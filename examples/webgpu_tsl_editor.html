@@ -111,7 +111,6 @@
 					const options = {
 						shader: 'fragment',
 						outputColorSpace: THREE.SRGBColorSpace,
-						output: 'WGSL',
 						preview: true
 					};
 
@@ -169,9 +168,6 @@ output = vec4( finalColor, opacity );
 
 					};
 
-					const webGLRenderer = new THREE.WebGPURenderer( { forceWebGL: true } );
-					webGLRenderer.debug.diagnostics.keywords = true;
-
 					const build = async () => {
 
 						try {
@@ -188,31 +184,13 @@ output = vec4( finalColor, opacity );
 
 							mesh.visible = false;
 
-							if ( options.output === 'WGSL' ) {
-
-								rawShader = await renderer.debug.getShaderAsync( scene, camera, mesh );
-
-
-							} else if ( options.output === 'GLSL ES 3.0' ) {
-
-								rawShader = await webGLRenderer.debug.getShaderAsync( scene, camera, mesh );
-
-							}
+							rawShader = await renderer.debug.getShaderAsync( scene, camera, mesh );
 
 							mesh.visible = true;
 
 							compiling = false;
 
 							showCode();
-
-							// extra debug info
-
-							/*const style = 'background-color: #333; color: white; font-style: italic; border: 2px solid #777; font-size: 22px;';
-
-							console.log( '%c  [ WGSL ] Vertex Shader      ', style );
-							console.log( rawShader.vertexShader );
-							console.log( '%c  [ WGSL ] Fragment Shader    ', style );
-							console.log( rawShader.fragmentShader );/**/
 
 						} catch ( e ) {
 
@@ -236,7 +214,6 @@ output = vec4( finalColor, opacity );
 
 					const gui = new GUI();
 
-					gui.add( options, 'output', [ 'WGSL', 'GLSL ES 3.0' ] ).onChange( build );
 					gui.add( options, 'shader', [ 'vertex', 'fragment' ] ).onChange( showCode );
 
 					gui.add( options, 'outputColorSpace', [ THREE.LinearSRGBColorSpace, THREE.SRGBColorSpace ] ).onChange( ( value ) => {

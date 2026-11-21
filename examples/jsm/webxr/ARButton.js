@@ -15,7 +15,7 @@ class ARButton {
 	/**
 	 * Constructs a new AR button.
 	 *
-	 * @param {WebGLRenderer|WebGPURenderer} renderer - The renderer.
+	 * @param {WebGPURenderer} renderer - The renderer.
 	 * @param {XRSessionInit} [sessionInit] - The a configuration object for the AR session.
 	 * @return {HTMLElement} The button or an error message if `immersive-ar` isn't supported.
 	 */
@@ -24,6 +24,18 @@ class ARButton {
 		const button = document.createElement( 'button' );
 
 		function showStartAR( /*device*/ ) {
+
+			if ( sessionInit.optionalFeatures === undefined ) {
+
+				sessionInit.optionalFeatures = [];
+
+			}
+
+			if ( sessionInit.optionalFeatures.includes( 'webgpu' ) === false ) {
+
+				sessionInit.optionalFeatures.push( 'webgpu' );
+
+			}
 
 			if ( sessionInit.domOverlay === undefined ) {
 
@@ -49,12 +61,6 @@ class ARButton {
 				path.setAttribute( 'stroke', '#fff' );
 				path.setAttribute( 'stroke-width', 2 );
 				svg.appendChild( path );
-
-				if ( sessionInit.optionalFeatures === undefined ) {
-
-					sessionInit.optionalFeatures = [];
-
-				}
 
 				sessionInit.optionalFeatures.push( 'dom-overlay' );
 				sessionInit.domOverlay = { root: overlay };

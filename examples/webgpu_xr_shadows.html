@@ -31,9 +31,7 @@
 			import * as THREE from 'three/webgpu';
 
 			import { VRButton } from 'three/addons/webxr/VRButton.js';
-			import { setupWebGLXRFallback } from 'three/addons/webxr/WebGLXRFallback.js';
 
-			const rendererParameters = { antialias: true, outputBufferType: THREE.UnsignedByteType, multiview: false };
 			const timer = new THREE.Timer();
 			timer.connect( document );
 
@@ -156,23 +154,7 @@
 
 				// renderer
 
-				renderer = createRenderer();
-				setRenderer( renderer );
-				setupWebGLXRFallback( renderer, () => createRenderer( true ), setRenderer );
-
-				document.body.appendChild( VRButton.createButton( renderer, { optionalFeatures: [ 'webgpu' ] } ) );
-
-				window.addEventListener( 'resize', onWindowResize );
-
-			}
-
-			function createRenderer( forceWebGL = false ) {
-
-				const parameters = { ...rendererParameters };
-
-				if ( forceWebGL === true ) parameters.forceWebGL = true;
-
-				const renderer = new THREE.WebGPURenderer( parameters );
+				renderer = new THREE.WebGPURenderer( { antialias: true, outputBufferType: THREE.UnsignedByteType } );
 				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				renderer.setAnimationLoop( animate );
@@ -181,25 +163,11 @@
 				renderer.toneMapping = THREE.ACESFilmicToneMapping;
 				renderer.toneMappingExposure = 1.2;
 				renderer.xr.enabled = true;
+				document.body.appendChild( renderer.domElement );
 
-				return renderer;
+				document.body.appendChild( VRButton.createButton( renderer ) );
 
-			}
-
-			function setRenderer( newRenderer, oldRenderer = null ) {
-
-				if ( oldRenderer === null ) {
-
-					document.body.appendChild( newRenderer.domElement );
-
-				} else {
-
-					document.body.replaceChild( newRenderer.domElement, oldRenderer.domElement );
-					oldRenderer.dispose();
-
-				}
-
-				renderer = newRenderer;
+				window.addEventListener( 'resize', onWindowResize );
 
 			}
 

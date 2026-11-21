@@ -24,7 +24,7 @@ class XRPlanes extends Object3D {
 	/**
 	 * Constructs a new XR plane container.
 	 *
-	 * @param {WebGLRenderer|WebGPURenderer} renderer - The renderer.
+	 * @param {WebGPURenderer} renderer - The renderer.
 	 */
 	constructor( renderer ) {
 

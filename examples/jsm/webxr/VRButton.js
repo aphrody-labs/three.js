@@ -15,7 +15,7 @@ class VRButton {
 	/**
 	 * Constructs a new VR button.
 	 *
-	 * @param {WebGLRenderer|WebGPURenderer} renderer - The renderer.
+	 * @param {WebGPURenderer} renderer - The renderer.
 	 * @param {XRSessionInit} [sessionInit] - The a configuration object for the AR session.
 	 * @return {HTMLElement} The button or an error message if `immersive-ar` isn't supported.
 	 */
@@ -71,6 +71,7 @@ class VRButton {
 					'local-floor',
 					'bounded-floor',
 					'layers',
+					'webgpu',
 					...( sessionInit.optionalFeatures || [] )
 				],
 			};

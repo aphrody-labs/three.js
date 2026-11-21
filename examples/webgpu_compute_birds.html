@@ -113,8 +113,6 @@
 
 			}
 
-			// TODO: Fix example with WebGL backend
-
 			if ( WebGPU.isAvailable() === false ) {
 
 				document.body.appendChild( WebGPU.getErrorMessage() );
@@ -162,7 +160,7 @@
 
 				//
 
-				renderer = new THREE.WebGPURenderer( { antialias: true, forceWebGL: false, requiredLimits: { maxStorageBuffersInVertexStage: 3 } } );
+				renderer = new THREE.WebGPURenderer( { antialias: true, requiredLimits: { maxStorageBuffersInVertexStage: 3 } } );
 				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				renderer.setAnimationLoop( render );
@@ -207,12 +205,6 @@
 				const positionStorage = instancedArray( positionArray, 'vec3' ).setName( 'positionStorage' );
 				const velocityStorage = instancedArray( velocityArray, 'vec3' ).setName( 'velocityStorage' );
 				const phaseStorage = instancedArray( phaseArray, 'float' ).setName( 'phaseStorage' );
-
-				// The Pixel Buffer Object (PBO) is required to get the GPU computed data in the WebGL2 fallback.
-
-				positionStorage.setPBO( true );
-				velocityStorage.setPBO( true );
-				phaseStorage.setPBO( true );
 
 				// Define Uniforms. Uniforms only need to be defined once rather than per shader.
 

@@ -20,7 +20,6 @@
 
 			<small>
 				This example demonstrates texture gather
-				<br /> Left canvas is using WebGPU Backend, right canvas is WebGL Backend.
 				<br /> The top half gathers color values and the bottom half gathers depth comparison.
 			</small>
 		</div>
@@ -41,15 +40,11 @@
 			import * as THREE from 'three/webgpu';
 			import { If, vec4, uv, ivec2, texture, Fn } from 'three/tsl';
 
-			// WebGPU Backend
 			init();
 
-			// WebGL Backend
-			init( true );
+			async function init() {
 
-			async function init( forceWebGL = false ) {
-
-				const aspect = ( window.innerWidth / 2 ) / window.innerHeight;
+				const aspect = window.innerWidth / window.innerHeight;
 				const camera = new THREE.OrthographicCamera( - aspect, aspect );
 				camera.position.z = 2;
 
@@ -91,30 +86,15 @@
 				const plane = new THREE.Mesh( new THREE.PlaneGeometry( 1, 1 ), material );
 				scene.add( plane );
 
-				const renderer = new THREE.WebGPURenderer( { antialias: false, forceWebGL: forceWebGL } );
+				const renderer = new THREE.WebGPURenderer( { antialias: false } );
 				renderer.setPixelRatio( window.devicePixelRatio );
-				renderer.setSize( window.innerWidth / 2, window.innerHeight );
+				renderer.setSize( window.innerWidth, window.innerHeight );
 				renderer.setAnimationLoop( animate );
 				await renderer.init();
 
 				document.body.appendChild( renderer.domElement );
-				renderer.domElement.style.position = 'absolute';
-				renderer.domElement.style.top = '0';
-				renderer.domElement.style.left = '0';
-				renderer.domElement.style.width = '50%';
-				renderer.domElement.style.height = '100%';
 
-				if ( forceWebGL ) {
-
-					renderer.domElement.style.left = '50%';
-
-					scene.background = new THREE.Color( 0x212121 );
-
-				} else {
-
-					scene.background = new THREE.Color( 0x313131 );
-
-				}
+				scene.background = new THREE.Color( 0x313131 );
 
 				//
 
@@ -165,9 +145,9 @@
 
 				function onWindowResize() {
 
-					renderer.setSize( window.innerWidth / 2, window.innerHeight );
+					renderer.setSize( window.innerWidth, window.innerHeight );
 
-					const aspect = ( window.innerWidth / 2 ) / window.innerHeight;
+					const aspect = window.innerWidth / window.innerHeight;
 
 					const frustumHeight = camera.top - camera.bottom;
 

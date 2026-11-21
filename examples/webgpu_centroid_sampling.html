@@ -115,8 +115,6 @@
 			canvasTexture.format = THREE.RGBAFormat;
 			canvasTexture.type = THREE.UnsignedByteType;
 
-			const forceWebGL = false;
-
 			init();
 
 			function init() {
@@ -211,8 +209,7 @@
 
 				// Create Standard Renderer
 				rendererAntialiasingDisabled = new THREE.WebGPURenderer( {
-					antialias: false,
-					forceWebGL: forceWebGL
+					antialias: false
 				} );
 
 				rendererAntialiasingDisabled.setPixelRatio( window.devicePixelRatio );
@@ -221,8 +218,7 @@
 
 				// Create antialiased renderer
 				rendererAntialiasingEnabled = new THREE.WebGPURenderer( {
-					antialias: true,
-					forceWebGL: forceWebGL
+					antialias: true
 				} );
 
 				document.body.querySelector( '#antialiasing-enabled' ).appendChild( rendererAntialiasingEnabled.domElement );

@@ -19,7 +19,7 @@ class XRButton {
 	/**
 	 * Constructs a new XR button.
 	 *
-	 * @param {WebGLRenderer|WebGPURenderer} renderer - The renderer.
+	 * @param {WebGPURenderer} renderer - The renderer.
 	 * @param {XRSessionInit} [sessionInit] - The a configuration object for the AR session.
 	 * @return {HTMLElement} The button or an error message if WebXR isn't supported.
 	 */
@@ -69,6 +69,7 @@ class XRButton {
 					'local-floor',
 					'bounded-floor',
 					'layers',
+					'webgpu',
 					...( sessionInit.optionalFeatures || [] )
 				],
 			};

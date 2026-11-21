@@ -257,11 +257,11 @@
 
 				}
 
-				vertexPositionBuffer = instancedArray( vertexPositionArray, 'vec3' ).setPBO( true ); // setPBO(true) is only important for the WebGL Fallback
+				vertexPositionBuffer = instancedArray( vertexPositionArray, 'vec3' );
 				vertexForceBuffer = instancedArray( vertexCount, 'vec3' );
 				vertexParamsBuffer = instancedArray( vertexParamsArray, 'uvec3' );
 
-				springListBuffer = instancedArray( new Uint32Array( springListArray ), 'uint' ).setPBO( true );
+				springListBuffer = instancedArray( new Uint32Array( springListArray ), 'uint' );
 
 			}
 
@@ -283,9 +283,9 @@
 
 				}
 
-				springVertexIdBuffer = instancedArray( springVertexIdArray, 'uvec2' ).setPBO( true );
+				springVertexIdBuffer = instancedArray( springVertexIdArray, 'uvec2' );
 				springRestLengthBuffer = instancedArray( springRestLengthArray, 'float' );
-				springForceBuffer = instancedArray( springCount * 3, 'vec3' ).setPBO( true );
+				springForceBuffer = instancedArray( springCount * 3, 'vec3' );
 
 			}
 

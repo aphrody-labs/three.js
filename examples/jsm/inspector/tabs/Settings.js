@@ -1,5 +1,5 @@
 import { Parameters } from './Parameters.js';
-import { WebGPURenderer, WebGLBackend, Node } from 'three/webgpu';
+import { Node } from 'three/webgpu';
 import { getItem, setItem } from '../Storage.js';
 
 const _extensions = [
@@ -13,34 +13,6 @@ const _extensions = [
 	}
 ];
 
-const _init = WebGPURenderer.prototype.init;
-
-function forceWebGL( enable ) {
-
-	if ( enable ) {
-
-		WebGPURenderer.prototype.init = async function () {
-
-			if ( this.backend.isWebGLBackend !== true ) {
-
-				const parameters = this.backend.parameters;
-
-				this.backend = new WebGLBackend( parameters );
-
-			}
-
-			return _init.call( this );
-
-		};
-
-	} else {
-
-		WebGPURenderer.prototype.init = _init;
-
-	}
-
-}
-
 let _state = null;
 
 function _loadState() {
@@ -50,17 +22,10 @@ function _loadState() {
 	const settings = getItem( 'settings' );
 
 	_state = {
-		forceWebGL: settings.forceWebGL !== undefined ? settings.forceWebGL : false,
 		captureStackTrace: settings.captureStackTrace !== undefined ? settings.captureStackTrace : false,
 		activeExtensions: settings.activeExtensions !== undefined ? settings.activeExtensions : {},
 		storage: settings.storage !== undefined ? settings.storage : 'url'
 	};
-
-	if ( _state.forceWebGL ) {
-
-		forceWebGL( true );
-
-	}
 
 	if ( _state.captureStackTrace ) {
 
@@ -75,7 +40,6 @@ function _loadState() {
 function _saveState() {
 
 	setItem( 'settings', {
-		forceWebGL: _state.forceWebGL,
 		captureStackTrace: _state.captureStackTrace,
 		activeExtensions: _state.activeExtensions,
 		storage: _state.storage
@@ -100,15 +64,6 @@ class Settings extends Parameters {
 		// UI
 
 		const rendererGroup = this.createGroup( 'Renderer' );
-
-		rendererGroup.add( currentState, 'forceWebGL' ).name( 'Force WebGL' ).onChange( ( enable ) => {
-
-			forceWebGL( enable );
-			_saveState();
-
-			location.reload();
-
-		} );
 
 		rendererGroup.add( currentState, 'captureStackTrace' ).name( 'Capture Stack Trace' ).onChange( ( enable ) => {
 

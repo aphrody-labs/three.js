@@ -64,7 +64,6 @@
 		const MAX_GEOMETRY_COUNT = 20000;
 
 		const api = {
-			webgpu: true,
 			count: 512,
 			dynamic: 16,
 
@@ -203,15 +202,7 @@
 
 		}
 
-		function init( forceWebGL = false ) {
-
-			if ( renderer ) {
-
-				renderer.dispose();
-				controls.dispose();
-				document.body.removeChild( renderer.domElement );
-
-			}
+		function init() {
 
 			// camera
 
@@ -222,7 +213,7 @@
 
 			// renderer
 
-			renderer = new THREE.WebGPURenderer( { antialias: true, forceWebGL } );
+			renderer = new THREE.WebGPURenderer( { antialias: true } );
 			renderer.setPixelRatio( window.devicePixelRatio );
 			renderer.setSize( window.innerWidth, window.innerHeight );
 			renderer.inspector = new Inspector();
@@ -231,7 +222,7 @@
 			// scene
 
 			scene = new THREE.Scene();
-			scene.background = forceWebGL ? new THREE.Color( 0xffc1c1 ) : new THREE.Color( 0xc1c1ff );
+			scene.background = new THREE.Color( 0xc1c1ff );
 
 			document.body.appendChild( renderer.domElement );
 
@@ -249,11 +240,6 @@
 			// gui
 
 			gui = renderer.inspector.createParameters( 'Settings' );
-			gui.add( api, 'webgpu' ).onChange( () => {
-
-				init( ! api.webgpu );
-
-			} );
 			gui.add( api, 'count', 1, MAX_GEOMETRY_COUNT, 1 ).onChange( initMesh );
 			gui.add( api, 'dynamic', 0, MAX_GEOMETRY_COUNT, 1 );
 

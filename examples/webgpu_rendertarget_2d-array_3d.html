@@ -246,17 +246,13 @@
 
 
 						// In WebGPU we need to clear all the layers of the 3D render target before rendering to it (WebGPU limitation?)
-						if ( renderer.backend.isWebGPUBackend ) {
+						const materialClear = new THREE.NodeMaterial();
+						materialClear.outputNode = vec4( 0 );
+						const clearQuadMesh = new THREE.QuadMesh( materialClear );
+						for ( let i = 0; i < size.depth; i ++ ) {
 
-							const materialClear = new THREE.NodeMaterial();
-							materialClear.outputNode = vec4( 0 );
-							const clearQuadMesh = new THREE.QuadMesh( materialClear );
-							for ( let i = 0; i < size.depth; i ++ ) {
-			
-								renderer.setRenderTarget( fbo3D, i );
-								clearQuadMesh.render( renderer );
-
-							}
+							renderer.setRenderTarget( fbo3D, i );
+							clearQuadMesh.render( renderer );
 
 						}
 

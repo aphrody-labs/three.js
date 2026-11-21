@@ -121,11 +121,6 @@
 
 				const originalWave = instancedArray( waveBuffer ).toReadOnly();
 
-				// The Pixel Buffer Object (PBO) is required to get the GPU computed data to the CPU in the WebGL2 fallback.
-
-				originalWave.setPBO( true );
-				waveArray.setPBO( true );
-
 				// params
 
 				const pitch = uniform( 1.5 );

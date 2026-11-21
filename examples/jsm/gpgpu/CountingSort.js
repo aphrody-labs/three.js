@@ -1,4 +1,4 @@
-import { StorageBufferAttribute, DynamicDrawUsage } from 'three/webgpu';
+import { StorageBufferAttribute } from 'three/webgpu';
 import { Fn, Loop, atomicAdd, atomicExchange, atomicStore, instanceIndex, storage, uint } from 'three/tsl';
 
 /**
@@ -13,9 +13,7 @@ import { Fn, Loop, atomicAdd, atomicExchange, atomicStore, instanceIndex, storag
  * in the same bin end up in an unspecified relative order.
  *
  * This class does not compute the sort key itself. Instead, a TSL function is supplied via
- * {@link CountingSort#setBinNode} that maps the current `instanceIndex` to a bin, and an equivalent
- * plain JavaScript function can be supplied to {@link CountingSort#computeCPU} for platforms without
- * compute shader support (e.g. the WebGL backend of {@link WebGPURenderer}).
+ * {@link CountingSort#setBinNode} that maps the current `instanceIndex` to a bin.
  *
  * ```js
  * const sort = new CountingSort( count, { binCount: 4096 } );
@@ -123,11 +121,6 @@ class CountingSort {
 		 */
 		this.offsetAtomic = storage( offsetAttribute, 'uint' ).toAtomic();
 
-		this._webGLBuffersEnabled = false;
-
-		this._cpuBins = new Uint32Array( count );
-		this._cpuCounts = new Uint32Array( binCount );
-		this._cpuOffsets = new Uint32Array( binCount );
 
 		this._histogramNode = null;
 		this._prefixNode = null;
@@ -189,71 +182,6 @@ class CountingSort {
 		renderer.compute( this._histogramNode );
 		renderer.compute( this._prefixNode );
 		renderer.compute( this._scatterNode );
-
-	}
-
-	/**
-	 * Executes a complete counting sort on the CPU, updating {@link CountingSort#orderAttribute}.
-	 * Intended as a fallback for backends without compute shader support.
-	 *
-	 * @param {Function} binFn - A function taking an element index and returning its bin (a plain number in `[0, binCount)`).
-	 */
-	computeCPU( binFn ) {
-
-		const { count, binCount } = this;
-		const order = this.orderAttribute.array;
-		const bins = this._cpuBins;
-		const counts = this._cpuCounts;
-		const offsets = this._cpuOffsets;
-
-		counts.fill( 0 );
-
-		for ( let i = 0; i < count; i ++ ) {
-
-			const bin = binFn( i );
-
-			bins[ i ] = bin;
-			counts[ bin ] ++;
-
-		}
-
-		let sum = 0;
-
-		for ( let i = 0; i < binCount; i ++ ) {
-
-			offsets[ i ] = sum;
-			sum += counts[ i ];
-
-		}
-
-		for ( let i = 0; i < count; i ++ ) {
-
-			order[ offsets[ bins[ i ] ] ++ ] = i;
-
-		}
-
-		this.orderAttribute.needsUpdate = true;
-
-		if ( this.orderAttribute.pbo !== undefined ) {
-
-			this.orderAttribute.pbo.needsUpdate = true;
-
-		}
-
-	}
-
-	/**
-	 * Enables the WebGL-specific storage buffer path (PBO + dynamic draw usage) for the order buffer.
-	 * Only needed when {@link CountingSort#computeCPU} is used with the WebGL backend of {@link WebGPURenderer}.
-	 */
-	enableWebGLBuffers() {
-
-		if ( this._webGLBuffersEnabled === true ) return;
-
-		this.orderAttribute.setUsage( DynamicDrawUsage );
-		this.orderRead.setPBO( true );
-
-		this._webGLBuffersEnabled = true;
 
 	}
 

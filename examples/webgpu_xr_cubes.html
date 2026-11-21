@@ -34,12 +34,10 @@
 			import { BoxLineGeometry } from 'three/addons/geometries/BoxLineGeometry.js';
 			import { XRButton } from 'three/addons/webxr/XRButton.js';
 			import { XRControllerModelFactory } from 'three/addons/webxr/XRControllerModelFactory.js';
-			import { setupWebGLXRFallback } from 'three/addons/webxr/WebGLXRFallback.js';
 
 			const timer = new THREE.Timer();
 			timer.connect( document );
 
-			const rendererParameters = { antialias: true, outputBufferType: THREE.UnsignedByteType, multiview: true };
 			const controllerModelFactory = new XRControllerModelFactory();
 
 			let container;
@@ -105,9 +103,16 @@
 
 				raycaster = new THREE.Raycaster();
 
-				renderer = createRenderer();
-				setRenderer( renderer );
-				setupWebGLXRFallback( renderer, () => createRenderer( true ), setRenderer );
+				renderer = new THREE.WebGPURenderer( { antialias: true, outputBufferType: THREE.UnsignedByteType } );
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				renderer.setAnimationLoop( animate );
+				renderer.xr.enabled = true;
+				container.appendChild( renderer.domElement );
+
+				renderPipeline = new THREE.DirectRenderPipeline( renderer );
+
+				setupControllers();
 
 				//
 
@@ -115,45 +120,7 @@
 
 				//
 
-				document.body.appendChild( XRButton.createButton( renderer, { optionalFeatures: [ 'webgpu' ] } ) );
-
-			}
-
-			function createRenderer( forceWebGL = false ) {
-
-				const parameters = { ...rendererParameters };
-
-				if ( forceWebGL === true ) parameters.forceWebGL = true;
-
-				const renderer = new THREE.WebGPURenderer( parameters );
-				renderer.setPixelRatio( window.devicePixelRatio );
-				renderer.setSize( window.innerWidth, window.innerHeight );
-				renderer.setAnimationLoop( animate );
-				renderer.xr.enabled = true;
-
-				return renderer;
-
-			}
-
-			function setRenderer( newRenderer, oldRenderer = null ) {
-
-				if ( controller !== undefined ) scene.remove( controller );
-				if ( controllerGrip !== undefined ) scene.remove( controllerGrip );
-
-				if ( oldRenderer === null ) {
-
-					container.appendChild( newRenderer.domElement );
-
-				} else {
-
-					container.replaceChild( newRenderer.domElement, oldRenderer.domElement );
-					oldRenderer.dispose();
-
-				}
-
-				renderer = newRenderer;
-				renderPipeline = new THREE.DirectRenderPipeline( renderer );
-				setupControllers();
+				document.body.appendChild( XRButton.createButton( renderer ) );
 
 			}
 

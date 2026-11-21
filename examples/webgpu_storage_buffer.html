@@ -14,7 +14,6 @@
 		<div id="info">
 			<a href="https://threejs.org" target="_blank" rel="noopener">three.js</a>
 			<br />This example demonstrates fetching an external element from a StorageBuffer.
-			<br />The left canvas uses the WebGPU Backend, while the right uses the WebGL Backend.
 			<div id="timestamps" style="
 				position: absolute;
 				top: 60px;
@@ -28,19 +27,6 @@
 				pointer-events: none;
 				text-align: left;
 			"></div>
-			<div id="timestamps_webgl" style="
-			position: absolute;
-			top: 60px;
-			right: 0;
-			padding: 10px;
-			background: rgba( 0, 0, 0, 0.5 );
-			color: #fff;
-			font-family: monospace;
-			font-size: 12px;
-			line-height: 1.5;
-			pointer-events: none;
-			text-align: left;
-		"></div>
 		</div>
 
 		<script type="importmap">
@@ -59,20 +45,13 @@
 			import * as THREE from 'three/webgpu';
 			import { storage, If, vec3, uv, uint, float, Fn, instanceIndex, workgroupBarrier } from 'three/tsl';
 
-			const timestamps = {
-				webgpu: document.getElementById( 'timestamps' ),
-				webgl: document.getElementById( 'timestamps_webgl' )
-			};
+			const timestamps = document.getElementById( 'timestamps' );
 
-			// WebGPU Backend
 			init();
 
-			// WebGL Backend
-			init( true );
+			async function init() {
 
-			async function init( forceWebGL = false ) {
-
-				const aspect = ( window.innerWidth / 2 ) / window.innerHeight;
+				const aspect = window.innerWidth / window.innerHeight;
 				const camera = new THREE.OrthographicCamera( - aspect, aspect, 1, - 1, 0, 2 );
 				camera.position.z = 1;
 
@@ -94,7 +73,7 @@
 
 					const arrayBuffer = new THREE.StorageInstancedBufferAttribute( new Float32Array( array ), typeSize );
 
-					arrayBufferNodes.push( storage( arrayBuffer, type[ i ] ).setPBO( true ) );
+					arrayBufferNodes.push( storage( arrayBuffer, type[ i ] ) );
 
 				}
 
@@ -185,31 +164,15 @@
 				const plane = new THREE.Mesh( new THREE.PlaneGeometry( 1, 1 ), material );
 				scene.add( plane );
 
-				const renderer = new THREE.WebGPURenderer( { antialias: false, forceWebGL: forceWebGL } );
+				const renderer = new THREE.WebGPURenderer( { antialias: false } );
 				renderer.setPixelRatio( window.devicePixelRatio );
-				renderer.setSize( window.innerWidth / 2, window.innerHeight );
+				renderer.setSize( window.innerWidth, window.innerHeight );
 
 				await renderer.init();
 
 				document.body.appendChild( renderer.domElement );
-				renderer.domElement.style.position = 'absolute';
-				renderer.domElement.style.top = '0';
-				renderer.domElement.style.left = '0';
-				renderer.domElement.style.width = '50%';
-				renderer.domElement.style.height = '100%';
 
-				if ( forceWebGL ) {
-
-					renderer.domElement.style.left = '50%';
-
-					scene.background = new THREE.Color( 0x212121 );
-			
-				} else {
-
-					scene.background = new THREE.Color( 0x313131 );
-
-				}
-
+				scene.background = new THREE.Color( 0x313131 );
 
 				renderer.compute( computeInit );
 
@@ -236,7 +199,7 @@
 					const computeTimeText = computeDuration === null ? 'N/A' : `${computeDuration.delta.toFixed( 6 )}ms`;
 					const renderTimeText = renderDuration === null ? 'N/A' : `${renderDuration.delta.toFixed( 6 )}ms`;
 
-					timestamps[ forceWebGL ? 'webgl' : 'webgpu' ].innerHTML = `
+					timestamps.innerHTML = `
 
 							Compute ${renderer.info.compute.frameCalls} pass in ${computeTimeText}<br>
 							Draw ${renderer.info.render.drawCalls} pass in ${renderTimeText}`;
@@ -251,9 +214,9 @@
 
 				function onWindowResize() {
 
-					renderer.setSize( window.innerWidth / 2, window.innerHeight );
+					renderer.setSize( window.innerWidth, window.innerHeight );
 
-					const aspect = ( window.innerWidth / 2 ) / window.innerHeight;
+					const aspect = window.innerWidth / window.innerHeight;
 
 					const frustumHeight = camera.top - camera.bottom;
 

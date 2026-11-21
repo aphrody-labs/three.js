@@ -62,7 +62,6 @@
 			//
 
 			const api = {
-				webgpu: true,
 				renderBundle: true,
 				count: 4000,
 				opacity: 1,
@@ -170,7 +169,6 @@
 			function init() {
 
 				const searchParams = new URLSearchParams( window.location.search );
-				api.webgpu = searchParams.get( 'backend' ) !== 'webgl';
 				api.renderBundle = searchParams.get( 'renderBundle' ) !== 'false';
 				api.count = parseFloat( searchParams.get( 'count' ) || 4000 );
 
@@ -185,7 +183,7 @@
 
 				// renderer
 
-				renderer = new THREE.WebGPURenderer( { antialias: true, forceWebGL: ! api.webgpu } );
+				renderer = new THREE.WebGPURenderer( { antialias: true } );
 				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				renderer.inspector = new Inspector();
@@ -213,8 +211,6 @@
 				gui = renderer.inspector.createParameters( 'Settings' );
 				gui.add( api, 'renderBundle' ).name( 'render bundle' ).onChange( reload );
 
-				gui.add( api, 'webgpu' ).onChange( reload );
-
 				gui.add( api, 'dynamic' ).onChange( () => {
 
 					group.static = ! group.static;
@@ -241,11 +237,10 @@
 
 				function reload() {
 
-					const backendParam = 'backend=' + ( api.webgpu ? 'webgpu' : 'webgl' );
-					const renderBundleParam = '&renderBundle=' + ( api.renderBundle ? 'true' : 'false' );
+					const renderBundleParam = 'renderBundle=' + ( api.renderBundle ? 'true' : 'false' );
 					const countParam = '&count=' + api.count;
 
-					location.href = location.pathname + '?' + backendParam + renderBundleParam + countParam; // relative redirect with parameters
+					location.href = location.pathname + '?' + renderBundleParam + countParam; // relative redirect with parameters
 
 				}
 

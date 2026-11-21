@@ -65,8 +65,8 @@
 
 			import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-			let MESH_COUNT = 256;
-			let GRID_SIZE = 16;
+			const MESH_COUNT = 256;
+			const GRID_SIZE = 16;
 			const ADD_DELAY = 1000;
 
 			let camera, scene, renderer;
@@ -143,16 +143,6 @@
 				document.body.appendChild( renderer.domElement );
 
 				await renderer.init();
-
-				// Reduce mesh count for WebGL (slower compilation)
-				if ( renderer.backend.isWebGLBackend ) {
-
-					MESH_COUNT = 64;
-					GRID_SIZE = 8;
-					document.getElementById( 'materialCount' ).textContent = '64';
-					meshCountEl.textContent = '0 / 64';
-
-				}
 
 				// Get mode from URL
 				const urlParams = new URLSearchParams( window.location.search );

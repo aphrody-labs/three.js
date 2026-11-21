@@ -934,10 +934,10 @@
 				} ) );
 
 				// Represents array of data as uints in compute shader.
-				const inputStorage = instancedArray( array, 'uint' ).setPBO( true ).setName( `Current_${leftSideDisplay ? 'Left' : 'Right'}` );
+				const inputStorage = instancedArray( array, 'uint' ).setName( `Current_${leftSideDisplay ? 'Left' : 'Right'}` );
 				// Represents array of data as vec4s in compute shader;
 				const inputVec4BufferAttribute = new THREE.StorageInstancedBufferAttribute( array, 4 );
-				const inputVectorizedStorage = storage( inputVec4BufferAttribute, 'uvec4' ).setPBO( true ).setName( `CurrentVectorized_${leftSideDisplay ? 'Left' : 'Right'}` );
+				const inputVectorizedStorage = storage( inputVec4BufferAttribute, 'uvec4' ).setName( `CurrentVectorized_${leftSideDisplay ? 'Left' : 'Right'}` );
 
 				// Reduce 3 Calculations
 				const workPerThread = 4;
@@ -945,9 +945,9 @@
 				const rowSize = divRoundUp( size, numRows );
 
 				const workgroupSumsArray = new Uint32Array( numRows );
-				const workgroupSumsStorage = instancedArray( workgroupSumsArray, 'uint' ).setPBO( true ).setName( `WorkgroupSums_${leftSideDisplay ? 'Left' : 'Right'}` );
+				const workgroupSumsStorage = instancedArray( workgroupSumsArray, 'uint' ).setName( `WorkgroupSums_${leftSideDisplay ? 'Left' : 'Right'}` );
 				const debugArray = new Uint32Array( 1024 );
-				const debugStorage = instancedArray( debugArray, 'uint' ).setPBO( true ).setName( `Debug_${leftSideDisplay ? 'Left' : 'Right'}` );
+				const debugStorage = instancedArray( debugArray, 'uint' ).setName( `Debug_${leftSideDisplay ? 'Left' : 'Right'}` );
 
 				const storageNodes = {
 					'Input Buffer': inputStorage,

@@ -79,10 +79,8 @@ const _vector = /*@__PURE__*/ new Vector3();
 /**
  * A minimal renderer for 3D Gaussian splat geometry.
  *
- * Note that this class can only be used with {@link WebGPURenderer}. The
- * `forceWebGL` fallback of {@link WebGPURenderer} is supported, but
- * {@link WebGLRenderer} is not. Import maps or package exports must resolve
- * both `three/webgpu` and `three/tsl`.
+ * Note that this class can only be used with {@link WebGPURenderer}. Import maps
+ * or package exports must resolve both `three/webgpu` and `three/tsl`.
  *
  * ```js
  * const splats = new GaussianSplat( geometry );
@@ -179,7 +177,6 @@ class GaussianSplat extends Mesh {
 		this._sphericalHarmonicsInitialized = false;
 		this._lastSphericalHarmonicsCameraMatrix = new Matrix4();
 		this._lastSphericalHarmonicsWorldMatrix = new Matrix4();
-		this._sphericalHarmonicsVertexNode = materialNodes.sphericalHarmonicsVertexNode;
 		this._precomputedSphericalHarmonicsVertexNode = materialNodes.vertexNode;
 		this._positionAttribute = positionAttribute;
 
@@ -202,9 +199,7 @@ class GaussianSplat extends Mesh {
 
 		this.onBeforeRender = ( renderer, scene, camera ) => {
 
-			const vertexNode = renderer.backend && renderer.backend.isWebGLBackend === true ?
-				this._sphericalHarmonicsVertexNode :
-				this._precomputedSphericalHarmonicsVertexNode;
+			const vertexNode = this._precomputedSphericalHarmonicsVertexNode;
 
 			if ( vertexNode !== null && material.vertexNode !== vertexNode ) {
 
@@ -237,20 +232,12 @@ class GaussianSplat extends Mesh {
 
 		if ( this._sphericalHarmonicsComputeNode === null ) return false;
 
-		const isWebGLBackend = renderer.backend && renderer.backend.isWebGLBackend === true;
-
 		if ( this._sphericalHarmonicsInitialized === true &&
 			camera.matrixWorld.equals( this._lastSphericalHarmonicsCameraMatrix ) &&
 			this.matrixWorld.equals( this._lastSphericalHarmonicsWorldMatrix ) &&
-			( isWebGLBackend === true || this._buffers.sphericalHarmonicsContributionRead !== undefined ) ) {
+			this._buffers.sphericalHarmonicsContributionRead !== undefined ) {
 
 			return false;
-
-		}
-
-		if ( isWebGLBackend === true ) {
-
-			enableWebGLBuffers( this._buffers );
 
 		}
 
@@ -260,8 +247,6 @@ class GaussianSplat extends Mesh {
 		this._lastSphericalHarmonicsCameraMatrix.copy( camera.matrixWorld );
 		this._lastSphericalHarmonicsWorldMatrix.copy( this.matrixWorld );
 		this._sphericalHarmonicsInitialized = true;
-
-		if ( isWebGLBackend === true ) return false;
 
 		ensureSphericalHarmonicsContributionBuffer( this._buffers );
 		renderer.compute( this._sphericalHarmonicsComputeNode );
@@ -410,17 +395,7 @@ class GaussianSplat extends Mesh {
 
 			this._updateSortUniforms( camera );
 
-			if ( renderer.backend && renderer.backend.isWebGLBackend === true ) {
-
-				enableWebGLBuffers( this._buffers );
-				this._sort.enableWebGLBuffers();
-				this._sortCPU();
-
-			} else {
-
-				this._sort.compute( renderer );
-
-			}
+			this._sort.compute( renderer );
 
 			this._sortInitialized = true;
 			this._lastSortDirection.copy( _sortDirection );
@@ -496,26 +471,6 @@ class GaussianSplat extends Mesh {
 
 		_sortDepthRange.set( nearDepth, farDepth );
 		this._sortDepthRange.value.copy( _sortDepthRange );
-
-	}
-
-	_sortCPU() {
-
-		const centers = this._positionAttribute.array;
-		const matrix = this._sortMatrix.value.elements;
-		const nearDepth = this._sortDepthRange.value.x;
-		const range = Math.max( this._sortDepthRange.value.y - nearDepth, 0.0001 );
-		const scale = ( BIN_COUNT - 1 ) / range;
-
-		this._sort.computeCPU( ( i ) => {
-
-			const i3 = i * 3;
-			const depth = - ( matrix[ 2 ] * centers[ i3 ] + matrix[ 6 ] * centers[ i3 + 1 ] + matrix[ 10 ] * centers[ i3 + 2 ] + matrix[ 14 ] );
-			const depthBin = Math.min( BIN_COUNT - 1, Math.max( 0, Math.floor( ( depth - nearDepth ) * scale ) ) );
-
-			return BIN_COUNT - 1 - depthBin;
-
-		} );
 
 	}
 
@@ -702,7 +657,6 @@ function createStorageBuffers( count, centers, covariances, colors, sphericalHar
 	const buffers = {
 		count,
 		sphericalHarmonicsDegree,
-		webGLBuffersEnabled: false,
 		centerAttribute,
 		covarianceAAttribute,
 		covarianceBAttribute,
@@ -732,34 +686,12 @@ function ensureSphericalHarmonicsContributionBuffer( buffers ) {
 
 	if ( buffers.sphericalHarmonicsContributionRead !== undefined ) return;
 
-	// WebGPU stores one precomputed SH contribution per splat. The WebGL
-	// fallback evaluates SH in the vertex shader because its transform-feedback
-	// compute path cannot perform the packed buffer's indexed reads, so allocate
-	// this additional buffer lazily only when the WebGPU pre-pass runs.
+	// One precomputed SH contribution per splat, allocated lazily when the pre-pass first runs.
 	const attribute = new StorageBufferAttribute( new Float32Array( buffers.count * 4 ), 4 );
 
 	buffers.sphericalHarmonicsContributionAttribute = attribute;
 	buffers.sphericalHarmonicsContributionRead = storage( attribute, 'vec4' ).toReadOnly();
 	buffers.sphericalHarmonicsContributionWrite = storage( attribute, 'vec4' );
-
-}
-
-function enableWebGLBuffers( buffers ) {
-
-	if ( buffers.webGLBuffersEnabled === true ) return;
-
-	buffers.centerRead.setPBO( true );
-	buffers.covarianceARead.setPBO( true );
-	buffers.covarianceBRead.setPBO( true );
-	buffers.colorRead.setPBO( true );
-
-	for ( let degree = 1; degree <= buffers.sphericalHarmonicsDegree; degree ++ ) {
-
-		buffers[ `sphericalHarmonics${ degree }Read` ].setPBO( true );
-
-	}
-
-	buffers.webGLBuffersEnabled = true;
 
 }
 
@@ -1041,7 +973,6 @@ function createMaterialNodes( buffers, sort, localCameraPosition ) {
 	} )();
 
 	const vertexNode = createVertexNode( true );
-	const sphericalHarmonicsVertexNode = buffers.sphericalHarmonicsDegree > 0 ? createVertexNode( false ) : null;
 
 	const fragmentNode = Fn( () => {
 
@@ -1057,7 +988,7 @@ function createMaterialNodes( buffers, sort, localCameraPosition ) {
 
 	} )();
 
-	return { vertexNode, sphericalHarmonicsVertexNode, fragmentNode };
+	return { vertexNode, fragmentNode };
 
 }
 

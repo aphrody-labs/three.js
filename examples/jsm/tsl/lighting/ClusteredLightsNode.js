@@ -776,8 +776,7 @@ class ClusteredLightsNode extends LightsNode {
 
 		}
 
-		// instanced storage: WebGL computes use gl_InstanceID as instanceIndex; PBO: random access in the fragment stage
-		const lightIndexes = instancedArray( new Int32Array( elements * 4 ), 'ivec4' ).setPBO( true ).setName( 'lightIndexes' );
+		const lightIndexes = instancedArray( new Int32Array( elements * 4 ), 'ivec4' ).setName( 'lightIndexes' );
 
 		// view-space AABB of the given cluster
 

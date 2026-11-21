@@ -89,7 +89,7 @@
 				mesh.receiveShadow = true;
 				scene.add( mesh );
 
-				renderer = new THREE.WebGPURenderer( /*{ forceWebGL: true }*/ );
+				renderer = new THREE.WebGPURenderer();
 				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				renderer.setAnimationLoop( animate );

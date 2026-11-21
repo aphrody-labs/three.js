@@ -78,8 +78,8 @@
 
 							const countOfPoints = child.geometry.getAttribute( 'position' ).count;
 
-							const pointPositionArray = instancedArray( countOfPoints, 'vec3' ).setPBO( true );
-							const pointSpeedArray = instancedArray( countOfPoints, 'vec3' ).setPBO( true );
+							const pointPositionArray = instancedArray( countOfPoints, 'vec3' );
+							const pointSpeedArray = instancedArray( countOfPoints, 'vec3' );
 
 							const pointSpeedAttribute = pointSpeedArray.toAttribute();
 							const skinningPosition = computeSkinning( child );

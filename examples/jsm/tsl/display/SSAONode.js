@@ -1,5 +1,5 @@
 import { RenderTarget, Vector2, Node, QuadMesh, NodeMaterial, RendererUtils, RedFormat } from 'three/webgpu';
-import { reference, getViewPosition, getScreenPositionFromClip, vogelDiskSample, interleavedGradientNoise, nodeObject, Fn, float, NodeUpdateType, uv, uniform, Loop, vec4, int, dot, max, clamp, length, screenCoordinate, PI2, texture, passTexture, context, isBackgroundDepth, projectionDepth } from 'three/tsl';
+import { reference, getViewPosition, getScreenPositionFromClip, vogelDiskSample, interleavedGradientNoise, nodeObject, Fn, float, NodeUpdateType, uv, uniform, Loop, vec4, int, dot, max, clamp, length, screenCoordinate, TWO_PI, texture, passTexture, context, isBackgroundDepth, projectionDepth } from 'three/tsl';
 import { depthAwareBlur } from './depthAwareBlur.js';
 
 const _quadMesh = /*@__PURE__*/ new QuadMesh();
@@ -336,7 +336,7 @@ class SSAONode extends Node {
 			// a low-discrepancy Vogel disk rotated per-pixel decorrelates the samples spatially,
 			// so a small blur is enough to hide the sampling pattern
 
-			const phi = interleavedGradientNoise( screenCoordinate ).mul( PI2 ).toVar();
+			const phi = interleavedGradientNoise( screenCoordinate ).mul( TWO_PI ).toVar();
 			const samples = this.samples;
 
 			// the fragment's clip position is loop-invariant; projection is linear, so each

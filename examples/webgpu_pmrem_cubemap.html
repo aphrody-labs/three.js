@@ -46,9 +46,7 @@
 
 				scene = new THREE.Scene();
 
-				const forceWebGL = false;
-
-				renderer = new THREE.WebGPURenderer( { antialias: true, forceWebGL } );
+				renderer = new THREE.WebGPURenderer( { antialias: true } );
 				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				renderer.setAnimationLoop( render );

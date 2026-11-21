@@ -140,7 +140,7 @@ const woodRings = TSL.Fn( ( [ w, ringThickness, ringBias, ringSizeVariance, ring
 
 const woodDetail = TSL.Fn( ( [ warp, p, y, splotchScale ] ) => {
 
-	const radialCoords = TSL.clamp( TSL.atan( warp.y, warp.x ).div( TSL.PI2 ).add( 0.5 ), 0, 1 ).mul( TSL.PI2.mul( 3 ) );
+	const radialCoords = TSL.clamp( TSL.atan( warp.y, warp.x ).div( TSL.TWO_PI ).add( 0.5 ), 0, 1 ).mul( TSL.TWO_PI.mul( 3 ) );
 	const combinedXyz = TSL.vec3( radialCoords.sin(), y, radialCoords.cos().mul( p.z ) );
 	const scaled = TSL.vec3( 0.1, 1.19, 0.05 ).mul( combinedXyz );
 
