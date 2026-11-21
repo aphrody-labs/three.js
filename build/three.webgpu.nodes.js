@@ -28405,7 +28405,7 @@ class UniformArrayNode extends BufferNode_default {
     this.updateType = NodeUpdateType.RENDER;
     this.isArrayBufferNode = true;
   }
-  generateNodeType(builder) {
+  generateNodeType() {
     return this.getPaddedType();
   }
   getElementType() {
