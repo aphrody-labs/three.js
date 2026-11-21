@@ -14,7 +14,6 @@ export default QUnit.module( 'Constants', () => {
 
 		assert.equal( Constants.BasicShadowMap, 0, 'BasicShadowMap is equal to 0' );
 		assert.equal( Constants.PCFShadowMap, 1, 'PCFShadowMap is equal to 1' );
-		assert.equal( Constants.PCFSoftShadowMap, 2, 'PCFSoftShadowMap is equal to 2' );
 		assert.equal( Constants.VSMShadowMap, 3, 'VSMShadowMap is equal to 3' );
 
 		assert.equal( Constants.FrontSide, 0, 'FrontSide is equal to 0' );
@@ -203,8 +202,6 @@ export default QUnit.module( 'Constants', () => {
 		assert.equal( Constants.DynamicCopyUsage, 35050, 'DynamicCopyUsage is equal to 35050' );
 		assert.equal( Constants.StreamCopyUsage, 35042, 'StreamCopyUsage is equal to 35042' );
 
-		assert.equal( Constants.GLSL1, '100', 'GLSL1 is equal to 100' );
-		assert.equal( Constants.GLSL3, '300 es', 'GLSL3 is equal to 300 es' );
 
 	} );
 

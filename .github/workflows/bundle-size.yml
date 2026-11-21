@@ -1,0 +1,51 @@
+name: Bundle size
+
+on:
+  pull_request:
+    paths:
+      - "src/**"
+      - "package.json"
+      - "utils/build/**"
+      - "scripts/bundle-size.ts"
+
+# Read-only: the comparison goes to the job summary, so the PR code can be checked out safely.
+permissions:
+  contents: read
+
+jobs:
+  bundle-size:
+    name: Minified and brotli size against the base branch
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Git checkout (pull request)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          path: head
+      - name: Git checkout (base)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: base
+      - name: Install Bun
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+      - name: Measure
+        run: |
+          for side in base head; do
+            (cd $side && bun ../head/scripts/bundle-size.ts > ../$side.json)
+          done
+      - name: Compare
+        run: |
+          bun -e '
+            const [ base, head ] = await Promise.all( [ "base.json", "head.json" ].map( file => Bun.file( file ).json() ) );
+            const kb = bytes => ( bytes / 1000 ).toFixed( 2 ) + " kB";
+            const diff = ( after, before ) => ( after - before >= 0 ? "+" : "" ) + kb( after - before );
+            const rows = head.map( ( row ) => {
+              const before = base.find( ( candidate ) => candidate.entry === row.entry ) ?? { minified: 0, brotli: 0 };
+              return `| ${ row.entry } | ${ kb( before.minified ) } <br> **${ kb( before.brotli ) }** | ${ kb( row.minified ) } <br> **${ kb( row.brotli ) }** | ${ diff( row.minified, before.minified ) } <br> **${ diff( row.brotli, before.brotli ) }** |`;
+            } );
+            const table = [ "### Bundle size", "", "_Minified and brotli-compressed with `bun build`._", "", "| Entry | Before | After | Diff |", "|:-:|:-:|:-:|:-:|", ...rows ].join( "\n" );
+            await Bun.write( Bun.env.GITHUB_STEP_SUMMARY, table + "\n" );
+            console.log( table );
+          '

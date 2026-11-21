@@ -18,30 +18,30 @@ It is assumed that you know a little about Node.js and Git. If not, [here's some
 
 * Install the dependencies
 
-      npm ci
+      bun install --frozen-lockfile
 
 ## Next Steps
 
-As per the npm standard, ‘start’ is the place to begin the package.
+‘start’ is the place to begin the package.
 
-    npm start
+    bun run start
 
-This script will start a local server similar to [threejs.org](https://threejs.org/), but instead will be hosted on your local machine. Browse to https://localhost:8080/ to check it out. It also automatically creates the `build/three.module.js` script anytime there is a change `src` directory.
+This script will start a local server similar to [threejs.org](https://threejs.org/), but instead will be hosted on your local machine. Browse to https://localhost:8080/ to check it out. It also automatically creates the `build/three.webgpu.js` script anytime there is a change `src` directory.
 
 Next scripts run all the appropriate testing.
 
-- `npm run test` - Lint testing and unit testing (individually being `npm run lint` and `npm run test-unit`)
-- `npm run test-e2e` - E2E testing. This one can take quite a long time and installs ~200 MB Chromium browser - it is primarily intended to be run only by GitHub Actions
+- `bun run test` - Lint testing and unit testing (individually being `bun lint` and `bun test`)
+- `bun run test-e2e` - E2E screenshot testing of the `webgpu_*` examples. It drives a local Chrome with WebGPU through `puppeteer-core`
 
 The linting is there to keep a consistent code style across all of the code and the testing is there to help catch bugs and check that the code behaves as expected. It is important that neither of these steps comes up with any errors due to your changes.
 
 Most linting errors can be fixed automatically by running
 
-    npm run lint-fix
+    bun lint --fix
 
-If you’d like to make a build of the source files (e.g. `build/three.module.js`) run:
+If you’d like to make a build of the source files (e.g. `build/three.webgpu.js`) run:
 
-    npm run build
+    bun run build
 
 ## Making changes
 
@@ -49,12 +49,12 @@ When you’ve decided to make changes, start with the following:
 
 * Update your local repo
 
-      git pull https://github.com/mrdoob/three.js.git
+      git pull https://github.com/aphrody-labs/three.js.git
       git push
 
-* Make a new branch from the dev branch
+* Make a new branch from the main branch
 
-      git checkout dev
+      git checkout main
       git branch [mychangesbranch]
       git checkout [mychangesbranch]
 
@@ -74,6 +74,6 @@ When you’ve decided to make changes, start with the following:
 * If the end-to-end test failed and you are sure that all is correct, follow the instructions it outputs.
 * Once done with a patch/feature do not add more commits to a feature branch.
 * Create separate branches per patch or feature.
-* If you make a PR but it is not actually ready to be pulled into the dev branch then please [convert it to a draft PR](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/changing-the-stage-of-a-pull-request#converting-a-pull-request-to-a-draft).
+* If you make a PR but it is not actually ready to be pulled into the main branch then please [convert it to a draft PR](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/changing-the-stage-of-a-pull-request#converting-a-pull-request-to-a-draft).
 
 This project is currently contributed mostly via everyone's spare time. Please keep that in mind as it may take some time for the appropriate feedback to get to you. If you are unsure about adding a new feature, it might be better to ask first to see whether other people think it's a good idea.

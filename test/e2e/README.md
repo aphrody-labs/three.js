@@ -9,13 +9,13 @@ just make a new screenshot to example. As a last resort increase timeouts or add
 
 ```shell
 # generate new screenshots for exact examples
-npm run make-screenshot <example1_name> ... <exampleN_name>
+bun run make-screenshot <example1_name> ... <exampleN_name>
 
 # check exact examples
-npm run test-e2e <example1_name> ... <exampleN_name>
+bun run test-e2e <example1_name> ... <exampleN_name>
 
 # check all examples
-npm run test-e2e
+bun run test-e2e
 ```
 
 Merge only those commits that pass the tests, otherwise all next commits will also fail.

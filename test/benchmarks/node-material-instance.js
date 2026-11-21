@@ -1,14 +1,13 @@
 import assert from 'node:assert/strict';
-import puppeteer from 'puppeteer';
 import { createServer } from '../../utils/server.js';
+import { launchBrowser } from '../../utils/browser.js';
 
-// Run from the repository root with: npm run benchmark-node-material-instance
+// Run from the repository root with: bun run benchmark-node-material-instance
 // Rotate ordering to reduce the effect of browser and driver warm-up.
 const runs = 3;
 const modes = [
 	{ name: 'node material', page: 'node-material', builds: 10000 },
-	{ name: 'material instance', page: 'material-instance', builds: 1 },
-	{ name: 'shader material', page: 'shader-material', webgl: true }
+	{ name: 'material instance', page: 'material-instance', builds: 1 }
 ];
 const metrics = {
 	firstRender: 'first render',
@@ -22,7 +21,7 @@ let browser;
 try {
 
 	await new Promise( resolve => server.listen( 0, resolve ) );
-	browser = await puppeteer.launch( { headless: true, args: [ '--enable-unsafe-webgpu' ] } );
+	browser = await launchBrowser( { headless: true, args: [ '--enable-unsafe-webgpu' ] } );
 
 	for ( let run = 0; run < runs; run ++ ) {
 
@@ -43,22 +42,11 @@ try {
 			assert.equal( result.count, 10000 );
 			assert.ok( result.drawCalls >= 10000, 'All meshes must be drawn, plus any output pass' );
 
-			if ( mode.webgl ) {
-
-				assert.equal( result.backend, 'WebGLRenderer' );
-				assert.equal( result.drawCalls, 10000 );
-				assert.equal( result.firstPrograms, 1, 'WebGL materials must share one program' );
-				assert.equal( result.updatePrograms, 0, 'Uniform updates must not create programs' );
-
-			} else {
-
-				assert.equal( result.firstBuilds, mode.builds );
-				assert.equal( result.updateBuilds, 0, 'Uniform updates must not rebuild shaders' );
-
-			}
+			assert.equal( result.firstBuilds, mode.builds );
+			assert.equal( result.updateBuilds, 0, 'Uniform updates must not rebuild shaders' );
 
 			samples[ mode.name ].push( result );
-			const builds = mode.webgl ? `${ result.firstPrograms } WebGL programs` : `${ result.firstBuilds } node builds`;
+			const builds = `${ result.firstBuilds } node builds`;
 			console.log( `Run ${ run + 1 }, ${ mode.name }: ${ result.firstRender.toFixed( 1 ) } ms, ${ builds } (${ result.backend })` );
 
 			await page.close();
@@ -67,7 +55,7 @@ try {
 
 	}
 
-	const nodeSamples = modes.filter( mode => ! mode.webgl ).flatMap( mode => samples[ mode.name ] );
+	const nodeSamples = modes.flatMap( mode => samples[ mode.name ] );
 	const backends = new Set( nodeSamples.map( sample => sample.backend ) );
 	assert.equal( backends.size, 1, 'Node material examples must use the same backend' );
 	assert.equal( new Set( nodeSamples.map( sample => sample.drawCalls ) ).size, 1, 'Node material examples must issue the same number of draws' );
@@ -87,7 +75,7 @@ try {
 
 	}
 
-	console.log( `Median of ${ runs } runs, CPU milliseconds (${ [ ...backends ][ 0 ] } vs WebGLRenderer). GPU completion is not timed.` );
+	console.log( `Median of ${ runs } runs, CPU milliseconds (${ [ ...backends ][ 0 ] }). GPU completion is not timed.` );
 	console.table( rows );
 
 } finally {

@@ -1,57 +1,50 @@
-import { spawn } from 'child_process';
-import { createRequire } from 'module';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const __dirname = path.dirname( fileURLToPath( import.meta.url ) );
-const rootDir = path.resolve( __dirname, '../..' );
+const rootDir = path.resolve( path.dirname( fileURLToPath( import.meta.url ) ), '../..' );
 
-const rollupBin = createRequire( import.meta.url ).resolve( 'rollup/dist/bin/rollup' );
-
-// Start rollup in watch mode
-const rollup = spawn( process.execPath, [
-	rollupBin,
-	'-c', 'utils/build/rollup.config.js',
-	'-w',
-	'-m', 'inline'
-], {
+// Start the bundler in watch mode
+const build = Bun.spawn( [ process.execPath, 'run', 'utils/build/build.ts', '--watch', '--sourcemap' ], {
 	cwd: rootDir,
-	stdio: [ 'ignore', 'pipe', 'pipe' ],
-	shell: false
+	stdout: 'pipe',
+	stderr: 'pipe'
 } );
 
 // Start server
-const server = spawn( 'node', [ 'utils/server.js', '-p', '8080' ], {
+const server = Bun.spawn( [ process.execPath, 'run', 'utils/server.js', '-p', '8080' ], {
 	cwd: rootDir,
-	stdio: [ 'ignore', 'pipe', 'pipe' ],
-	shell: false
+	stdout: 'pipe',
+	stderr: 'pipe'
 } );
 
 // Prefix output
-const prefix = ( name, color ) => {
+const prefix = async ( stream, name, color ) => {
 
-	return ( data ) => {
+	const decoder = new TextDecoder();
 
-		const lines = data.toString().split( '\n' ).filter( l => l.trim() );
+	for await ( const chunk of stream ) {
+
+		const lines = decoder.decode( chunk ).split( '\n' ).filter( l => l.trim() );
+
 		for ( const line of lines ) {
 
 			console.log( `${color}[${name}]\x1b[0m ${line}` );
 
 		}
 
-	};
+	}
 
 };
 
-rollup.stdout.on( 'data', prefix( 'ROLLUP', '\x1b[44m\x1b[1m' ) );
-rollup.stderr.on( 'data', prefix( 'ROLLUP', '\x1b[44m\x1b[1m' ) );
-server.stdout.on( 'data', prefix( 'HTTP', '\x1b[42m\x1b[1m' ) );
-server.stderr.on( 'data', prefix( 'HTTP', '\x1b[42m\x1b[1m' ) );
+prefix( build.stdout, 'BUN BUILD', '\x1b[44m\x1b[1m' );
+prefix( build.stderr, 'BUN BUILD', '\x1b[44m\x1b[1m' );
+prefix( server.stdout, 'HTTP', '\x1b[42m\x1b[1m' );
+prefix( server.stderr, 'HTTP', '\x1b[42m\x1b[1m' );
 
 // Handle cleanup
 const cleanup = () => {
 
-	rollup.kill();
+	build.kill();
 	server.kill();
 	process.exit( 0 );
 
@@ -60,5 +53,5 @@ const cleanup = () => {
 process.on( 'SIGINT', cleanup );
 process.on( 'SIGTERM', cleanup );
 
-rollup.on( 'close', cleanup );
-server.on( 'close', cleanup );
+build.exited.then( cleanup );
+server.exited.then( cleanup );

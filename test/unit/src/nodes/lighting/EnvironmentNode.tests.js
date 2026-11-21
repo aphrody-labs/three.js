@@ -34,7 +34,7 @@ export default QUnit.module( 'Nodes', () => {
 
 		QUnit.module( 'EnvironmentNode', () => {
 
-			for ( const backend of [ 'webgpu', 'webgl' ] ) {
+			for ( const backend of [ 'webgpu' ] ) {
 
 				for ( const Material of [ MeshStandardMaterial, MeshPhysicalMaterial ] ) {
 

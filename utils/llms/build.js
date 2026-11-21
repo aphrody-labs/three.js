@@ -81,7 +81,7 @@ turndown.addRule( 'inheritance', {
 // Root llms.txt - simple pointer file
 const rootLlms = `# Three.js
 
-> Three.js is a cross-browser JavaScript library for creating 3D graphics using WebGL and WebGPU.
+> Three.js is a cross-browser JavaScript library for creating 3D graphics using WebGPU.
 
 See the full documentation for LLMs at: https://threejs.org/docs/llms.txt
 
@@ -91,7 +91,7 @@ For complete inline documentation including TSL: https://threejs.org/docs/llms-f
 // Docs llms.txt - main documentation index with instructions
 const docsLlms = `# Three.js
 
-> Three.js is a cross-browser JavaScript library for creating 3D graphics using WebGL and WebGPU.
+> Three.js is a cross-browser JavaScript library for creating 3D graphics using WebGPU.
 
 ## Instructions for Large Language Models
 
@@ -109,7 +109,9 @@ CORRECT - modern pattern (always use latest version):
 <script type="importmap">
 {
   "imports": {
-    "three": "https://cdn.jsdelivr.net/npm/three@${version}/build/three.module.js",
+    "three": "https://cdn.jsdelivr.net/npm/three@${version}/build/three.webgpu.js",
+    "three/webgpu": "https://cdn.jsdelivr.net/npm/three@${version}/build/three.webgpu.js",
+    "three/tsl": "https://cdn.jsdelivr.net/npm/three@${version}/build/three.tsl.js",
     "three/addons/": "https://cdn.jsdelivr.net/npm/three@${version}/examples/jsm/"
   }
 }
@@ -120,38 +122,12 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 </script>
 \`\`\`
 
-### 2. Choosing Between WebGLRenderer and WebGPURenderer
+### 2. Using WebGPURenderer
 
-Three.js maintains both renderers:
-
-**Use WebGLRenderer** (default, mature):
-- Maximum browser compatibility
-- Well-established, many years of development
-- Most examples and tutorials use this
-
-\`\`\`js
-import * as THREE from 'three';
-const renderer = new THREE.WebGLRenderer();
-\`\`\`
-
-**Use WebGPURenderer** when you need:
+Three.js renders with WebGPURenderer, which supports:
 - Custom shaders/materials using TSL (Three.js Shading Language)
 - Compute shaders
-- Advanced node-based materials
-
-With import maps, WebGPURenderer pages map \`three\` to the WebGPU build and add the \`three/webgpu\` and \`three/tsl\` entries:
-\`\`\`html
-<script type="importmap">
-{
-  "imports": {
-    "three": "https://cdn.jsdelivr.net/npm/three@${version}/build/three.webgpu.js",
-    "three/webgpu": "https://cdn.jsdelivr.net/npm/three@${version}/build/three.webgpu.js",
-    "three/tsl": "https://cdn.jsdelivr.net/npm/three@${version}/build/three.tsl.js",
-    "three/addons/": "https://cdn.jsdelivr.net/npm/three@${version}/examples/jsm/"
-  }
-}
-</script>
-\`\`\`
+- Node-based materials
 
 \`\`\`js
 import * as THREE from 'three/webgpu';
@@ -161,7 +137,7 @@ await renderer.init();
 
 ### 3. TSL (Three.js Shading Language)
 
-When using WebGPURenderer, use TSL instead of raw GLSL for custom materials:
+When using WebGPURenderer, use TSL for custom materials:
 
 \`\`\`js
 import * as THREE from 'three/webgpu';
@@ -172,14 +148,14 @@ material.colorNode = texture( myTexture ).mul( color( 0xff0000 ) );
 \`\`\`
 
 TSL benefits:
-- Works with both WebGL and WebGPU backends
+- Compiles to WGSL for the WebGPU backend
 - No string manipulation or onBeforeCompile hacks
 - Type-safe, composable shader nodes
 - Automatic optimization
 
-### 4. NodeMaterial Classes (for WebGPU/TSL)
+### 4. NodeMaterial Classes (for TSL)
 
-When using TSL, use node-based materials:
+Use node-based materials with TSL:
 - MeshBasicNodeMaterial
 - MeshStandardNodeMaterial
 - MeshPhysicalNodeMaterial
@@ -225,7 +201,6 @@ When using TSL, use node-based materials:
 - [OrthographicCamera](https://threejs.org/docs/pages/OrthographicCamera.html.md)
 
 ### Renderers
-- [WebGLRenderer](https://threejs.org/docs/pages/WebGLRenderer.html.md)
 - [WebGPURenderer](https://threejs.org/docs/pages/WebGPURenderer.html.md)
 
 ### Objects
@@ -268,7 +243,7 @@ When using TSL, use node-based materials:
 // Docs llms-full.txt - complete inline documentation
 const docsLlmsFull = `# Three.js
 
-> Three.js is a cross-browser JavaScript library for creating 3D graphics using WebGL and WebGPU.
+> Three.js is a cross-browser JavaScript library for creating 3D graphics using WebGPU.
 
 ## Instructions for Large Language Models
 
@@ -286,7 +261,9 @@ CORRECT - modern pattern (always use latest version):
 <script type="importmap">
 {
   "imports": {
-    "three": "https://cdn.jsdelivr.net/npm/three@${version}/build/three.module.js",
+    "three": "https://cdn.jsdelivr.net/npm/three@${version}/build/three.webgpu.js",
+    "three/webgpu": "https://cdn.jsdelivr.net/npm/three@${version}/build/three.webgpu.js",
+    "three/tsl": "https://cdn.jsdelivr.net/npm/three@${version}/build/three.tsl.js",
     "three/addons/": "https://cdn.jsdelivr.net/npm/three@${version}/examples/jsm/"
   }
 }
@@ -297,38 +274,12 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 </script>
 \`\`\`
 
-### 2. Choosing Between WebGLRenderer and WebGPURenderer
+### 2. Using WebGPURenderer
 
-Three.js maintains both renderers:
-
-**Use WebGLRenderer** (default, mature):
-- Maximum browser compatibility
-- Well-established, many years of development
-- Most examples and tutorials use this
-
-\`\`\`js
-import * as THREE from 'three';
-const renderer = new THREE.WebGLRenderer();
-\`\`\`
-
-**Use WebGPURenderer** when you need:
+Three.js renders with WebGPURenderer, which supports:
 - Custom shaders/materials using TSL (Three.js Shading Language)
 - Compute shaders
-- Advanced node-based materials
-
-With import maps, WebGPURenderer pages map \`three\` to the WebGPU build and add the \`three/webgpu\` and \`three/tsl\` entries:
-\`\`\`html
-<script type="importmap">
-{
-  "imports": {
-    "three": "https://cdn.jsdelivr.net/npm/three@${version}/build/three.webgpu.js",
-    "three/webgpu": "https://cdn.jsdelivr.net/npm/three@${version}/build/three.webgpu.js",
-    "three/tsl": "https://cdn.jsdelivr.net/npm/three@${version}/build/three.tsl.js",
-    "three/addons/": "https://cdn.jsdelivr.net/npm/three@${version}/examples/jsm/"
-  }
-}
-</script>
-\`\`\`
+- Node-based materials
 
 \`\`\`js
 import * as THREE from 'three/webgpu';
@@ -338,7 +289,7 @@ await renderer.init();
 
 ### 3. TSL (Three.js Shading Language)
 
-When using WebGPURenderer, use TSL instead of raw GLSL for custom materials:
+When using WebGPURenderer, use TSL for custom materials:
 
 \`\`\`js
 import * as THREE from 'three/webgpu';
@@ -349,14 +300,14 @@ material.colorNode = texture( myTexture ).mul( color( 0xff0000 ) );
 \`\`\`
 
 TSL benefits:
-- Works with both WebGL and WebGPU backends
+- Compiles to WGSL for the WebGPU backend
 - No string manipulation or onBeforeCompile hacks
 - Type-safe, composable shader nodes
 - Automatic optimization
 
-### 4. NodeMaterial Classes (for WebGPU/TSL)
+### 4. NodeMaterial Classes (for TSL)
 
-When using TSL, use node-based materials:
+Use node-based materials with TSL:
 - MeshBasicNodeMaterial
 - MeshStandardNodeMaterial
 - MeshPhysicalNodeMaterial
@@ -366,81 +317,6 @@ When using TSL, use node-based materials:
 ---
 
 ## Complete Code Examples
-
-### Basic Scene with WebGLRenderer
-
-\`\`\`html
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>Three.js Basic Scene</title>
-  <style>
-    body { margin: 0; }
-  </style>
-</head>
-<body>
-<script type="importmap">
-{
-  "imports": {
-    "three": "https://cdn.jsdelivr.net/npm/three@${version}/build/three.module.js",
-    "three/addons/": "https://cdn.jsdelivr.net/npm/three@${version}/examples/jsm/"
-  }
-}
-</script>
-<script type="module">
-import * as THREE from 'three';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-
-// Scene
-const scene = new THREE.Scene();
-
-// Camera
-const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-camera.position.z = 5;
-
-// Renderer
-const renderer = new THREE.WebGLRenderer( { antialias: true } );
-renderer.setSize( window.innerWidth, window.innerHeight );
-renderer.setPixelRatio( window.devicePixelRatio );
-document.body.appendChild( renderer.domElement );
-
-// Controls
-const controls = new OrbitControls( camera, renderer.domElement );
-
-// Lighting
-const ambientLight = new THREE.AmbientLight( 0x404040 );
-scene.add( ambientLight );
-
-const directionalLight = new THREE.DirectionalLight( 0xffffff, 1 );
-directionalLight.position.set( 5, 5, 5 );
-scene.add( directionalLight );
-
-// Mesh
-const geometry = new THREE.BoxGeometry( 1, 1, 1 );
-const material = new THREE.MeshStandardMaterial( { color: 0x00ff00 } );
-const cube = new THREE.Mesh( geometry, material );
-scene.add( cube );
-
-// Handle resize
-window.addEventListener( 'resize', () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize( window.innerWidth, window.innerHeight );
-} );
-
-// Animation loop
-function animate() {
-  cube.rotation.x += 0.01;
-  cube.rotation.y += 0.01;
-  controls.update();
-  renderer.render( scene, camera );
-}
-renderer.setAnimationLoop( animate );
-</script>
-</body>
-</html>
-\`\`\`
 
 ### Basic Scene with WebGPURenderer and TSL
 

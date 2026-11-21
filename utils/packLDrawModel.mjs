@@ -9,7 +9,7 @@
  *
  * - Place this script also in ldraw/
  *
- * - Issue command 'node packLDrawModel models/<modelFileName>'
+ * - Issue command 'bun run packLDrawModel.mjs models/<modelFileName>'
  *
  * The packed object will be in ldraw/models/<modelFileName>_Packed.mpd and will contain all the object subtree as embedded files.
  *
@@ -27,7 +27,7 @@ import path from 'path';
 
 if ( process.argv.length !== 3 ) {
 
-	console.log( 'Usage: node packLDrawModel <modelFilePath>' );
+	console.log( 'Usage: bun run packLDrawModel.mjs <modelFilePath>' );
 	process.exit( 0 );
 
 }

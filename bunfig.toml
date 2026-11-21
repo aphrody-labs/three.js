@@ -1,0 +1,79 @@
+[test]
+root = "./test/unit"
+environment = "happy-dom"
+preload = ["./test/unit/qunit-bun.ts"]
+
+[lint]
+plugins = ["eslint-plugin-jsdoc"]
+ignorePatterns = [
+  "build/",
+  "examples/jsm/libs/",
+  "editor/js/libs/",
+  "**/ifc/",
+  "**/prettify.js",
+  "**/prettify/",
+  "**/3rdparty/",
+  "**/shapefile.js",
+  "**/vendor/",
+  "**/fuse/",
+  "**/template/static/",
+]
+
+[lint.globals]
+__THREE_DEVTOOLS__ = "readonly"
+potpack = "readonly"
+fflate = "readonly"
+Stats = "readonly"
+Ammo = "readonly"
+CodeMirror = "readonly"
+QUnit = "readonly"
+GPUShaderStage = "readonly"
+GPUBufferUsage = "readonly"
+GPUTextureUsage = "readonly"
+GPUTexture = "readonly"
+GPUMapMode = "readonly"
+XRRigidTransform = "readonly"
+XRMediaBinding = "readonly"
+
+[lint.rules]
+"no-throw-literal" = "error"
+"prefer-const" = [
+  "error",
+  { destructuring = "any", ignoreReadBeforeAssign = false },
+]
+"no-irregular-whitespace" = "error"
+"no-duplicate-imports" = "error"
+"prefer-spread" = "error"
+"no-undef" = "warn"
+"no-unused-vars" = ["error", { caughtErrors = "none" }]
+"no-useless-escape" = "off"
+"no-case-declarations" = "off"
+"no-cond-assign" = "off"
+"getter-return" = "off"
+"no-async-promise-executor" = "off"
+"no-empty" = "off"
+"no-fallthrough" = "off"
+"no-prototype-builtins" = "off"
+"no-loss-of-precision" = "off"
+"jsdoc/check-types" = "error"
+"jsdoc/require-returns-type" = "error"
+"jsdoc/require-param-type" = "error"
+
+[[lint.overrides]]
+files = ["test/unit/**"]
+rules = { "no-restricted-imports" = [
+  "error",
+  { patterns = [
+    { group = ["**/build/*"], message = "Tests must import from /src, not /build as build is not guaranteed to be fresh." },
+  ] },
+] }
+
+[lint.settings.jsdoc]
+tagNamePreference = { returns = "return", extends = "augments" }
+
+[lint.settings.jsdoc.preferredTypes]
+Any = "any"
+Boolean = "boolean"
+Number = "number"
+object = "Object"
+String = "string"

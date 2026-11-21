@@ -25,7 +25,9 @@
 		<script type="importmap">
 			{
 				"imports": {
-					"three": "../../build/three.module.js",
+					"three": "../../build/three.webgpu.js",
+					"three/webgpu": "../../build/three.webgpu.js",
+					"three/tsl": "../../build/three.tsl.js",
 					"three/addons/": "../../examples/jsm/"
 				}
 			}
@@ -742,10 +744,12 @@
 
 			const gui = new GUI();
 
-			const renderer = new THREE.WebGLRenderer( { antialias: true } );
+			const renderer = new THREE.WebGPURenderer( { antialias: true } );
 			renderer.setPixelRatio( window.devicePixelRatio );
 			renderer.setSize( window.innerWidth, window.innerHeight );
 			document.body.appendChild( renderer.domElement );
+
+			await renderer.init();
 
 			const pmremGenerator = new THREE.PMREMGenerator( renderer );
 
@@ -786,8 +790,6 @@
 
 			function render() {
 
-				requestAnimationFrame( render );
-
 				mesh.rotation.x += 0.005;
 				mesh.rotation.y += 0.005;
 
@@ -811,7 +813,7 @@
 
 			}, false );
 
-			render();
+			renderer.setAnimationLoop( render );
 
 		</script>
 	</body>

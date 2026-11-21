@@ -7,7 +7,6 @@ const categoryPaths = [
 	[ '.github', 'CI' ],
 
 	// Specific renderer paths
-	[ 'src/renderers/webgl', 'WebGLRenderer' ],
 	[ 'src/renderers/webgpu', 'WebGPURenderer' ],
 	[ 'src/renderers/common', 'Renderer' ],
 
@@ -19,7 +18,7 @@ const categoryPaths = [
 	[ 'devtools', 'Devtools' ],
 	[ 'editor', 'Editor' ],
 	[ 'test', 'Tests' ],
-	[ 'eslint.config.js', 'Tests' ],
+	[ 'bunfig.toml', 'Tests' ],
 	[ 'playground', 'Playground' ],
 	[ 'utils', 'Utils' ],
 	[ 'build', 'Build' ],
@@ -387,9 +386,9 @@ function validateEnvironment( tag ) {
 
 	if ( ! tag ) {
 
-		console.error( 'Usage: node utils/changelog.js <tag|branch>' );
-		console.error( 'Example: node utils/changelog.js r185' );
-		console.error( 'Example: node utils/changelog.js dev' );
+		console.error( 'Usage: bun run utils/changelog.js <tag|branch>' );
+		console.error( 'Example: bun run utils/changelog.js r185' );
+		console.error( 'Example: bun run utils/changelog.js dev' );
 		process.exit( 1 );
 
 	}

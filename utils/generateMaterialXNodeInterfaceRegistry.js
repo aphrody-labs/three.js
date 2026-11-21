@@ -1,5 +1,5 @@
 // Generates examples/jsm/loaders/materialx/MaterialXNodeInterfaceRegistry.js from a MaterialX checkout.
-// Usage: node utils/generateMaterialXNodeInterfaceRegistry.js <path-to-MaterialX>/libraries
+// Usage: bun run utils/generateMaterialXNodeInterfaceRegistry.js <path-to-MaterialX>/libraries
 
 import fs from 'node:fs';
 import path from 'node:path';
@@ -9,7 +9,7 @@ const librariesPath = process.argv[ 2 ];
 
 if ( ! librariesPath ) {
 
-	console.error( 'Usage: node utils/generateMaterialXNodeInterfaceRegistry.js <path-to-MaterialX>/libraries' );
+	console.error( 'Usage: bun run utils/generateMaterialXNodeInterfaceRegistry.js <path-to-MaterialX>/libraries' );
 	process.exit( 1 );
 
 }

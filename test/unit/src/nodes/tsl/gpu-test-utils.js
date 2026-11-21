@@ -227,13 +227,9 @@ class AssertWriteNode extends Node {
 }
 
 // One shared renderer per backend, reused across all tests in the suite.
-// `'webgpu'` is the real WebGPU backend (when available); `'webgl'` forces
-// WebGPURenderer's WebGL2 fallback backend (`forceWebGL: true`), so the same
-// TSL expression can be checked against both -- useful since not every node
-// is (or needs to be) WebGL2-compatible, but most math/color/BRDF nodes are.
+// `'webgpu'` is the real WebGPU backend, the only one WebGPURenderer has.
 const BACKEND_OPTIONS = {
-	webgpu: {},
-	webgl: { forceWebGL: true }
+	webgpu: {}
 };
 
 // Cached per backend: a real renderer once `init()` succeeds, or `null` once
@@ -439,6 +435,14 @@ function declareTest( name, backends, run ) {
 
 		const testName = backends.length > 1 ? `${ name } [${ backend }]` : name;
 
+		// Runtimes without WebGPU (bun test) skip instead of reporting a soft pass.
+		if ( typeof navigator === 'undefined' || navigator.gpu === undefined ) {
+
+			QUnit.skip( testName );
+			continue;
+
+		}
+
 		QUnit.test( testName, async ( assert ) => {
 
 			const renderer = await getSharedRenderer( backend );
@@ -591,12 +595,10 @@ function assertKernelRan( assert, data, row, canaryValue, name, kind = 'gpuTest'
  * generously so callers don't need to pre-count assertions; override via the
  * options object if a suite exceeds it.
  *
- * `backends` (default `[ 'webgpu', 'webgl' ]`) selects which renderer
- * backend(s) to run the suite against -- both by default, so a backend
- * regression can't slip by unnoticed; narrow it (e.g. `[ 'webgpu' ]`) only
- * for a node that's deliberately WebGPU-only.
+ * `backends` (default `[ 'webgpu' ]`) selects which renderer backend(s) to run
+ * the suite against.
  */
-export function gpuTest( name, buildFn, { maxAssertions = 64, backends = [ 'webgpu', 'webgl' ] } = {} ) {
+export function gpuTest( name, buildFn, { maxAssertions = 64, backends = [ 'webgpu' ] } = {} ) {
 
 	declareTest( name, backends, async ( assert, renderer ) => {
 
@@ -748,9 +750,9 @@ export function gpuTest( name, buildFn, { maxAssertions = 64, backends = [ 'webg
  * try splitting it into multiple smaller `gpuFuzzTest` calls before
  * suspecting the node under test.
  *
- * `backends` (default `[ 'webgpu', 'webgl' ]`) -- see `gpuTest`.
+ * `backends` (default `[ 'webgpu' ]`) -- see `gpuTest`.
  */
-export function gpuFuzzTest( name, count, buildFn, { maxSitesPerInstance = 4, maxColumnsPerSite = 1, backends = [ 'webgpu', 'webgl' ] } = {} ) {
+export function gpuFuzzTest( name, count, buildFn, { maxSitesPerInstance = 4, maxColumnsPerSite = 1, backends = [ 'webgpu' ] } = {} ) {
 
 	declareTest( name, backends, async ( assert, renderer ) => {
 

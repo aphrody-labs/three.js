@@ -14,7 +14,7 @@ QUnit.module( 'TSL', () => {
 
 				const url = new URL( `./reference.${ language }`, import.meta.url );
 				const response = await fetch( url );
-				if ( ! response.ok ) throw new Error( `Missing reference.${ language }. Run npm run make-tsl-reference to generate references.` );
+				if ( ! response.ok ) throw new Error( `Missing reference.${ language }. Run bun run make-tsl-reference to generate references.` );
 				references = parseReferences( await response.text() );
 
 			} );
@@ -25,7 +25,7 @@ QUnit.module( 'TSL', () => {
 
 					const actual = generateCode( createNode, language );
 
-					assert.ok( references.has( name ), `Reference exists: ${ name }. Run npm run make-tsl-reference to generate references.` );
+					assert.ok( references.has( name ), `Reference exists: ${ name }. Run bun run make-tsl-reference to generate references.` );
 
 					if ( references.has( name ) ) {
 

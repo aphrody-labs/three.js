@@ -45,9 +45,7 @@ import './src/cameras/StereoCamera.tests.js';
 //src/core
 import './src/core/BufferAttribute.tests.js';
 import './src/core/BufferGeometry.tests.js';
-import './src/core/Clock.tests.js';
 import './src/core/EventDispatcher.tests.js';
-import './src/core/GLBufferAttribute.tests.js';
 import './src/core/InstancedBufferAttribute.tests.js';
 import './src/core/InstancedBufferGeometry.tests.js';
 import './src/core/InstancedInterleavedBuffer.tests.js';
@@ -58,8 +56,6 @@ import './src/core/Object3D.tests.js';
 import './src/core/Raycaster.tests.js';
 import './src/core/RenderTarget.tests.js';
 import './src/core/RenderTarget3D.tests.js';
-import './src/core/Uniform.tests.js';
-import './src/core/UniformsGroup.tests.js';
 
 
 //src/extras
@@ -130,7 +126,6 @@ import './src/lights/DirectionalLight.tests.js';
 import './src/lights/DirectionalLightShadow.tests.js';
 import './src/lights/HemisphereLight.tests.js';
 import './src/lights/Light.tests.js';
-import './src/lights/LightProbe.tests.js';
 import './src/lights/LightShadow.tests.js';
 import './src/lights/PointLight.tests.js';
 import './src/lights/PointLightShadow.tests.js';
@@ -174,8 +169,6 @@ import './src/materials/MeshStandardMaterial.tests.js';
 import './src/materials/MeshToonMaterial.tests.js';
 import './src/materials/NodeMaterialInstance.tests.js';
 import './src/materials/PointsMaterial.tests.js';
-import './src/materials/RawShaderMaterial.tests.js';
-import './src/materials/ShaderMaterial.tests.js';
 import './src/materials/ShadowMaterial.tests.js';
 import './src/materials/SpriteMaterial.tests.js';
 
@@ -228,24 +221,8 @@ import './src/objects/SkinnedMesh.tests.js';
 import './src/objects/Sprite.tests.js';
 
 
-//src/renderers
-import './src/renderers/WebGL3DRenderTarget.tests.js';
-import './src/renderers/WebGLArrayRenderTarget.tests.js';
-import './src/renderers/WebGLCubeRenderTarget.tests.js';
-import './src/renderers/WebGLRenderTarget.tests.js';
-
 //src/renderers/common
 import './src/renderers/common/ClippingContext.tests.js';
-
-//src/renderers/shaders
-import './src/renderers/shaders/ShaderChunk.tests.js';
-import './src/renderers/shaders/ShaderLib.tests.js';
-import './src/renderers/shaders/UniformsLib.tests.js';
-import './src/renderers/shaders/UniformsUtils.tests.js';
-
-//src/renderers/webgl
-import './src/renderers/webgl/WebGLExtensions.tests.js';
-import './src/renderers/webgl/WebGLRenderLists.tests.js';
 
 //src/renderers/webgpu
 import './src/renderers/webgpu/WebGPUBackend.tests.js';

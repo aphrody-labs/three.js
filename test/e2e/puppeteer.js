@@ -1,4 +1,4 @@
-import puppeteer from 'puppeteer';
+import { launchBrowser } from '../../utils/browser.js';
 import { Image } from './image.js';
 import * as fs from 'fs/promises';
 import { createServer } from '../../utils/server.js';
@@ -9,15 +9,9 @@ const exceptionList = [
 
 	// Take too long
 	'webgpu_cubemap_mix', 				// 2 min
-	'webgl_loader_texture_ultrahdr', 	// 1 min
-	'webgl_marchingcubes', 				// 1 min
- 	'webgl_materials_cubemap_dynamic', 	// 1 min
-	'webgl_materials_displacementmap', 	// 1 min
-	'webgl_materials_envmaps_hdr', 		// 1 min
 	'webgpu_loader_vdb',				// streams 31 MB of frames
 
 	// Requires HTML-in-Canvas API
-	'webgl_materials_texture_html',
 	'webgpu_materials_texture_html',
 
 	// Requires srgb-linear and float16 canvas
@@ -34,9 +28,6 @@ const exceptionList = [
 	'webgpu_volume_lighting_traa',
 
 	// Timming issues?
-	'physics_rapier_instancing',
-	'webgl_shadowmap',
-	'webaudio_visualizer',
 	'webgpu_compute_audio',
 	'webgpu_compute_cloth',
 	'webgpu_compute_particles_fluid',
@@ -46,17 +37,11 @@ const exceptionList = [
 	'webgpu_tsl_editor',
 	'webgpu_tsl_graph',
 	'webgpu_tsl_noise_smoothing',
-	'webxr_vr_video',
 	'webgpu_tsl_transpiler',
 	'webgpu_rendertarget_2d-array_3d',
 	'webgpu_volume_fire',
 
 	// Need more time to render
-	'css3d_mixed',
-	'webgl_loader_3dtiles',
-	'webgl_loader_texture_lottie',
-	'webgl_morphtargets_face',
-	'webgl_shadowmap_progressive',
 	'webgpu_materials_matcap',
 	'webgpu_meshlets_city',
 	'webgpu_meshlets_materials',
@@ -71,22 +56,11 @@ const exceptionList = [
 	'webgpu_vxgi_sponza',
 
 	// Incremental light probe baking
-	'webgl_lightprobes_sponza',
 	'webgpu_generator_city', // Sub-pixel coverage of thin high-contrast geometry edges differs across rasterizers #33817
 	'webgpu_lightprobes_sponza',
 
 	// Video hangs the CI?
-	'css3d_youtube',
-	'webgpu_materials_video',
-	'webgl_video_kinect',
-	'webgl_video_panorama_equirectangular',
-
-	// Timeout
-	'webgl_test_memory2',
-
-	// Webcam
-	'webgl_materials_video_webcam',
-	'webgl_morphtargets_webcam'
+	'webgpu_materials_video'
 
 ];
 
@@ -157,16 +131,8 @@ async function main() {
 	/* Find files */
 
 	let isMakeScreenshot = false;
-	let isWebGPU = false;
 
 	let argvIndex = 2;
-
-	if ( process.argv[ argvIndex ] === '--webgpu' ) {
-
-		isWebGPU = true;
-		argvIndex ++;
-
-	}
 
 	if ( process.argv[ argvIndex ] === '--make' ) {
 
@@ -183,6 +149,7 @@ async function main() {
 	let files = ( await fs.readdir( 'examples' ) )
 		.filter( s => s.slice( - 5 ) === '.html' && s !== 'index.html' )
 		.map( s => s.slice( 0, s.length - 5 ) )
+		.filter( f => f.startsWith( 'webgpu_' ) )
 		.filter( f => isExactList ? exactList.includes( f ) : ! exceptionList.includes( f ) );
 
 	if ( isExactList ) {
@@ -199,7 +166,6 @@ async function main() {
 
 	}
 
-	if ( isWebGPU ) files = files.filter( f => f.includes( 'webgpu_' ) );
 
 	/* CI parallelism */
 
@@ -231,7 +197,7 @@ async function main() {
 
 	const launchOptions = {
 		headless: ( 'CI' in process.env || process.env.VISIBLE ) ? false : 'new',
-		env: { ...process.env, VK_DRIVER_FILES: '/usr/share/vulkan/icd.d/lvp_icd.x86_64.json' },
+		env: { VK_DRIVER_FILES: '/usr/share/vulkan/icd.d/lvp_icd.x86_64.json', ...process.env },
 		args: flags,
 		defaultViewport: viewport,
 		handleSIGINT: false,
@@ -248,11 +214,9 @@ async function main() {
 	const buildInjection = ( code ) => injection + '\n' + code
 		.replace( /Math\.random\(\) \* 0xffffffff/g, 'Math._random() * 0xffffffff' );
 
-	const builds = {
-		'three.core.js': buildInjection( await fs.readFile( 'build/three.core.js', 'utf8' ) ),
-		'three.module.js': buildInjection( await fs.readFile( 'build/three.module.js', 'utf8' ) ),
-		'three.webgpu.js': buildInjection( await fs.readFile( 'build/three.webgpu.js', 'utf8' ) )
-	};
+	const builds = Object.fromEntries( await Promise.all(
+		[ 'three.webgpu.js', 'three.webgpu.nodes.js' ].map( async name => [ name, buildInjection( await fs.readFile( `build/${ name }`, 'utf8' ) ) ] )
+	) );
 
 	/* Prepare page */
 
@@ -260,7 +224,7 @@ async function main() {
 
 	const launchPage = async () => {
 
-		browser = await puppeteer.launch( launchOptions );
+		browser = await launchBrowser( launchOptions );
 		const page = await browser.newPage();
 		await preparePage( page, injection, builds, errorMessagesCache );
 		return page;
@@ -304,7 +268,7 @@ async function main() {
 	if ( isMakeScreenshot && failedScreenshots.length ) {
 
 		console.red( 'List of failed screenshots: ' + list );
-		console.red( `If you are sure that everything is correct, try to run "npm run make-screenshot ${ list }". If this does not help, add remaining screenshots to the exception list.` );
+		console.red( `If you are sure that everything is correct, try to run "bun run make-screenshot ${ list }". If this does not help, add remaining screenshots to the exception list.` );
 		console.red( `${ failedScreenshots.length } from ${ files.length } screenshots have not generated successfully.` );
 
 	} else if ( isMakeScreenshot && ! failedScreenshots.length ) {
@@ -314,7 +278,7 @@ async function main() {
 	} else if ( failedScreenshots.length ) {
 
 		console.red( 'List of failed screenshots: ' + list );
-		console.red( `If you are sure that everything is correct, try to run "npm run make-screenshot ${ list }". If this does not help, add remaining screenshots to the exception list.` );
+		console.red( `If you are sure that everything is correct, try to run "bun run make-screenshot ${ list }". If this does not help, add remaining screenshots to the exception list.` );
 		console.red( `TEST FAILED! ${ failedScreenshots.length } from ${ files.length } screenshots have not rendered correctly.` );
 
 	} else {
