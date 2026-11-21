@@ -5,7 +5,6 @@ import NodeMaterial from '../../../materials/nodes/NodeMaterial.js';
 import { cubeMapNode } from '../../../nodes/utils/CubeMapNode.js';
 import { NodeFrame, NodeUpdateType, StackTrace } from '../../../nodes/Nodes.js';
 import { renderGroup, cubeTexture, texture, fog, rangeFogFactor, densityFogFactor, reference, pmremTexture, screenUV, uniform } from '../../../nodes/TSL.js';
-import { builtin } from '../../../nodes/accessors/BuiltinNode.js';
 
 import { EquirectangularReflectionMapping, EquirectangularRefractionMapping } from '../../../constants.js';
 import { hashArray } from '../../../nodes/core/NodeUtils.js';
@@ -162,12 +161,6 @@ class NodeManager extends DataMap {
 		nodeBuilder.fogNode = this.getFogNode( renderObject.scene );
 		nodeBuilder.clippingContext = renderObject.clippingContext;
 
-		if ( this.renderer.getOutputRenderTarget() ? this.renderer.getOutputRenderTarget().multiview : false ) {
-
-			nodeBuilder.enableMultiview();
-
-		}
-
 		return nodeBuilder;
 
 	}
@@ -318,8 +311,7 @@ class NodeManager extends DataMap {
 			nodeBuilder.updateBeforeNodes,
 			nodeBuilder.updateAfterNodes,
 			nodeBuilder.observer,
-			nodeBuilder.hardwareClipping,
-			nodeBuilder.transforms
+			nodeBuilder.hardwareClipping
 		);
 
 	}
@@ -461,7 +453,6 @@ class NodeManager extends DataMap {
 
 		if ( cacheKeyData.renderId !== renderId ) {
 
-			_cacheKeyValues.push( this.renderer.getOutputRenderTarget() && this.renderer.getOutputRenderTarget().multiview ? 1 : 0 );
 			_cacheKeyValues.push( this.renderer.lighting.enabled ? 1 : 0 );
 
 			if ( this.renderer.lighting.enabled ) {
@@ -804,15 +795,7 @@ class NodeManager extends DataMap {
 
 		if ( outputTarget.isArrayTexture ) {
 
-			if ( this.backend.isWebGLBackend ) {
-
-				output = texture( outputTarget, screenUV ).depth( builtin( 'gl_ViewID_OVR' ) ).renderOutput( renderer.toneMapping, renderer.currentColorSpace );
-
-			} else {
-
-				output = texture( outputTarget, screenUV ).depth( _outputLayerIndex ).renderOutput( renderer.toneMapping, renderer.currentColorSpace );
-
-			}
+			output = texture( outputTarget, screenUV ).depth( _outputLayerIndex ).renderOutput( renderer.toneMapping, renderer.currentColorSpace );
 
 		} else {
 

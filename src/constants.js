@@ -65,16 +65,6 @@ export const BasicShadowMap = 0;
 export const PCFShadowMap = 1;
 
 /**
- * Filters shadow maps using the Percentage-Closer Filtering (PCF) algorithm with
- * better soft shadows especially when using low-resolution shadow maps.
- *
- * @type {number}
- * @constant
- * @deprecated since r186. Use `PCFShadowMap` instead.
- */
-export const PCFSoftShadowMap = 2;
-
-/**
  * Filters shadow maps using the Variance Shadow Map (VSM) algorithm.
  * When using VSMShadowMap all shadow receivers will also cast shadows.
  *
@@ -1622,22 +1612,6 @@ export const DynamicCopyUsage = 35050;
  * @constant
  */
 export const StreamCopyUsage = 35042;
-
-/**
- * GLSL 1 shader code.
- *
- * @type {string}
- * @constant
- */
-export const GLSL1 = '100';
-
-/**
- * GLSL 3 shader code.
- *
- * @type {string}
- * @constant
- */
-export const GLSL3 = '300 es';
 
 /**
  * WebGL coordinate system.

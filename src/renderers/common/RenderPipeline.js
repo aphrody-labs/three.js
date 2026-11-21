@@ -3,7 +3,6 @@ import { ColorManagement } from '../../math/ColorManagement.js';
 import { vec4, renderOutput, context } from '../../nodes/TSL.js';
 import { NoToneMapping } from '../../constants.js';
 import QuadMesh from '../../renderers/common/QuadMesh.js';
-import { warnOnce } from '../../utils.js';
 
 /**
  * This module is responsible to manage the rendering pipeline setups in apps.
@@ -239,25 +238,6 @@ class RenderPipeline {
 			this.needsUpdate = false;
 
 		}
-
-	}
-
-	/**
-	 * When `RenderPipeline` is used to apply rendering pipeline and post processing effects,
-	 * the application must use this version of `renderAsync()` inside
-	 * its animation loop (not the one from the renderer).
-	 *
-	 * @async
-	 * @deprecated
-	 * @return {Promise} A Promise that resolves when the render has been finished.
-	 */
-	async renderAsync() {
-
-		warnOnce( 'RenderPipeline: "renderAsync()" has been deprecated. Use "render()" and "await renderer.init();" when creating the renderer.' ); // @deprecated r181
-
-		await this.renderer.init();
-
-		this.render();
 
 	}
 

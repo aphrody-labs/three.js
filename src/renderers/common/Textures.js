@@ -149,7 +149,7 @@ class Textures extends DataMap {
 		let textureNeedsUpdate = false;
 
 		const hasArrayDepthTexture = depthTexture !== undefined && depthTexture.image !== undefined && depthTexture.image.depth > 1;
-		const useArrayDepth = size.depth > 1 && ( renderTarget.useArrayDepthTexture || renderTarget.multiview || hasArrayDepthTexture );
+		const useArrayDepth = size.depth > 1 && ( renderTarget.useArrayDepthTexture || hasArrayDepthTexture );
 
 		if ( depthTexture === undefined && useDepthTexture ) {
 
@@ -244,25 +244,19 @@ class Textures extends DataMap {
 
 		const options = { sampleCount };
 
-		// XR render targets require no texture updates
+		for ( let i = 0; i < textures.length; i ++ ) {
 
-		if ( renderTarget.isXRRenderTarget !== true ) {
+			const texture = textures[ i ];
 
-			for ( let i = 0; i < textures.length; i ++ ) {
+			if ( textureNeedsUpdate ) texture.needsUpdate = true;
 
-				const texture = textures[ i ];
+			this.updateTexture( texture, options );
 
-				if ( textureNeedsUpdate ) texture.needsUpdate = true;
+		}
 
-				this.updateTexture( texture, options );
+		if ( depthTexture ) {
 
-			}
-
-			if ( depthTexture ) {
-
-				this.updateTexture( depthTexture, options );
-
-			}
+			this.updateTexture( depthTexture, options );
 
 		}
 
@@ -446,8 +440,6 @@ class Textures extends DataMap {
 
 						backend.updateTexture( texture, options );
 
-						texture.clearUpdateRanges();
-
 					}
 
 					if ( options.needsMipmaps && getMipmaps( texture ).length === 0 && texture.mipmapsAutoUpdate === true ) {
@@ -524,13 +516,8 @@ class Textures extends DataMap {
 	}
 
 	/**
-	 * Updates the sampler for the given texture. This method has no effect
-	 * for the WebGL backend since it has no concept of samplers. Texture
-	 * parameters are configured with the `texParameter()` command for each
-	 * texture.
-	 *
-	 * In WebGPU, samplers are objects like textures and it's possible to share
-	 * them when the texture parameters match.
+	 * Updates the sampler for the given texture. Samplers are objects like
+	 * textures and it's possible to share them when the texture parameters match.
 	 *
 	 * @param {Sampler} binding - The sampler binding to update.
 	 * @return {string} The current sampler key.

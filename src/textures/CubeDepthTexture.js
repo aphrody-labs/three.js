@@ -44,7 +44,7 @@ class CubeDepthTexture extends DepthTexture {
 		this.isCubeDepthTexture = true;
 
 		/**
-		 * Set to true for cube texture handling in WebGLTextures.
+		 * Set to true for cube texture handling.
 		 *
 		 * @type {boolean}
 		 * @readonly

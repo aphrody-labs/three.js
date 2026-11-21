@@ -11,7 +11,6 @@ import { Vector2 } from '../../math/Vector2.js';
 import { Vector4 } from '../../math/Vector4.js';
 import { DepthTexture } from '../../textures/DepthTexture.js';
 import { RenderTarget } from '../../core/RenderTarget.js';
-import { warn } from '../../utils.js';
 
 const _size = /*@__PURE__*/ new Vector2();
 
@@ -543,36 +542,6 @@ class PassNode extends Node {
 	}
 
 	/**
-	 * Sets the resolution for the pass.
-	 * The resolution is a factor that is multiplied with the renderer's width and height.
-	 *
-	 * @param {number} resolution - The resolution to set. A value of `1` means full resolution.
-	 * @return {PassNode} A reference to this pass.
-	 * @deprecated since r181. Use {@link PassNode#setResolutionScale `setResolutionScale()`} instead.
-	 */
-	setResolution( resolution ) { // @deprecated, r181
-
-		warn( 'PassNode: .setResolution() is deprecated. Use .setResolutionScale() instead.' );
-
-		return this.setResolutionScale( resolution );
-
-	}
-
-	/**
-	 * Gets the current resolution of the pass.
-	 *
-	 * @return {number} The current resolution. A value of `1` means full resolution.
-	 * @deprecated since r181. Use {@link PassNode#getResolutionScale `getResolutionScale()`} instead.
-	 */
-	getResolution() { // @deprecated, r181
-
-		warn( 'PassNode: .getResolution() is deprecated. Use .getResolutionScale() instead.' );
-
-		return this.getResolutionScale();
-
-	}
-
-	/**
 	 * Sets the layer configuration that should be used when rendering the pass.
 	 *
 	 * @param {Layers} layers - The layers object to set.
@@ -872,25 +841,9 @@ class PassNode extends Node {
 		const { renderer } = frame;
 		const { scene } = this;
 
-		let camera;
+		const camera = this.camera;
 
-		const outputRenderTarget = renderer.getOutputRenderTarget();
-
-		if ( outputRenderTarget && outputRenderTarget.isXRRenderTarget === true ) {
-
-			camera = renderer.xr.getCamera();
-
-			renderer.xr.updateCamera( camera );
-
-			_size.set( outputRenderTarget.width, outputRenderTarget.height );
-
-		} else {
-
-			camera = this.camera;
-
-			renderer.getDrawingBufferSize( _size );
-
-		}
+		renderer.getDrawingBufferSize( _size );
 
 		this.setSize( _size.width, _size.height );
 

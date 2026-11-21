@@ -1,6 +1,5 @@
 /**
- * This class is an alternative to {@link Clock} with a different API design and behavior.
- * The goal is to avoid the conceptual flaws that became apparent in `Clock` over time.
+ * Class for keeping track of time.
  *
  * - `Timer` has an `update()` method that updates its internal state. That makes it possible to
  * call `getDelta()` and `getElapsed()` multiple times per simulation step without getting different values.

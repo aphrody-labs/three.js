@@ -342,29 +342,6 @@ class Object3D extends EventDispatcher {
 		this.animations = [];
 
 		/**
-		 * Custom depth material to be used when rendering to the depth map. Can only be used
-		 * in context of meshes, lines and points. When shadow-casting with a {@link DirectionalLight} or {@link SpotLight},
-		 * if you are modifying vertex positions in the vertex shader you must specify a custom depth
-		 * material for proper shadows.
-		 *
-		 * Only relevant in context of {@link WebGLRenderer}.
-		 *
-		 * @type {(Material|undefined)}
-		 * @default undefined
-		 */
-		this.customDepthMaterial = undefined;
-
-		/**
-		 * Same as {@link Object3D#customDepthMaterial}, but used with {@link PointLight}.
-		 *
-		 * Only relevant in context of {@link WebGLRenderer}.
-		 *
-		 * @type {(Material|undefined)}
-		 * @default undefined
-		 */
-		this.customDistanceMaterial = undefined;
-
-		/**
 		 * Whether the 3D object is supposed to be static or not. If set to `true`, it means
 		 * the 3D object is not going to be changed after the first render. This includes
 		 * geometry and material settings. A static 3D object can be processed by the renderer
@@ -400,7 +377,7 @@ class Object3D extends EventDispatcher {
 	/**
 	 * A callback that is executed immediately before a 3D object is rendered to a shadow map.
 	 *
-	 * @param {Renderer|WebGLRenderer} renderer - The renderer.
+	 * @param {Renderer} renderer - The renderer.
 	 * @param {Object3D} object - The 3D object.
 	 * @param {Camera} camera - The camera that is used to render the scene.
 	 * @param {Camera} shadowCamera - The shadow camera.
@@ -413,7 +390,7 @@ class Object3D extends EventDispatcher {
 	/**
 	 * A callback that is executed immediately after a 3D object is rendered to a shadow map.
 	 *
-	 * @param {Renderer|WebGLRenderer} renderer - The renderer.
+	 * @param {Renderer} renderer - The renderer.
 	 * @param {Object3D} object - The 3D object.
 	 * @param {Camera} camera - The camera that is used to render the scene.
 	 * @param {Camera} shadowCamera - The shadow camera.
@@ -428,7 +405,7 @@ class Object3D extends EventDispatcher {
 	 * Only invoked for renderable 3D objects like meshes, lines, points or sprites, and for
 	 * the scene passed to `render()` (with different arguments).
 	 *
-	 * @param {Renderer|WebGLRenderer} renderer - The renderer.
+	 * @param {Renderer} renderer - The renderer.
 	 * @param {Object3D} scene - The scene.
 	 * @param {Camera} camera - The camera that is used to render the scene.
 	 * @param {BufferGeometry} geometry - The 3D object's geometry.
@@ -442,7 +419,7 @@ class Object3D extends EventDispatcher {
 	 * Only invoked for renderable 3D objects like meshes, lines, points or sprites, and for
 	 * the scene passed to `render()` (with different arguments).
 	 *
-	 * @param {Renderer|WebGLRenderer} renderer - The renderer.
+	 * @param {Renderer} renderer - The renderer.
 	 * @param {Object3D} scene - The scene.
 	 * @param {Camera} camera - The camera that is used to render the scene.
 	 * @param {BufferGeometry} geometry - The 3D object's geometry.

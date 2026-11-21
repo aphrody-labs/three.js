@@ -1,6 +1,5 @@
 import Node from '../core/Node.js';
 import { nodeImmutable, float, Fn } from '../tsl/TSLBase.js';
-import { warnOnce } from '../../utils.js';
 
 import { BackSide, DoubleSide } from '../../constants.js';
 
@@ -111,27 +110,4 @@ export const negateOnBackSide = /*@__PURE__*/ Fn( ( [ vector ], { material } ) =
 	return vector;
 
 } );
-
-/**
- * Negates a vector if the rendering occurs on the back side of a face,
- * based on the material's side configuration.
- *
- * - If the material's side is `BackSide`, the vector is inverted (negated).
- * - If the material's side is `DoubleSide`, the vector is multiplied by `faceDirection`
- *   (negated only for back-facing fragments).
- * - If the material's side is `FrontSide` (default), the vector remains unchanged.
- *
- * @tsl
- * @function
- * @deprecated since r185. Use {@link negateOnBackSide} instead.
- * @param {Node<vec3>} vector - The vector to convert.
- * @returns {Node<vec3>} The converted vector.
- */
-export const directionToFaceDirection = ( vector ) => {
-
-	warnOnce( 'TSL: "directionToFaceDirection()" has been renamed to "negateOnBackSide()".' ); // @deprecated r185
-
-	return negateOnBackSide( vector );
-
-};
 

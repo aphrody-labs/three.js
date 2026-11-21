@@ -193,7 +193,7 @@ class Background extends DataMap {
 
 			// premultiply alpha
 
-			if ( renderer.backend.isWebGLBackend === true || renderer.alpha === true ) {
+			if ( renderer.alpha === true ) {
 
 				clearColorValue.r *= clearColorValue.a;
 				clearColorValue.g *= clearColorValue.a;

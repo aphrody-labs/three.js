@@ -4,7 +4,7 @@ import { error } from '../../utils.js';
 
 /**
  * This module represents the call of a {@link FunctionNode}. Developers are usually not confronted
- * with this module since they use the predefined TSL syntax `wgslFn` and `glslFn` which encapsulate
+ * with this module since they use the predefined TSL syntax `wgslFn` which encapsulates
  * this logic.
  *
  * @augments Node

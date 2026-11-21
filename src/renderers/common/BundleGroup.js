@@ -10,10 +10,6 @@ import { Group } from '../../objects/Group.js';
  * types like lights are not supported and must be added to the scene
  * outside of the group.
  *
- * This module is only fully supported by `WebGPURenderer` with a WebGPU backend.
- * With a WebGL backend, the group can technically be rendered but without
- * any performance improvements.
- *
  * @augments Group
  */
 class BundleGroup extends Group {
@@ -53,9 +49,6 @@ class BundleGroup extends Group {
 		 *
 		 * Adding or removing objects always requires setting the `needsUpdate`
 		 * flag to `true`.
-		 *
-		 * Only used by the WebGPU backend. With the WebGL 2 backend, the group is
-		 * rendered like a regular group and all changes are applied immediately.
 		 *
 		 * @type {boolean}
 		 * @default true

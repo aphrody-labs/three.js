@@ -34,7 +34,6 @@ export { default as StackTrace } from './core/StackTrace.js';
 export { default as StructNode } from './core/StructNode.js';
 export { default as StructTypeNode } from './core/StructTypeNode.js';
 export { default as SubBuildNode } from './core/SubBuildNode.js';
-export { default as TempNode } from './core/TempNode.js';
 export { default as UniformGroupNode } from './core/UniformGroupNode.js';
 export { default as UniformNode } from './core/UniformNode.js';
 export { default as VarNode } from './core/VarNode.js';
@@ -53,7 +52,6 @@ export { default as MaterialNode } from './accessors/MaterialNode.js';
 export { default as MaterialReferenceNode } from './accessors/MaterialReferenceNode.js';
 export { default as ModelNode } from './accessors/ModelNode.js';
 export { default as Object3DNode } from './accessors/Object3DNode.js';
-export { default as PointUVNode } from './accessors/PointUVNode.js';
 export { default as ReferenceAttributeNode } from './accessors/ReferenceAttributeNode.js';
 export { default as ReferenceBaseNode } from './accessors/ReferenceBaseNode.js';
 export { default as ReferenceElementNode } from './accessors/ReferenceElementNode.js';
@@ -115,7 +113,6 @@ export { default as IESSpotLightNode } from './lighting/IESSpotLightNode.js';
 export { default as IrradianceNode } from './lighting/IrradianceNode.js';
 export { default as LightingContextNode } from './lighting/LightingContextNode.js';
 export { default as LightingNode } from './lighting/LightingNode.js';
-export { default as LightProbeNode } from './lighting/LightProbeNode.js';
 export { default as LightsNode } from './lighting/LightsNode.js';
 export { default as OcclusionAwareIrradianceNode } from './lighting/OcclusionAwareIrradianceNode.js';
 export { default as PointLightNode } from './lighting/PointLightNode.js';
@@ -137,7 +134,6 @@ export { default as Packed4x8IntegerNode } from './math/Packed4x8IntegerNode.js'
 export { default as UnpackFloatNode } from './math/UnpackFloatNode.js';
 
 // parsers
-export { default as GLSLNodeParser } from './parsers/GLSLNodeParser.js'; // @TODO: Move to jsm/renderers/webgl.
 
 // pmrem
 export { default as PMREMNode } from './pmrem/PMREMNode.js';

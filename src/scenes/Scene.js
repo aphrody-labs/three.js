@@ -42,8 +42,7 @@ class Scene extends Object3D {
 
 		/**
 		 * Sets the environment map used for image-based lighting of {@link MeshStandardMaterial}
-		 * and {@link MeshPhysicalMaterial} (with `WebGLRenderer` also {@link MeshLambertMaterial}
-		 * and {@link MeshPhongMaterial}). However, it's not possible to overwrite an existing
+		 * and {@link MeshPhysicalMaterial}. However, it's not possible to overwrite an existing
 		 * texture assigned to the `envMap` material property.
 		 *
 		 * @type {?Texture}

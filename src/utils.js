@@ -432,49 +432,6 @@ function yieldToMain() {
 }
 
 /**
- * Asynchronously probes for WebGL sync object completion.
- *
- * This function creates a promise that resolves when the WebGL sync object
- * signals completion or rejects if the sync operation fails. It uses polling
- * at the specified interval to check the sync status without blocking the
- * main thread. This is useful for GPU-CPU synchronization in WebGL contexts.
- *
- * @private
- * @param {WebGL2RenderingContext} gl - The WebGL rendering context.
- * @param {WebGLSync} sync - The WebGL sync object to wait for.
- * @param {number} interval - The polling interval in milliseconds.
- * @return {Promise<void>} A promise that resolves when the sync completes or rejects if it fails.
- */
-function probeAsync( gl, sync, interval ) {
-
-	return new Promise( function ( resolve, reject ) {
-
-		function probe() {
-
-			switch ( gl.clientWaitSync( sync, gl.SYNC_FLUSH_COMMANDS_BIT, 0 ) ) {
-
-				case gl.WAIT_FAILED:
-					reject();
-					break;
-
-				case gl.TIMEOUT_EXPIRED:
-					setTimeout( probe, interval );
-					break;
-
-				default:
-					resolve();
-
-			}
-
-		}
-
-		setTimeout( probe, interval );
-
-	} );
-
-}
-
-/**
  * Converts a projection matrix from normalized device coordinates (NDC)
  * range [-1, 1] to [0, 1].
  *
@@ -552,4 +509,4 @@ const ReversedDepthFuncs = {
 	[ GreaterEqualDepth ]: LessEqualDepth,
 };
 
-export { arrayMin, arrayMax, arrayNeedsUint32, minHeapPush, minHeapPop, getTypedArray, createElementNS, createCanvasElement, setConsoleFunction, getConsoleFunction, log, warn, error, warnOnce, probeAsync, yieldToMain, toNormalizedProjectionMatrix, toReversedProjectionMatrix, isTypedArray, ReversedDepthFuncs };
+export { arrayMin, arrayMax, arrayNeedsUint32, minHeapPush, minHeapPop, getTypedArray, createElementNS, createCanvasElement, setConsoleFunction, getConsoleFunction, log, warn, error, warnOnce, yieldToMain, toNormalizedProjectionMatrix, toReversedProjectionMatrix, isTypedArray, ReversedDepthFuncs };

@@ -4,7 +4,6 @@ import { Mesh } from '../../objects/Mesh.js';
 import { OrthographicCamera } from '../../cameras/OrthographicCamera.js';
 import { vec4, array } from '../../nodes/tsl/TSLBase.js';
 import { vertexIndex } from '../../nodes/core/IndexNode.js';
-import { warnOnce } from '../../utils.js';
 
 const _camera = /*@__PURE__*/ new OrthographicCamera( - 1, 1, 1, - 1, 0, 1 );
 
@@ -83,24 +82,6 @@ class QuadMesh extends Mesh {
 		 * @default true
 		 */
 		this.isQuadMesh = true;
-
-	}
-
-	/**
-	 * Async version of `render()`.
-	 *
-	 * @async
-	 * @deprecated
-	 * @param {Renderer} renderer - The renderer.
-	 * @return {Promise} A Promise that resolves when the render has been finished.
-	 */
-	async renderAsync( renderer ) {
-
-		warnOnce( 'QuadMesh: "renderAsync()" has been deprecated. Use "render()" and "await renderer.init();" when creating the renderer.' ); // @deprecated r181
-
-		await renderer.init();
-
-		renderer.render( this, _camera );
 
 	}
 

@@ -813,7 +813,7 @@ class RenderObject {
 
 		for ( const property of getKeys( material ) ) {
 
-			if ( /^(is[A-Z]|_)|^(visible|version|uuid|name|opacity|userData|iridescenceThicknessRange)$/.test( property ) ) continue;
+			if ( /^(is[A-Z]|_)|^(visible|version|uuid|name|opacity|userData)$/.test( property ) ) continue;
 
 			const value = material[ property ];
 
@@ -850,17 +850,13 @@ class RenderObject {
 						valueKey += value.mapping;
 						valueKey += value.channel;
 
-						// WebGPU must honor the sampler data because they are part of the bindings
+						// the sampler data are part of the bindings
 
-						if ( renderer.backend.isWebGPUBackend === true ) {
-
-							valueKey += value.magFilter;
-							valueKey += value.minFilter;
-							valueKey += value.wrapS;
-							valueKey += value.wrapT;
-							valueKey += value.wrapR;
-
-						}
+						valueKey += value.magFilter;
+						valueKey += value.minFilter;
+						valueKey += value.wrapS;
+						valueKey += value.wrapT;
+						valueKey += value.wrapR;
 
 					} else if ( value.isNode === true && material.isNodeMaterial !== true ) {
 

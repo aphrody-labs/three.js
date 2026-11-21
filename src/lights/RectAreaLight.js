@@ -9,12 +9,10 @@ import { Light } from './Light.js';
  *
  * - There is no shadow support.
  * - Only PBR materials are supported.
- * - You have to include `RectAreaLightUniformsLib` (`WebGLRenderer`) or `RectAreaLightTexturesLib` (`WebGPURenderer`)
- * into your app and init the uniforms/textures.
+ * - You have to include `RectAreaLightTexturesLib` into your app and init the textures.
  *
  * ```js
- * RectAreaLightUniformsLib.init(); // only relevant for WebGLRenderer
- * THREE.RectAreaLightNode.setLTC( RectAreaLightTexturesLib.init() ); //  only relevant for WebGPURenderer
+ * THREE.RectAreaLightNode.setLTC( RectAreaLightTexturesLib.init() );
  *
  * const intensity = 1; const width = 10; const height = 10;
  * const rectLight = new THREE.RectAreaLight( 0xffffff, intensity, width, height );

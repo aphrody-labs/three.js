@@ -8,7 +8,7 @@ import { renderGroup } from '../core/UniformGroupNode.js';
 import { Matrix4 } from '../../math/Matrix4.js';
 import { Vector3 } from '../../math/Vector3.js';
 import { Color } from '../../math/Color.js';
-import { BasicShadowMap, GreaterEqualCompare, LessEqualCompare, WebGPUCoordinateSystem } from '../../constants.js';
+import { BasicShadowMap, GreaterEqualCompare, LessEqualCompare } from '../../constants.js';
 import { CubeDepthTexture } from '../../textures/CubeDepthTexture.js';
 import { screenCoordinate } from '../display/ScreenNode.js';
 import { interleavedGradientNoise, vogelDiskSample } from '../utils/PostProcessingUtils.js';
@@ -31,17 +31,6 @@ const _cubeDirectionsWebGPU = [
 const _cubeUpsWebGPU = [
 	/*@__PURE__*/ new Vector3( 0, 1, 0 ), /*@__PURE__*/ new Vector3( 0, 1, 0 ), /*@__PURE__*/ new Vector3( 0, 0, - 1 ),
 	/*@__PURE__*/ new Vector3( 0, 0, 1 ), /*@__PURE__*/ new Vector3( 0, 1, 0 ), /*@__PURE__*/ new Vector3( 0, 1, 0 )
-];
-
-// WebGL coordinate system - standard OpenGL convention
-const _cubeDirectionsWebGL = [
-	/*@__PURE__*/ new Vector3( 1, 0, 0 ), /*@__PURE__*/ new Vector3( - 1, 0, 0 ), /*@__PURE__*/ new Vector3( 0, 1, 0 ),
-	/*@__PURE__*/ new Vector3( 0, - 1, 0 ), /*@__PURE__*/ new Vector3( 0, 0, 1 ), /*@__PURE__*/ new Vector3( 0, 0, - 1 )
-];
-
-const _cubeUpsWebGL = [
-	/*@__PURE__*/ new Vector3( 0, - 1, 0 ), /*@__PURE__*/ new Vector3( 0, - 1, 0 ), /*@__PURE__*/ new Vector3( 0, 0, 1 ),
-	/*@__PURE__*/ new Vector3( 0, 0, - 1 ), /*@__PURE__*/ new Vector3( 0, - 1, 0 ), /*@__PURE__*/ new Vector3( 0, - 1, 0 )
 ];
 
 /**
@@ -290,10 +279,8 @@ class PointShadowNode extends ShadowNode {
 		const camera = shadow.camera;
 		const shadowMatrix = shadow.matrix;
 
-		// Select cube directions/ups based on coordinate system
-		const isWebGPU = renderer.coordinateSystem === WebGPUCoordinateSystem;
-		const cubeDirections = isWebGPU ? _cubeDirectionsWebGPU : _cubeDirectionsWebGL;
-		const cubeUps = isWebGPU ? _cubeUpsWebGPU : _cubeUpsWebGL;
+		const cubeDirections = _cubeDirectionsWebGPU;
+		const cubeUps = _cubeUpsWebGPU;
 
 		shadowMap.setSize( shadow.mapSize.width, shadow.mapSize.width );
 

@@ -1,5 +1,3 @@
-import { warnOnce } from '../utils.js';
-
 /**
  * Represents a 3x3 matrix.
  *
@@ -406,59 +404,6 @@ class Matrix3 {
 
 	}
 
-	/**
-	 * Scales this matrix with the given scalar values.
-	 *
-	 * @deprecated
-	 * @param {number} sx - The amount to scale in the X axis.
-	 * @param {number} sy - The amount to scale in the Y axis.
-	 * @return {Matrix3} A reference to this matrix.
-	 */
-	scale( sx, sy ) {
-
-		warnOnce( 'Matrix3: .scale() is deprecated. Use .makeScale() instead.' ); // @deprecated r185
-
-		this.premultiply( _m3.makeScale( sx, sy ) );
-
-		return this;
-
-	}
-
-	/**
-	 * Rotates this matrix by the given angle.
-	 *
-	 * @deprecated
-	 * @param {number} theta - The rotation in radians.
-	 * @return {Matrix3} A reference to this matrix.
-	 */
-	rotate( theta ) {
-
-		warnOnce( 'Matrix3: .rotate() is deprecated. Use .makeRotation() instead.' ); // @deprecated r185
-
-		this.premultiply( _m3.makeRotation( - theta ) );
-
-		return this;
-
-	}
-
-	/**
-	 * Translates this matrix by the given scalar values.
-	 *
-	 * @deprecated
-	 * @param {number} tx - The amount to translate in the X axis.
-	 * @param {number} ty - The amount to translate in the Y axis.
-	 * @return {Matrix3} A reference to this matrix.
-	 */
-	translate( tx, ty ) {
-
-		warnOnce( 'Matrix3: .translate() is deprecated. Use .makeTranslation() instead.' ); // @deprecated r185
-
-		this.premultiply( _m3.makeTranslation( tx, ty ) );
-
-		return this;
-
-	}
-
 	// for 2D Transforms
 
 	/**
@@ -622,7 +567,5 @@ class Matrix3 {
 	}
 
 }
-
-const _m3 = /*@__PURE__*/ new Matrix3();
 
 export { Matrix3 };

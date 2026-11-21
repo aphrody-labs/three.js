@@ -273,9 +273,7 @@ class Texture extends EventDispatcher {
 		 * If set to `true`, the alpha channel, if present, is multiplied into the
 		 * color channels when the texture is uploaded to the GPU.
 		 *
-		 * Note that with `WebGLRenderer` and the WebGL backend of `WebGPURenderer` this property
-		 * has no effect when using `ImageBitmap`. You need to configure premultiply alpha on bitmap
-		 * creation instead. The WebGPU backend applies this property to `ImageBitmap` as well.
+		 * This property is also applied to `ImageBitmap`.
 		 *
 		 * @type {boolean}
 		 * @default false
@@ -286,9 +284,7 @@ class Texture extends EventDispatcher {
 		 * If set to `true`, the texture is flipped along the vertical axis when
 		 * uploaded to the GPU.
 		 *
-		 * Note that with `WebGLRenderer` and the WebGL backend of `WebGPURenderer` this property
-		 * has no effect when using `ImageBitmap`. You need to configure the flip on bitmap
-		 * creation instead. The WebGPU backend applies this property to `ImageBitmap` as well.
+		 * This property is also applied to `ImageBitmap`.
 		 *
 		 * @type {boolean}
 		 * @default true
@@ -322,14 +318,6 @@ class Texture extends EventDispatcher {
 		this.userData = {};
 
 		/**
-		 * This can be used to only update parts of a data texture (for example, just a few rows).
-		 * Use the `addUpdateRange()` function to add ranges to this array.
-		 *
-		 * @type {Array<Object>}
-		 */
-		this.updateRanges = [];
-
-		/**
 		 * This starts at `0` and counts how many times {@link Texture#needsUpdate} is set to `true`.
 		 *
 		 * @type {number}
@@ -350,7 +338,7 @@ class Texture extends EventDispatcher {
 		/**
 		 * An optional back reference to the textures render target.
 		 *
-		 * @type {?(RenderTarget|WebGLRenderTarget)}
+		 * @type {?RenderTarget}
 		 * @default null
 		 */
 		this.renderTarget = null;
@@ -458,31 +446,6 @@ class Texture extends EventDispatcher {
 	updateMatrix() {
 
 		this.matrix.setUvTransform( this.offset.x, this.offset.y, this.repeat.x, this.repeat.y, this.rotation, this.center.x, this.center.y );
-
-	}
-
-	/**
-	 * Adds a range of data in the data texture to be updated on the GPU.
-	 *
-	 * Update ranges assume four components per texel, so they currently only work with `RGBAFormat`.
-	 * Each range must stay within a single row of the texture. To update several rows, add one
-	 * range per row. Update ranges are only supported in `WebGLRenderer`.
-	 *
-	 * @param {number} start - Index of the first array element to update.
-	 * @param {number} count - The number of array elements to update.
-	 */
-	addUpdateRange( start, count ) {
-
-		this.updateRanges.push( { start, count } );
-
-	}
-
-	/**
-	 * Clears the update ranges.
-	 */
-	clearUpdateRanges() {
-
-		this.updateRanges.length = 0;
 
 	}
 
@@ -803,8 +766,7 @@ class Texture extends EventDispatcher {
 
 	/**
 	 * Setting this property to `true` indicates the engine the PMREM
-	 * must be regenerated. Note that `WebGLRenderer` only honors this
-	 * property for render target textures.
+	 * must be regenerated.
 	 *
 	 * @type {boolean}
 	 * @default false

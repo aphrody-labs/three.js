@@ -1,9 +1,6 @@
 import { REVISION } from './constants.js';
 import { warn } from './utils.js';
 
-export { WebGLArrayRenderTarget } from './renderers/WebGLArrayRenderTarget.js';
-export { WebGL3DRenderTarget } from './renderers/WebGL3DRenderTarget.js';
-export { WebGLRenderTarget } from './renderers/WebGLRenderTarget.js';
 export { WebXRController } from './renderers/webxr/WebXRController.js';
 export { FogExp2 } from './scenes/FogExp2.js';
 export { Fog } from './scenes/Fog.js';
@@ -37,7 +34,7 @@ export { DepthTexture } from './textures/DepthTexture.js';
 export { CubeDepthTexture } from './textures/CubeDepthTexture.js';
 export { ExternalTexture } from './textures/ExternalTexture.js';
 export { Texture } from './textures/Texture.js';
-export { TextureSource, Source } from './textures/TextureSource.js';
+export { TextureSource } from './textures/TextureSource.js';
 export * from './geometries/Geometries.js';
 export * from './materials/Materials.js';
 export { AnimationLoader } from './loaders/AnimationLoader.js';
@@ -64,7 +61,6 @@ export { DirectionalLight } from './lights/DirectionalLight.js';
 export { AmbientLight } from './lights/AmbientLight.js';
 export { Light } from './lights/Light.js';
 export { LightShadow } from './lights/LightShadow.js';
-export { LightProbe } from './lights/LightProbe.js';
 export { StereoCamera } from './cameras/StereoCamera.js';
 export { PerspectiveCamera } from './cameras/PerspectiveCamera.js';
 export { OrthographicCamera } from './cameras/OrthographicCamera.js';
@@ -92,21 +88,17 @@ export { AnimationClip } from './animation/AnimationClip.js';
 export { AnimationAction } from './animation/AnimationAction.js';
 export { RenderTarget } from './core/RenderTarget.js';
 export { RenderTarget3D } from './core/RenderTarget3D.js';
-export { Uniform } from './core/Uniform.js';
-export { UniformsGroup } from './core/UniformsGroup.js';
 export { InstancedBufferGeometry } from './core/InstancedBufferGeometry.js';
 export { BufferGeometry } from './core/BufferGeometry.js';
 export { InterleavedBufferAttribute } from './core/InterleavedBufferAttribute.js';
 export { InstancedInterleavedBuffer } from './core/InstancedInterleavedBuffer.js';
 export { InterleavedBuffer } from './core/InterleavedBuffer.js';
 export { InstancedBufferAttribute } from './core/InstancedBufferAttribute.js';
-export { GLBufferAttribute } from './core/GLBufferAttribute.js';
 export * from './core/BufferAttribute.js';
 export { Object3D } from './core/Object3D.js';
 export { Raycaster } from './core/Raycaster.js';
 export { Layers } from './core/Layers.js';
 export { EventDispatcher } from './core/EventDispatcher.js';
-export { Clock } from './core/Clock.js';
 export { Timer } from './core/Timer.js';
 export { QuaternionLinearInterpolant } from './math/interpolants/QuaternionLinearInterpolant.js';
 export { LinearInterpolant } from './math/interpolants/LinearInterpolant.js';
@@ -163,7 +155,6 @@ export { ShapeUtils } from './extras/ShapeUtils.js';
 export { TextureUtils } from './extras/TextureUtils.js';
 export { createCanvasElement, setConsoleFunction, getConsoleFunction, log, warn, error, warnOnce } from './utils.js';
 export * from './constants.js';
-export * from './Three.Legacy.js';
 
 if ( typeof __THREE_DEVTOOLS__ !== 'undefined' ) {
 

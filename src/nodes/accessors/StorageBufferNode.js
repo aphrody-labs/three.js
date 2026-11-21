@@ -1,6 +1,4 @@
 import BufferNode from './BufferNode.js';
-import { bufferAttribute } from './BufferAttributeNode.js';
-import { varying } from '../tsl/TSLBase.js';
 import { storageElement } from '../utils/StorageArrayElementNode.js';
 import { NodeAccess } from '../core/constants.js';
 import { getTypeFromLength } from '../core/NodeUtils.js';
@@ -106,33 +104,6 @@ class StorageBufferNode extends BufferNode {
 		this.isAtomic = false;
 
 		/**
-		 * Whether the node represents a PBO or not.
-		 * Only relevant for WebGL.
-		 *
-		 * @type {boolean}
-		 * @default false
-		 */
-		this.isPBO = false;
-
-		/**
-		 * A reference to the internal buffer attribute node.
-		 *
-		 * @private
-		 * @type {?BufferAttributeNode}
-		 * @default null
-		 */
-		this._attribute = null;
-
-		/**
-		 * A reference to the internal varying node.
-		 *
-		 * @private
-		 * @type {?VaryingNode}
-		 * @default null
-		 */
-		this._varying = null;
-
-		/**
 		 * `StorageBufferNode` sets this property to `true` by default.
 		 *
 		 * @type {boolean}
@@ -172,31 +143,6 @@ class StorageBufferNode extends BufferNode {
 	element( indexNode ) {
 
 		return storageElement( this, indexNode );
-
-	}
-
-	/**
-	 * Defines whether this node is a PBO or not. Only relevant for WebGL.
-	 *
-	 * @param {boolean} value - The value so set.
-	 * @return {StorageBufferNode} A reference to this node.
-	 */
-	setPBO( value ) {
-
-		this.isPBO = value;
-
-		return this;
-
-	}
-
-	/**
-	 * Returns the `isPBO` value.
-	 *
-	 * @return {boolean} Whether the node represents a PBO or not.
-	 */
-	getPBO() {
-
-		return this.isPBO;
 
 	}
 
@@ -251,27 +197,6 @@ class StorageBufferNode extends BufferNode {
 	}
 
 	/**
-	 * Returns attribute data for this storage buffer node.
-	 *
-	 * @return {{attribute: BufferAttributeNode, varying: VaryingNode}} The attribute data.
-	 */
-	getAttributeData() {
-
-		if ( this._attribute === null ) {
-
-			this._attribute = bufferAttribute( this.value );
-			this._varying = varying( this._attribute );
-
-		}
-
-		return {
-			attribute: this._attribute,
-			varying: this._varying
-		};
-
-	}
-
-	/**
 	 * This method is overwritten since the node type is inferred from the struct type if present.
 	 *
 	 * @param {NodeBuilder} builder - The current node builder.
@@ -318,19 +243,7 @@ class StorageBufferNode extends BufferNode {
 
 		if ( this.structTypeNode !== null ) this.structTypeNode.build( builder );
 
-		if ( builder.isAvailable( 'storageBuffer' ) || builder.isAvailable( 'indirectStorageBuffer' ) ) {
-
-			return super.generate( builder );
-
-		}
-
-		const { attribute, varying } = this.getAttributeData();
-
-		const output = varying.build( builder );
-
-		builder.registerTransform( output, attribute );
-
-		return builder.format( output, attribute.getNodeType( builder ), this.getNodeType( builder ) );
+		return super.generate( builder );
 
 	}
 

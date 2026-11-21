@@ -12,7 +12,6 @@ import { Vector4 } from '../../math/Vector4.js';
 import { Matrix4 } from '../../math/Matrix4.js';
 import { RenderTarget } from '../../core/RenderTarget.js';
 import { DepthTexture } from '../../textures/DepthTexture.js';
-import { warnOnce } from '../../utils.js';
 import { resetRendererState, restoreRendererState } from '../../renderers/common/RendererUtils.js';
 
 const _reflectorPlane = new Plane();
@@ -252,14 +251,6 @@ class ReflectorBaseNode extends Node {
 		 * @default {1}
 		 */
 		this.resolutionScale = resolutionScale;
-
-		if ( parameters.resolution !== undefined ) {
-
-			warnOnce( 'ReflectorNode: The "resolution" parameter has been renamed to "resolutionScale".' ); // @deprecated r180
-
-			this.resolutionScale = parameters.resolution;
-
-		}
 
 		/**
 		 * Whether mipmaps should be generated or not.
@@ -613,29 +604,6 @@ class ReflectorBaseNode extends Node {
 		_inReflector = false;
 
 		this.forceUpdate = false;
-
-	}
-
-	/**
-	 * The resolution scale.
-	 *
-	 * @deprecated
-	 * @type {number}
-	 * @default {1}
-	 */
-	get resolution() {
-
-		warnOnce( 'ReflectorNode: The "resolution" property has been renamed to "resolutionScale".' ); // @deprecated r180
-
-		return this.resolutionScale;
-
-	}
-
-	set resolution( value ) {
-
-		warnOnce( 'ReflectorNode: The "resolution" property has been renamed to "resolutionScale".' ); // @deprecated r180
-
-		this.resolutionScale = value;
 
 	}
 

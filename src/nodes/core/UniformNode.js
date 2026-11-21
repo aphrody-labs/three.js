@@ -1,9 +1,7 @@
 import InputNode from './InputNode.js';
-import StackTrace from '../core/StackTrace.js';
 import { objectGroup } from './UniformGroupNode.js';
 import { getConstNodeType } from '../tsl/TSLCore.js';
 import { getValueFromType } from './NodeUtils.js';
-import { warn } from '../../utils.js';
 
 /**
  * Class for representing a uniform.
@@ -67,21 +65,6 @@ class UniformNode extends InputNode {
 		this.name = name;
 
 		return this;
-
-	}
-
-	/**
-	 * Sets the {@link UniformNode#name} property.
-	 *
-	 * @deprecated
-	 * @param {string} name - The name of the uniform.
-	 * @return {UniformNode} A reference to this node.
-	 */
-	label( name ) {
-
-		warn( 'TSL: "label()" has been deprecated. Use "setName()" instead.', new StackTrace() ); // @deprecated r179
-
-		return this.setName( name );
 
 	}
 

@@ -1,8 +1,6 @@
 import Node from './Node.js';
-import InspectorBase from '../../renderers/common/InspectorBase.js';
 import { addMethodChaining, nodeObject } from '../tsl/TSLCore.js';
 import { NodeUpdateType } from './constants.js';
-import { warnOnce } from '../../utils.js';
 
 /**
  * InspectorNode is a wrapper node that allows inspection of node values during rendering.
@@ -65,12 +63,6 @@ class InspectorNode extends Node {
 	update( frame ) {
 
 		const { renderer } = frame;
-
-		if ( renderer.backend.isWebGPUBackend !== true && renderer.inspector.constructor !== InspectorBase ) {
-
-			warnOnce( 'TSL: ".toInspector()" is only available with WebGPU.' );
-
-		}
 
 		renderer.inspector.inspect( this );
 

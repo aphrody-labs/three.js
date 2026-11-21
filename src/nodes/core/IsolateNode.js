@@ -1,6 +1,5 @@
 import Node from './Node.js';
 import { addMethodChaining, nodeObject } from '../tsl/TSLCore.js';
-import { warn } from '../../utils.js';
 
 /**
  * This node can be used as a cache management component for another node.
@@ -120,23 +119,4 @@ export default IsolateNode;
  */
 export const isolate = ( node ) => new IsolateNode( nodeObject( node ) );
 
-/**
- * TSL function for creating a cache node.
- *
- * @tsl
- * @function
- * @deprecated
- * @param {Node} node - The node that should be cached.
- * @param {boolean} [parent=true] - Whether this node refers to a shared parent cache or not.
- * @returns {IsolateNode}
- */
-export function cache( node, parent = true ) {
-
-	warn( 'TSL: "cache()" has been deprecated. Use "isolate()" instead.' ); // @deprecated r181
-
-	return isolate( node ).setParent( parent );
-
-}
-
-addMethodChaining( 'cache', cache );
 addMethodChaining( 'isolate', isolate );

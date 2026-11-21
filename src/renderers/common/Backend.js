@@ -3,14 +3,14 @@ let _color4 = null;
 
 import Color4 from './Color4.js';
 import { Vector2 } from '../../math/Vector2.js';
-import { createCanvasElement, warnOnce } from '../../utils.js';
+import { createCanvasElement } from '../../utils.js';
 import { REVISION } from '../../constants.js';
 
 /**
  * Most of the rendering related logic is implemented in the
  * {@link Renderer} module and related management components.
  * Sometimes it is required though to execute commands which are
- * specific to the current 3D backend (which is WebGPU or WebGL 2).
+ * specific to the current 3D backend (which is WebGPU).
  * This abstract base class defines an interface that encapsulates
  * all backend-related logic. Derived classes for each backend must
  * implement the interface.
@@ -65,12 +65,6 @@ class Backend {
 		 */
 		this.timestampQueryPool = null;
 
-		if ( parameters.trackTimestamp === true ) {
-
-			warnOnce( 'WebGPURenderer: "trackTimestamp" has been removed. Use "GPUTimer" instead.' ); // @deprecated r188
-
-		}
-
 	}
 
 	/**
@@ -118,15 +112,6 @@ class Backend {
 	 * @param {RenderContext} renderContext - The render context.
 	 */
 	finishRender( /*renderContext*/ ) {}
-
-	/**
-	 * Sets the XR rendering destination.
-	 *
-	 * Backends that render directly into XR framebuffers can override this hook.
-	 *
-	 * @param {?Object} xrTarget - The XR rendering destination.
-	 */
-	setXRTarget( /*xrTarget*/ ) {}
 
 	/**
 	 * This method is executed at the beginning of a compute call and
@@ -612,8 +597,6 @@ class Backend {
 
 		if ( delta === null ) return null;
 
-		// WebGL only measures the duration
-
 		let start = null;
 		let end = null;
 
@@ -686,16 +669,6 @@ class Backend {
 	 * @return {Promise<ArrayBuffer|ReadbackBuffer>} A promise that resolves with the buffer data when the data are ready.
 	 */
 	async getArrayBufferAsync( /* attribute, target, offset, count */ ) {}
-
-	/**
-	 * Checks if the given feature is supported by the backend.
-	 *
-	 * @async
-	 * @abstract
-	 * @param {string} name - The feature's name.
-	 * @return {Promise<boolean>} A Promise that resolves with a bool that indicates whether the feature is supported or not.
-	 */
-	async hasFeatureAsync( /*name*/ ) { }
 
 	/**
 	 * Checks if the given feature is supported  by the backend.

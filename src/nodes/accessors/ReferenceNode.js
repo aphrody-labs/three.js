@@ -7,7 +7,6 @@ import { buffer } from './BufferNode.js';
 import { nodeObject } from '../tsl/TSLBase.js';
 import { uniformArray } from './UniformArrayNode.js';
 import ReferenceElementNode from './ReferenceElementNode.js';
-import { warn } from '../../utils.js';
 
 // TODO: Avoid duplicated code and use only ReferenceBaseNode or ReferenceNode
 
@@ -164,21 +163,6 @@ class ReferenceNode extends Node {
 		this.name = name;
 
 		return this;
-
-	}
-
-	/**
-	 * Sets the label for the internal uniform.
-	 *
-	 * @deprecated
-	 * @param {string} name - The label to set.
-	 * @return {ReferenceNode} A reference to this node.
-	 */
-	label( name ) {
-
-		warn( 'TSL: "label()" has been deprecated. Use "setName()" instead.' ); // @deprecated r179
-
-		return this.setName( name );
 
 	}
 

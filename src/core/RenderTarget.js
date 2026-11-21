@@ -32,8 +32,6 @@ class RenderTarget extends EventDispatcher {
 	 * @property {boolean} [depthBuffer=true] - Whether to allocate a depth buffer or not.
 	 * @property {boolean} [stencilBuffer=false] - Whether to allocate a stencil buffer or not.
 	 * @property {boolean} [resolveColorBuffer=true] - Whether to resolve the color buffer or not. Only relevant for multisampled render targets.
-	 * @property {boolean} [resolveDepthBuffer=true] - Whether to resolve the depth buffer or not. Only relevant for multisampled render targets.
-	 * @property {boolean} [resolveStencilBuffer=true] - Whether to resolve the stencil buffer or not. Only relevant for multisampled render targets.
 	 * @property {boolean} [storeMultisampledColorBuffer=true] - Whether to store the multisampled color buffer or not. Setting to `false` saves memory bandwidth when the multisampled data are not needed after a render pass.
 	 * @property {boolean} [storeMultisampledDepthBuffer=true] - Whether to store the multisampled depth buffer or not. Setting to `false` saves memory bandwidth when the multisampled data are not needed after a render pass.
 	 * @property {boolean} [storeMultisampledStencilBuffer=true] - Whether to store the multisampled stencil buffer or not. Setting to `false` saves memory bandwidth when the multisampled data are not needed after a render pass.
@@ -41,8 +39,7 @@ class RenderTarget extends EventDispatcher {
 	 * @property {number} [samples=0] - The MSAA samples count.
 	 * @property {number} [count=1] - Defines the number of color attachments. Use `0` for a depth-only render target (WebGPURenderer).
 	 * @property {number} [depth=1] - The texture depth.
-	 * @property {boolean} [multiview=false] - Whether this target is used for multiview rendering (WebGL OVR_multiview2 extension).
-	 * @property {boolean} [useArrayDepthTexture=false] - Whether to create the depth texture as an array texture for per-layer depth testing. This is separate from multiview so layered render targets can use array depth without the multiview extension.
+	 * @property {boolean} [useArrayDepthTexture=false] - Whether to create the depth texture as an array texture for per-layer depth testing.
 	 */
 
 	/**
@@ -63,8 +60,6 @@ class RenderTarget extends EventDispatcher {
 			depthBuffer: true,
 			stencilBuffer: false,
 			resolveColorBuffer: true,
-			resolveDepthBuffer: true,
-			resolveStencilBuffer: true,
 			storeMultisampledColorBuffer: true,
 			storeMultisampledDepthBuffer: true,
 			storeMultisampledStencilBuffer: true,
@@ -72,7 +67,6 @@ class RenderTarget extends EventDispatcher {
 			samples: 0,
 			count: 1,
 			depth: 1,
-			multiview: false,
 			useArrayDepthTexture: false
 		}, options );
 
@@ -184,31 +178,6 @@ class RenderTarget extends EventDispatcher {
 		this.resolveColorBuffer = options.resolveColorBuffer;
 
 		/**
-		 * Whether to resolve the depth buffer or not. When set to `false`, the depth
-		 * texture does not receive the resolved depth output of a render pass which
-		 * saves memory bandwidth. Use this setting when the depth data of a render
-		 * pass are not required afterwards.
-		 *
-		 * Only relevant for multisampled render targets in WebGL. WebGPU does not
-		 * support depth resolves; sampling the depth texture of a multisampled render
-		 * target accesses the multisampled data directly, see
-		 * {@link RenderTarget#storeMultisampledDepthBuffer}.
-		 *
-		 * @type {boolean}
-		 * @default true
-		 */
-		this.resolveDepthBuffer = options.resolveDepthBuffer;
-
-		/**
-		 * Whether to resolve the stencil buffer or not. Analogous to
-		 * {@link RenderTarget#resolveDepthBuffer} but for the stencil aspect.
-		 *
-		 * @type {boolean}
-		 * @default true
-		 */
-		this.resolveStencilBuffer = options.resolveStencilBuffer;
-
-		/**
 		 * Whether to store the multisampled color buffer or not. When set to `false`,
 		 * the multisampled data are discarded at the end of a render pass, right after
 		 * they have been resolved. This saves memory bandwidth, especially on tile-based
@@ -262,17 +231,7 @@ class RenderTarget extends EventDispatcher {
 		this.samples = options.samples;
 
 		/**
-		 * Whether this target is used in multiview rendering.
-		 *
-		 * @type {boolean}
-		 * @default false
-		 */
-		this.multiview = options.multiview;
-
-		/**
 		 * Whether to create the depth texture as an array texture for per-layer depth testing.
-		 * This is separate from multiview so layered render targets can use array depth without
-		 * the multiview extension.
 		 *
 		 * @type {boolean}
 		 * @default false
@@ -448,8 +407,6 @@ class RenderTarget extends EventDispatcher {
 		this.stencilBuffer = source.stencilBuffer;
 
 		this.resolveColorBuffer = source.resolveColorBuffer;
-		this.resolveDepthBuffer = source.resolveDepthBuffer;
-		this.resolveStencilBuffer = source.resolveStencilBuffer;
 
 		this.storeMultisampledColorBuffer = source.storeMultisampledColorBuffer;
 		this.storeMultisampledDepthBuffer = source.storeMultisampledDepthBuffer;
@@ -477,7 +434,6 @@ class RenderTarget extends EventDispatcher {
 		}
 
 		this.samples = source.samples;
-		this.multiview = source.multiview;
 		this.useArrayDepthTexture = source.useArrayDepthTexture;
 
 		return this;

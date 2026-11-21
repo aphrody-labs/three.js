@@ -1259,7 +1259,6 @@ class NodeBuilder {
 
 	/**
 	 * Returns the drawIndex input variable as a native shader string.
-	 * Only relevant for WebGL and its `WEBGL_multi_draw` extension.
 	 *
 	 * @abstract
 	 * @return {?string} The drawIndex shader string.
@@ -1364,8 +1363,7 @@ class NodeBuilder {
 	}
 
 	/**
-	 * Whether to flip texture data along its vertical axis or not. WebGL needs
-	 * this method evaluate to `true`, WebGPU to `false`.
+	 * Whether to flip texture data along its vertical axis or not.
 	 *
 	 * @abstract
 	 * @return {boolean} Whether to flip texture data along its vertical axis or not.

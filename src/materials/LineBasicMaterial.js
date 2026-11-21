@@ -62,8 +62,8 @@ class LineBasicMaterial extends Material {
 		/**
 		 * Controls line thickness or lines.
 		 *
-		 * Can only be used with {@link SVGRenderer}. WebGL and WebGPU
-		 * ignore this setting and always render line primitives with a
+		 * Can only be used with {@link SVGRenderer}. WebGPU
+		 * ignores this setting and always render line primitives with a
 		 * width of one pixel.
 		 *
 		 * @type {number}

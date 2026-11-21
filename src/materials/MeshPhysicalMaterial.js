@@ -2,7 +2,6 @@ import { Vector2 } from '../math/Vector2.js';
 import { MeshStandardMaterial } from './MeshStandardMaterial.js';
 import { Color } from '../math/Color.js';
 import { clamp } from '../math/MathUtils.js';
-import { warnOnce } from '../utils.js';
 
 /**
  * An extension of the {@link MeshStandardMaterial}, providing more advanced
@@ -597,30 +596,6 @@ class MeshPhysicalMaterial extends MeshStandardMaterial {
 		}
 
 		this._transmission = value;
-
-	}
-
-	/**
-	 * Array of exactly 2 elements, specifying minimum and maximum thickness of the iridescence layer.
-	 *
-	 * @deprecated since r187. Use {@link MeshPhysicalMaterial#iridescenceThicknessMinimum} and {@link MeshPhysicalMaterial#iridescenceThicknessMaximum} instead.
-	 * @type {Array<number,number>}
-	 * @default [100,400]
-	 */
-	get iridescenceThicknessRange() {
-
-		warnOnce( 'MeshPhysicalMaterial: The "iridescenceThicknessRange" property has been replaced by "iridescenceThicknessMinimum" and "iridescenceThicknessMaximum".' ); // @deprecated r187
-
-		return [ this.iridescenceThicknessMinimum, this.iridescenceThicknessMaximum ];
-
-	}
-
-	set iridescenceThicknessRange( value ) {
-
-		warnOnce( 'MeshPhysicalMaterial: The "iridescenceThicknessRange" property has been replaced by "iridescenceThicknessMinimum" and "iridescenceThicknessMaximum".' ); // @deprecated r187
-
-		this.iridescenceThicknessMinimum = value[ 0 ];
-		this.iridescenceThicknessMaximum = value[ 1 ];
 
 	}
 

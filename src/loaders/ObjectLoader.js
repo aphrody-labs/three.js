@@ -42,7 +42,6 @@ import { PointLight } from '../lights/PointLight.js';
 import { DirectionalLight } from '../lights/DirectionalLight.js';
 import { AmbientLight } from '../lights/AmbientLight.js';
 import { RectAreaLight } from '../lights/RectAreaLight.js';
-import { LightProbe } from '../lights/LightProbe.js';
 import { OrthographicCamera } from '../cameras/OrthographicCamera.js';
 import { PerspectiveCamera } from '../cameras/PerspectiveCamera.js';
 import { Scene } from '../scenes/Scene.js';
@@ -62,7 +61,6 @@ import * as Geometries from '../geometries/Geometries.js';
 import { getTypedArray, error, warn } from '../utils.js';
 import { Box3 } from '../math/Box3.js';
 import { Sphere } from '../math/Sphere.js';
-import { SphericalHarmonics3 } from '../math/SphericalHarmonics3.js';
 
 const _customGeometries = {};
 
@@ -964,13 +962,6 @@ class ObjectLoader extends Loader {
 			case 'HemisphereLight':
 
 				object = new HemisphereLight( data.color, data.groundColor, data.intensity );
-
-				break;
-
-			case 'LightProbe':
-
-				const sh = new SphericalHarmonics3().fromArray( data.sh );
-				object = new LightProbe( sh, data.intensity );
 
 				break;
 

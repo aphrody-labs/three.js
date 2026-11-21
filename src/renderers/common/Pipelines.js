@@ -365,9 +365,7 @@ class Pipelines extends DataMap {
 
 		if ( pipeline === undefined ) {
 
-			const { transforms, nodeAttributes } = this.nodes.getForCompute( computeNode );
-
-			pipeline = new ComputePipeline( cacheKey, stageCompute, transforms, nodeAttributes );
+			pipeline = new ComputePipeline( cacheKey, stageCompute );
 
 			this.caches.set( cacheKey, pipeline );
 

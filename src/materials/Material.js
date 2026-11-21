@@ -215,8 +215,7 @@ class Material extends EventDispatcher {
 
 		/**
 		 * Whether to have depth test enabled when rendering this material.
-		 * With `WebGLRenderer`, disabling the depth test also implicitly disables the depth write.
-		 * With the WebGPU backend of `WebGPURenderer`, depth is still written unless
+		 * Depth is still written when the depth test is disabled, unless
 		 * {@link Material#depthWrite} is set to `false`.
 		 *
 		 * @type {boolean}
@@ -307,33 +306,14 @@ class Material extends EventDispatcher {
 		 * User-defined clipping planes specified as THREE.Plane objects in world
 		 * space. These planes apply to the objects this material is attached to.
 		 * Points in space whose signed distance to the plane is negative are clipped
-		 * (not rendered). This requires {@link WebGLRenderer#localClippingEnabled} to
-		 * be `true`.
+		 * (not rendered).
 		 *
-		 * Only supported with `WebGLRenderer`. With `WebGPURenderer`, use {@link ClippingGroup}.
+		 * `WebGPURenderer` does not evaluate this property, use {@link ClippingGroup} instead.
 		 *
 		 * @type {?Array<Plane>}
 		 * @default null
 		 */
 		this.clippingPlanes = null;
-
-		/**
-		 * Changes the behavior of clipping planes so that only their intersection is
-		 * clipped, rather than their union. Only supported with `WebGLRenderer`.
-		 *
-		 * @type {boolean}
-		 * @default false
-		 */
-		this.clipIntersection = false;
-
-		/**
-		 * Defines whether to clip shadows according to the clipping planes specified
-		 * on this material. Only supported with `WebGLRenderer`.
-		 *
-		 * @type {boolean}
-		 * @default false
-		 */
-		this.clipShadows = false;
 
 		/**
 		 * Defines which side of faces cast shadows. If `null`, the side casting shadows
@@ -513,45 +493,15 @@ class Material extends EventDispatcher {
 	}
 
 	/**
-	 * An optional callback that is executed immediately before the material is used to render a 3D object.
-	 *
-	 * This method can only be used when rendering with {@link WebGLRenderer}.
-	 *
-	 * @param {WebGLRenderer} renderer - The renderer.
-	 * @param {Scene} scene - The scene.
-	 * @param {Camera} camera - The camera that is used to render the scene.
-	 * @param {BufferGeometry} geometry - The 3D object's geometry.
-	 * @param {Object3D} object - The 3D object.
-	 * @param {Object} group - The geometry group data.
-	 */
-	onBeforeRender( /* renderer, scene, camera, geometry, object, group */ ) {}
-
-	/**
-	 * An optional callback that is executed immediately before the shader
-	 * program is compiled. This function is called with the shader source code
-	 * as a parameter. Useful for the modification of built-in materials.
-	 *
-	 * This method can only be used when rendering with {@link WebGLRenderer}. The
-	 * recommended approach when customizing materials is to use `WebGPURenderer` with the new
-	 * Node Material system and [TSL](https://github.com/mrdoob/three.js/wiki/Three.js-Shading-Language).
-	 *
-	 * @param {{vertexShader:string,fragmentShader:string,uniforms:Object}} shaderobject - The object holds the uniforms and the vertex and fragment shader source.
-	 * @param {WebGLRenderer} renderer - A reference to the renderer.
-	 */
-	onBeforeCompile( /* shaderobject, renderer */ ) {}
-
-	/**
-	 * In case {@link Material#onBeforeCompile} is used, this callback can be used to identify
-	 * values of settings used in `onBeforeCompile()`, so three.js can reuse a cached
-	 * shader or recompile the shader for this material as needed.
-	 *
-	 * This method can only be used when rendering with {@link WebGLRenderer}.
+	 * Returns a string that identifies settings which affect the generated shader
+	 * beyond the material properties tracked by the renderer. Subclasses override
+	 * this to share or separate pipeline caches.
 	 *
 	 * @return {string} The custom program cache key.
 	 */
 	customProgramCacheKey() {
 
-		return this.onBeforeCompile.toString();
+		return '';
 
 	}
 
@@ -662,9 +612,6 @@ class Material extends EventDispatcher {
 		data.depthTest = this.depthTest;
 		data.depthWrite = this.depthWrite;
 		data.colorWrite = this.colorWrite;
-
-		data.clipIntersection = this.clipIntersection;
-		data.clipShadows = this.clipShadows;
 
 		data.stencilWriteMask = this.stencilWriteMask;
 		data.stencilFunc = this.stencilFunc;
@@ -950,13 +897,6 @@ class Material extends EventDispatcher {
 		if ( json.iridescenceThicknessMinimum !== undefined ) this.iridescenceThicknessMinimum = json.iridescenceThicknessMinimum;
 		if ( json.iridescenceThicknessMaximum !== undefined ) this.iridescenceThicknessMaximum = json.iridescenceThicknessMaximum;
 
-		if ( json.iridescenceThicknessRange !== undefined ) { // @deprecated r187
-
-			this.iridescenceThicknessMinimum = json.iridescenceThicknessRange[ 0 ];
-			this.iridescenceThicknessMaximum = json.iridescenceThicknessRange[ 1 ];
-
-		}
-
 		if ( json.transmission !== undefined ) this.transmission = json.transmission;
 		if ( json.thickness !== undefined ) this.thickness = json.thickness;
 		if ( json.attenuationDistance !== undefined ) this.attenuationDistance = json.attenuationDistance;
@@ -978,8 +918,6 @@ class Material extends EventDispatcher {
 		if ( json.depthWrite !== undefined ) this.depthWrite = json.depthWrite;
 		if ( json.colorWrite !== undefined ) this.colorWrite = json.colorWrite;
 		if ( json.clippingPlanes !== undefined ) this.clippingPlanes = json.clippingPlanes.map( plane => new Plane().fromJSON( plane ) );
-		if ( json.clipIntersection !== undefined ) this.clipIntersection = json.clipIntersection;
-		if ( json.clipShadows !== undefined ) this.clipShadows = json.clipShadows;
 		if ( json.depthPacking !== undefined ) this.depthPacking = json.depthPacking;
 		if ( json.blendSrc !== undefined ) this.blendSrc = json.blendSrc;
 		if ( json.blendDst !== undefined ) this.blendDst = json.blendDst;
@@ -1193,8 +1131,6 @@ class Material extends EventDispatcher {
 		}
 
 		this.clippingPlanes = dstPlanes;
-		this.clipIntersection = source.clipIntersection;
-		this.clipShadows = source.clipShadows;
 
 		this.shadowSide = source.shadowSide;
 

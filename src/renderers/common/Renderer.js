@@ -29,7 +29,7 @@ import { ColorManagement } from '../../math/ColorManagement.js';
 import { Vector2 } from '../../math/Vector2.js';
 import { Vector4 } from '../../math/Vector4.js';
 import { RenderTarget } from '../../core/RenderTarget.js';
-import { DoubleSide, BackSide, FrontSide, SRGBColorSpace, NoToneMapping, LinearFilter, HalfFloatType, RGBAFormat, PCFShadowMap, PCFSoftShadowMap, VSMShadowMap, RenderObjectRefreshType } from '../../constants.js';
+import { DoubleSide, BackSide, FrontSide, SRGBColorSpace, NoToneMapping, LinearFilter, HalfFloatType, RGBAFormat, PCFShadowMap, VSMShadowMap, RenderObjectRefreshType } from '../../constants.js';
 
 import { float, vec3, vec4, Fn } from '../../nodes/tsl/TSLCore.js';
 import { reference } from '../../nodes/accessors/ReferenceNode.js';
@@ -140,16 +140,14 @@ class Renderer {
 	 * @property {boolean} [antialias=false] - Whether MSAA as the default anti-aliasing should be enabled or not.
 	 * @property {number} [samples=0] - The number of MSAA samples. When `antialias` is `true`, `4` samples are used by default. A value other than `0`
 	 * overwrites the default and enables MSAA even without `antialias`. The WebGPU backend only supports `4` samples.
-	 * @property {?Function} [getFallback=null] - This callback function can be used to provide a fallback backend, if the primary backend can't be targeted.
 	 * @property {number} [outputBufferType=HalfFloatType] - Defines the type of output buffers. The default `HalfFloatType` is recommend for best
 	 * quality. To save memory and bandwidth, `UnsignedByteType` might be used. This will reduce rendering quality though.
-	 * @property {boolean} [multiview=false] - If set to `true`, the renderer will use multiview during WebXR rendering if supported.
 	 */
 
 	/**
 	 * Constructs a new renderer.
 	 *
-	 * @param {Backend} backend - The backend the renderer is targeting (e.g. WebGPU or WebGL 2).
+	 * @param {Backend} backend - The backend the renderer is targeting (e.g. WebGPU).
 	 * @param {Renderer~Options} [parameters] - The configuration parameter.
 
 	 */
@@ -174,9 +172,7 @@ class Renderer {
 			stencil = false,
 			antialias = false,
 			samples = 0,
-			getFallback = null,
-			outputBufferType = HalfFloatType,
-			multiview = false
+			outputBufferType = HalfFloatType
 		} = parameters;
 
 		/**
@@ -394,14 +390,6 @@ class Renderer {
 		 */
 		this._inspector = new InspectorBase();
 		this._inspector.setRenderer( this );
-
-		/**
-		 * This callback function can be used to provide a fallback backend, if the primary backend can't be targeted.
-		 *
-		 * @private
-		 * @type {?Function}
-		 */
-		this._getFallback = getFallback;
 
 		/**
 		 * A reference to a renderer module for managing shader attributes.
@@ -671,8 +659,7 @@ class Renderer {
 		this._handleObjectFunction = this._renderObjectDirect;
 
 		/**
-		 * Indicates whether the device has been lost or not. In WebGL terms, the device
-		 * lost is considered as a context lost. When this is set to `true`, rendering
+		 * Indicates whether the device has been lost or not. When this is set to `true`, rendering
 		 * isn't possible anymore.
 		 *
 		 * @private
@@ -821,7 +808,7 @@ class Renderer {
 		 *
 		 * @type {XRManager}
 		 */
-		this.xr = new XRManager( this, multiview );
+		this.xr = new XRManager( this );
 
 		/**
 		 * Debug configuration.
@@ -830,7 +817,6 @@ class Renderer {
 		 * @property {Object} diagnostics - Diagnostics configuration for the shader generation.
 		 * @property {boolean} diagnostics.keywords - Whether declaration names that collide with reserved keywords should be renamed or not.
 		 * @property {?Function} onNodeBuilderCreated - A callback function that is executed after a node builder has been created and before it is built.
-		 * @property {?Function} onShaderError - A callback function that is executed when a shader error happens. Only supported with WebGL 2 right now.
 		 * @property {Function} getShaderAsync - Allows the get the raw shader code for the given scene, camera and 3D object.
 		 */
 
@@ -845,7 +831,6 @@ class Renderer {
 				keywords: false
 			},
 			onNodeBuilderCreated: null,
-			onShaderError: null,
 			getShaderAsync: async ( scene, camera, object ) => {
 
 				await this.compileAsync( object, camera, scene );
@@ -906,7 +891,7 @@ class Renderer {
 
 		this._initPromise = new Promise( async ( resolve, reject ) => {
 
-			let backend = this.backend;
+			const backend = this.backend;
 
 			try {
 
@@ -914,28 +899,8 @@ class Renderer {
 
 			} catch ( error ) {
 
-				if ( this._getFallback !== null ) {
-
-					// try the fallback
-
-					try {
-
-						this.backend = backend = this._getFallback( error );
-						await backend.init( this );
-
-					} catch ( error ) {
-
-						reject( error );
-						return;
-
-					}
-
-				} else {
-
-					reject( error );
-					return;
-
-				}
+				reject( error );
+				return;
 
 			}
 
@@ -986,8 +951,7 @@ class Renderer {
 
 	/**
 	 * The coordinate system of the renderer. The value of this property
-	 * depends on the selected backend. Either `THREE.WebGLCoordinateSystem` or
-	 * `THREE.WebGPUCoordinateSystem`.
+	 * depends on the selected backend, which is `THREE.WebGPUCoordinateSystem`.
 	 *
 	 * @readonly
 	 * @type {number}
@@ -1028,14 +992,6 @@ class Renderer {
 		const prepare = this.drawingPipeline.prepareAsync( scene, camera );
 
 		if ( prepare !== undefined ) await prepare;
-
-		if ( this.shadowMap.type === PCFSoftShadowMap ) {
-
-			warn( 'WebGPURenderer: PCFSoftShadowMap has been removed. Using PCFShadowMap instead.' );
-
-			this.shadowMap.type = PCFShadowMap;
-
-		}
 
 		//
 
@@ -1467,39 +1423,6 @@ class Renderer {
 
 	}
 
-	/**
-	 * Renders the scene in an async fashion.
-	 *
-	 * @async
-	 * @deprecated
-	 * @param {Object3D} scene - The scene or 3D object to render.
-	 * @param {Camera} camera - The camera.
-	 * @return {Promise} A Promise that resolves when the render has been finished.
-	 */
-	async renderAsync( scene, camera ) {
-
-		warnOnce( 'Renderer: "renderAsync()" has been deprecated. Use "render()" and "await renderer.init();" when creating the renderer.' ); // @deprecated r181
-
-		await this.init();
-
-		this.render( scene, camera );
-
-	}
-
-	/**
-	 * Can be used to synchronize CPU operations with GPU tasks. So when this method is called,
-	 * the CPU waits for the GPU to complete its operation (e.g. a compute task).
-	 *
-	 * @async
-	 * @deprecated
-	 * @return {Promise} A Promise that resolves when synchronization has been finished.
-	 */
-	async waitForGPU() {
-
-		error( 'Renderer: waitForGPU() has been removed. Read https://github.com/mrdoob/three.js/issues/32012 for more information.' );
-
-	}
-
 	//
 
 	set inspector( value ) {
@@ -1600,20 +1523,6 @@ class Renderer {
 	getOutputBufferType() {
 
 		return this._outputBufferType;
-
-	}
-
-	/**
-	 * Returns the output buffer type.
-	 *
-	 * @deprecated since r182. Use `.getOutputBufferType()` instead.
-	 * @return {number} The output buffer type.
-	 */
-	getColorBufferType() { // @deprecated, r182
-
-		warnOnce( 'Renderer: ".getColorBufferType()" has been renamed to ".getOutputBufferType()".' );
-
-		return this.getOutputBufferType();
 
 	}
 
@@ -1843,9 +1752,7 @@ class Renderer {
 
 	_renderOutputLayers( quad, renderTarget ) {
 
-		const useMultiview = this.backend.isWebGLBackend === true && renderTarget.multiview === true;
-
-		if ( useMultiview || renderTarget.texture.isArrayTexture !== true || renderTarget.texture.image.depth <= 1 ) {
+		if ( renderTarget.texture.isArrayTexture !== true || renderTarget.texture.image.depth <= 1 ) {
 
 			this._renderScene( quad, quad.camera, false );
 			return;
@@ -1876,7 +1783,7 @@ class Renderer {
 
 	/**
 	 * Returns an internal render target which is used when computing the output tone mapping
-	 * and color space conversion. Unlike in `WebGLRenderer`, this is done in a separate render
+	 * and color space conversion. This is done in a separate render
 	 * pass and not inline to achieve more correct results.
 	 *
 	 * @private
@@ -1963,14 +1870,10 @@ class Renderer {
 		frameBufferTarget.viewport.multiplyScalar( pixelRatio );
 		frameBufferTarget.scissor.multiplyScalar( pixelRatio );
 		frameBufferTarget.scissorTest = scissorTest;
-		frameBufferTarget.multiview = outputRenderTarget !== null ? outputRenderTarget.multiview : false;
 		frameBufferTarget.useArrayDepthTexture = outputRenderTarget !== null ? outputRenderTarget.useArrayDepthTexture : false;
-		frameBufferTarget.resolveDepthBuffer = outputRenderTarget !== null ? outputRenderTarget.resolveDepthBuffer : true;
-		frameBufferTarget.resolveStencilBuffer = outputRenderTarget !== null ? outputRenderTarget.resolveStencilBuffer : true;
 		frameBufferTarget.storeMultisampledColorBuffer = outputRenderTarget !== null ? outputRenderTarget.storeMultisampledColorBuffer : true;
 		frameBufferTarget.storeMultisampledDepthBuffer = outputRenderTarget !== null ? outputRenderTarget.storeMultisampledDepthBuffer : true;
 		frameBufferTarget.storeMultisampledStencilBuffer = outputRenderTarget !== null ? outputRenderTarget.storeMultisampledStencilBuffer : true;
-		frameBufferTarget._autoAllocateDepthBuffer = outputRenderTarget !== null ? outputRenderTarget._autoAllocateDepthBuffer : false;
 
 		return frameBufferTarget;
 
@@ -1988,14 +1891,6 @@ class Renderer {
 	_renderScene( scene, camera, useFrameBufferTarget = true ) {
 
 		if ( this._isDeviceLost === true ) return;
-
-		if ( this.shadowMap.type === PCFSoftShadowMap ) {
-
-			warn( 'WebGPURenderer: PCFSoftShadowMap has been removed. Using PCFShadowMap instead.' );
-
-			this.shadowMap.type = PCFShadowMap;
-
-		}
 
 		//
 
@@ -2272,17 +2167,6 @@ class Renderer {
 
 	}
 
-	_setXRLayerSize( width, height ) {
-
-		// TODO: Find a better solution to resize the canvas when in XR.
-
-		this._canvasTarget._width = width;
-		this._canvasTarget._height = height;
-
-		this.setViewport( 0, 0, width, height );
-
-	}
-
 	/**
 	 * The output pass performs tone mapping and color space conversion.
 	 *
@@ -2457,7 +2341,7 @@ class Renderer {
 	/**
 	 * Returns the rendering context.
 	 *
-	 * @return {GPUCanvasContext|WebGL2RenderingContext} The rendering context.
+	 * @return {GPUCanvasContext} The rendering context.
 	 */
 	getContext() {
 
@@ -2871,71 +2755,6 @@ class Renderer {
 	}
 
 	/**
-	 * Async version of {@link Renderer#clear}.
-	 *
-	 * @async
-	 * @deprecated
-	 * @param {boolean} [color=true] - Whether the color buffer should be cleared or not.
-	 * @param {boolean} [depth=true] - Whether the depth buffer should be cleared or not.
-	 * @param {boolean} [stencil=true] - Whether the stencil buffer should be cleared or not.
-	 * @return {Promise} A Promise that resolves when the clear operation has been executed.
-	 */
-	async clearAsync( color = true, depth = true, stencil = true ) {
-
-		warnOnce( 'Renderer: "clearAsync()" has been deprecated. Use "clear()" and "await renderer.init();" when creating the renderer.' ); // @deprecated r181
-
-		await this.init();
-
-		this.clear( color, depth, stencil );
-
-	}
-
-	/**
-	 * Async version of {@link Renderer#clearColor}.
-	 *
-	 * @async
-	 * @deprecated
-	 * @return {Promise} A Promise that resolves when the clear operation has been executed.
-	 */
-	async clearColorAsync() {
-
-		warnOnce( 'Renderer: "clearColorAsync()" has been deprecated. Use "clearColor()" and "await renderer.init();" when creating the renderer.' ); // @deprecated r181
-
-		this.clear( true, false, false );
-
-	}
-
-	/**
-	 * Async version of {@link Renderer#clearDepth}.
-	 *
-	 * @async
-	 * @deprecated
-	 * @return {Promise} A Promise that resolves when the clear operation has been executed.
-	 */
-	async clearDepthAsync() {
-
-		warnOnce( 'Renderer: "clearDepthAsync()" has been deprecated. Use "clearDepth()" and "await renderer.init();" when creating the renderer.' ); // @deprecated r181
-
-		this.clear( false, true, false );
-
-	}
-
-	/**
-	 * Async version of {@link Renderer#clearStencil}.
-	 *
-	 * @async
-	 * @deprecated
-	 * @return {Promise} A Promise that resolves when the clear operation has been executed.
-	 */
-	async clearStencilAsync() {
-
-		warnOnce( 'Renderer: "clearStencilAsync()" has been deprecated. Use "clearStencil()" and "await renderer.init();" when creating the renderer.' ); // @deprecated r181
-
-		this.clear( false, false, true );
-
-	}
-
-	/**
 	 * Returns `true` if a framebuffer target is needed to perform tone mapping or color space conversion.
 	 * If this is the case, the renderer allocates an internal render target for that purpose.
 	 *
@@ -3164,7 +2983,6 @@ class Renderer {
 	 */
 	_resetXRState() {
 
-		this.backend.setXRTarget( null );
 		this.setOutputRenderTarget( null );
 		this.setRenderTarget( null );
 
@@ -3380,37 +3198,6 @@ class Renderer {
 	}
 
 	/**
-	 * Checks if the given feature is supported by the selected backend.
-	 *
-	 * @async
-	 * @deprecated
-	 * @param {string} name - The feature's name.
-	 * @return {Promise<boolean>} A Promise that resolves with a bool that indicates whether the feature is supported or not.
-	 */
-	async hasFeatureAsync( name ) {
-
-		warnOnce( 'Renderer: "hasFeatureAsync()" has been deprecated. Use "hasFeature()" and "await renderer.init();" when creating the renderer.' ); // @deprecated r181
-
-		await this.init();
-
-		return this.hasFeature( name );
-
-	}
-
-	/**
-	 * @async
-	 * @deprecated since r188. Use {@link GPUTimer} instead.
-	 * @return {Promise<null>} A Promise that resolves with `null`.
-	 */
-	async resolveTimestampsAsync() {
-
-		warnOnce( 'Renderer: "resolveTimestampsAsync()" has been removed. Use "GPUTimer" instead.' ); // @deprecated r188
-
-		return null;
-
-	}
-
-	/**
 	 * Checks if the given feature is supported by the selected backend. The renderer
 	 * must be initialized via {@link Renderer#init} before, otherwise this method throws.
 	 *
@@ -3437,25 +3224,6 @@ class Renderer {
 	hasInitialized() {
 
 		return this._initialized;
-
-	}
-
-	/**
-	 * Initializes the given textures. Useful for preloading a texture rather than waiting until first render
-	 * (which can cause noticeable lags due to decode and GPU upload overhead).
-	 *
-	 * @async
-	 * @deprecated
-	 * @param {Texture} texture - The texture.
-	 * @return {Promise} A Promise that resolves when the texture has been initialized.
-	 */
-	async initTextureAsync( texture ) {
-
-		warnOnce( 'Renderer: "initTextureAsync()" has been deprecated. Use "initTexture()" and "await renderer.init();" when creating the renderer.' ); // @deprecated r181
-
-		await this.init();
-
-		this.initTexture( texture );
 
 	}
 
@@ -3602,9 +3370,8 @@ class Renderer {
 	 * @async
 	 * @param {RenderTarget} renderTarget - The render target to read from.
 	 * @param {number} x - The `x` coordinate of the copy region's origin.
-	 * @param {number} y - The `y` coordinate of the copy region's origin. It is measured from the top
-	 * with the WebGPU backend and from the bottom with the WebGL backend. The row order of the
-	 * returned data follows the same convention.
+	 * @param {number} y - The `y` coordinate of the copy region's origin. It is measured from the top.
+	 * The row order of the returned data follows the same convention.
 	 * @param {number} width - The width of the copy region.
 	 * @param {number} height - The height of the copy region.
 	 * @param {number} [textureIndex=0] - The texture index of a MRT render target.
@@ -3853,7 +3620,7 @@ class Renderer {
 
 			}
 
-			// WebGPU/WebGL coordinate system
+			// coordinate system
 
 			const coordinateSystem = this.coordinateSystem;
 

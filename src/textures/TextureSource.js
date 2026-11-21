@@ -1,6 +1,6 @@
 import { ImageUtils } from '../extras/ImageUtils.js';
 import { generateUUID } from '../math/MathUtils.js';
-import { warn, warnOnce } from '../utils.js';
+import { warn } from '../utils.js';
 
 let _sourceId = 0;
 
@@ -227,35 +227,4 @@ function serializeImage( image ) {
 
 }
 
-/**
- * @deprecated since r186. Use {@link TextureSource} instead. `Source` has been renamed to `TextureSource`.
- */
-class Source extends TextureSource {
-
-	/**
-	 * Constructs a new texture source.
-	 *
-	 * @param {any} [data=null] - The data definition of a texture.
-	 * @deprecated since r186. Use {@link TextureSource} instead.
-	 */
-	constructor( data = null ) {
-
-		warnOnce( 'Source: "Source" has been renamed to "TextureSource". Please update your code to use "THREE.TextureSource" instead.' ); // @deprecated, r186
-
-		super( data );
-
-		/**
-		 * This flag can be used for type testing.
-		 *
-		 * @deprecated since r186. Use {@link TextureSource#isTextureSource} instead.
-		 * @type {boolean}
-		 * @readonly
-		 * @default true
-		 */
-		this.isSource = true;
-
-	}
-
-}
-
-export { Source, TextureSource };
+export { TextureSource };

@@ -1,7 +1,6 @@
 import Node from '../core/Node.js';
 import { sub, mul, div, mod } from './OperatorNode.js';
 import { addMethodChaining, nodeObject, nodeProxyAssignable, float, vec2, vec3, vec4, Fn } from '../tsl/TSLCore.js';
-import { WebGLCoordinateSystem, WebGPUCoordinateSystem } from '../../constants.js';
 import { error } from '../../utils.js';
 
 /**
@@ -242,8 +241,6 @@ class MathNode extends Node {
 		const b = this.bNode;
 		const c = this.cNode;
 
-		const coordinateSystem = builder.renderer.coordinateSystem;
-
 		if ( method === MathNode.NEGATE ) {
 
 			return builder.format( '( - ' + a.build( builder, inputType ) + ' )', type, output );
@@ -257,20 +254,6 @@ class MathNode extends Node {
 				params.push(
 					a.build( builder, type ),
 					b.build( builder, type )
-				);
-
-			} else if ( coordinateSystem === WebGLCoordinateSystem && method === MathNode.STEP ) {
-
-				params.push(
-					a.build( builder, builder.getTypeLength( a.getNodeType( builder ) ) === 1 ? 'float' : inputType ),
-					b.build( builder, inputType )
-				);
-
-			} else if ( coordinateSystem === WebGLCoordinateSystem && ( method === MathNode.MIN || method === MathNode.MAX ) ) {
-
-				params.push(
-					a.build( builder, inputType ),
-					b.build( builder, builder.getTypeLength( b.getNodeType( builder ) ) === 1 ? builder.getComponentType( inputType ) : inputType )
 				);
 
 			} else if ( method === MathNode.REFRACT ) {
@@ -291,7 +274,7 @@ class MathNode extends Node {
 
 			} else {
 
-				if ( coordinateSystem === WebGPUCoordinateSystem && method === MathNode.ATAN && b !== null ) {
+				if ( method === MathNode.ATAN && b !== null ) {
 
 					method = 'atan2';
 
@@ -440,15 +423,6 @@ export const INFINITY = /*@__PURE__*/ float( 1e6 );
  * @type {Node<float>}
  */
 export const PI = /*@__PURE__*/ float( Math.PI );
-
-/**
- * Represents PI * 2. Please use the non-deprecated version `TWO_PI`.
- *
- * @tsl
- * @deprecated
- * @type {Node<float>}
- */
-export const PI2 = /*@__PURE__*/ float( Math.PI * 2 ); // @deprecated r181
 
 /**
  * Represents PI * 2.

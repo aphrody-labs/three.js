@@ -12,7 +12,7 @@ const aspect = 1;
  *
  * ```js
  * // Create cube render target
- * const cubeRenderTarget = new THREE.WebGLCubeRenderTarget( 256, { generateMipmaps: true, minFilter: THREE.LinearMipmapLinearFilter } );
+ * const cubeRenderTarget = new THREE.CubeRenderTarget( 256, { generateMipmaps: true, minFilter: THREE.LinearMipmapLinearFilter } );
  *
  * // Create cube camera
  * const cubeCamera = new THREE.CubeCamera( 1, 100000, cubeRenderTarget );
@@ -42,7 +42,7 @@ class CubeCamera extends Object3D {
 	 *
 	 * @param {number} near - The camera's near plane.
 	 * @param {number} far - The camera's far plane.
-	 * @param {(WebGLCubeRenderTarget|CubeRenderTarget)} renderTarget - The cube render target.
+	 * @param {CubeRenderTarget} renderTarget - The cube render target.
 	 */
 	constructor( near, far, renderTarget ) {
 
@@ -53,7 +53,7 @@ class CubeCamera extends Object3D {
 		/**
 		 * A reference to the cube render target.
 		 *
-		 * @type {(WebGLCubeRenderTarget|CubeRenderTarget)}
+		 * @type {CubeRenderTarget}
 		 */
 		this.renderTarget = renderTarget;
 
@@ -172,7 +172,7 @@ class CubeCamera extends Object3D {
 	 * Calling this method will render the given scene with the given renderer
 	 * into the cube render target of the camera.
 	 *
-	 * @param {(Renderer|WebGLRenderer)} renderer - The renderer.
+	 * @param {Renderer} renderer - The renderer.
 	 * @param {Scene} scene - The scene to render.
 	 */
 	update( renderer, scene ) {
@@ -205,17 +205,7 @@ class CubeCamera extends Object3D {
 
 		// https://github.com/mrdoob/three.js/issues/31413#issuecomment-3095966812
 
-		let reversedDepthBuffer = false;
-
-		if ( renderer.isWebGLRenderer === true ) {
-
-			reversedDepthBuffer = renderer.state.buffers.depth.getReversed();
-
-		} else {
-
-			reversedDepthBuffer = renderer.reversedDepthBuffer;
-
-		}
+		const reversedDepthBuffer = renderer.reversedDepthBuffer;
 
 		renderer.setRenderTarget( renderTarget, 0, activeMipmapLevel );
 		if ( reversedDepthBuffer && renderer.autoClear === false ) renderer.clearDepth();

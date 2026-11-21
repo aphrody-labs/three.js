@@ -1,8 +1,6 @@
 import Renderer from '../common/Renderer.js';
-import WebGLBackend from '../webgl-fallback/WebGLBackend.js';
 import WebGPUBackend from './WebGPUBackend.js';
 import BasicNodeLibrary from './nodes/BasicNodeLibrary.js';
-import { warn } from '../../utils.js';
 
 /**
  * This alternative version of {@link WebGPURenderer} only supports node materials.
@@ -20,27 +18,7 @@ class WebGPURenderer extends Renderer {
 	 */
 	constructor( parameters = {} ) {
 
-		let BackendClass;
-
-		if ( parameters.forceWebGL ) {
-
-			BackendClass = WebGLBackend;
-
-		} else {
-
-			BackendClass = WebGPUBackend;
-
-			parameters.getFallback = () => {
-
-				warn( 'WebGPURenderer: WebGPU is not available, running under WebGL2 backend.' );
-
-				return new WebGLBackend( parameters );
-
-			};
-
-		}
-
-		const backend = new BackendClass( parameters );
+		const backend = new WebGPUBackend( parameters );
 
 		super( backend, parameters );
 

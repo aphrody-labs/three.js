@@ -13,7 +13,6 @@ import { viewportOpaqueMipTexture } from '../../nodes/display/ViewportTextureNod
 
 import { LineDashedMaterial } from '../LineDashedMaterial.js';
 import { NoBlending } from '../../constants.js';
-import { warnOnce } from '../../utils.js';
 
 const _defaultValues = /*@__PURE__*/ new LineDashedMaterial();
 
@@ -570,26 +569,6 @@ class Line2NodeMaterial extends NodeMaterial {
 		}
 
 		return super.setupPosition( builder );
-
-	}
-
-	/**
-	 * Defines the lines color.
-	 *
-	 * @deprecated since r185. Use {@link NodeMaterial#colorNode} instead.
-	 * @type {?Node<vec3>}
-	 */
-	get lineColorNode() {
-
-		return this.colorNode;
-
-	}
-
-	set lineColorNode( value ) {
-
-		warnOnce( 'Line2NodeMaterial: "lineColorNode" has been deprecated. Use "colorNode" instead.' ); // @deprecated r185
-
-		this.colorNode = value;
 
 	}
 

@@ -8,7 +8,6 @@ import RenderPipeline from './RenderPipeline.js';
  * material shaders. This avoids the intermediate framebuffer and output pass
  * used by {@link Renderer}, but changes blending and is not compatible with
  * materials that sample the framebuffer, such as transmissive materials.
- * With the WebGL backend, `antialias` has no effect.
  *
  * ```js
  * const renderPipeline = new DirectRenderPipeline( renderer );
@@ -84,8 +83,7 @@ class DirectRenderPipeline extends RenderPipeline {
 		const currentBackgroundNode = backgroundNode !== null ? scene.backgroundNode : null;
 		const currentContextNode = renderer.contextNode;
 		const outputRenderTarget = renderer.getOutputRenderTarget();
-		const useDirectXRRenderTarget = outputRenderTarget !== null && renderer.xr.isPresenting === true &&
-			renderer.backend.isWebGPUBackend === true && renderer.isOutputTarget === true;
+		const useDirectXRRenderTarget = outputRenderTarget !== null && renderer.xr.isPresenting === true && renderer.isOutputTarget === true;
 
 		let samples;
 		let depthBuffer;
@@ -115,12 +113,6 @@ class DirectRenderPipeline extends RenderPipeline {
 
 			renderer.toneMapping = NoToneMapping;
 			renderer.outputColorSpace = ColorManagement.workingColorSpace;
-
-			if ( renderer.xr.enabled ) {
-
-				renderer.xr.renderLayers();
-
-			}
 
 			renderer.render( scene, camera );
 
@@ -214,9 +206,8 @@ class DirectRenderPipeline extends RenderPipeline {
 			getOutput: ( materialOutputNode, builder ) => {
 
 				const renderer = builder.renderer;
-				const renderTarget = renderer.getRenderTarget();
 
-				if ( renderer.isOutputTarget === false && renderTarget?._hasExternalTextures !== true ) return materialOutputNode;
+				if ( renderer.isOutputTarget === false ) return materialOutputNode;
 
 				output.assign( materialOutputNode );
 

@@ -23,7 +23,6 @@ import {
 	BackSide,
 	LinearSRGBColorSpace
 } from '../../../constants.js';
-import { warnOnce } from '../../../utils.js';
 
 // Smaller inputs are upsampled so that every PMREM has enough mip levels.
 const MIN_SIZE = 256;
@@ -168,31 +167,6 @@ class PMREMGenerator {
 	}
 
 	/**
-	 * Asynchronous version of {@link PMREMGenerator#fromScene}.
-	 *
-	 * @deprecated
-	 * @param {Scene} scene - The scene to be captured.
-	 * @param {number} [sigma=0] - The blur radius in radians.
-	 * @param {number} [near=0.1] - The near plane distance.
-	 * @param {number} [far=100] - The far plane distance.
-	 * @param {Object} [options={}] - The configuration options.
-	 * @param {number} [options.size=256] - The texture size of the PMREM, rounded down to a power of two and at least 256.
-	 * @param {Vector3} [options.position=origin] - The position of the internal cube camera that renders the scene.
-	 * @param {?CubeRenderTarget} [options.renderTarget=null] - A PMREM previously returned by this generator to reuse. Its size must match the PMREM being generated.
-	 * @return {Promise<CubeRenderTarget>} A Promise that resolves with the PMREM.
-	 * @see {@link PMREMGenerator#fromScene}
-	 */
-	async fromSceneAsync( scene, sigma = 0, near = 0.1, far = 100, options = {} ) {
-
-		warnOnce( 'PMREMGenerator: ".fromSceneAsync()" is deprecated. Use "await renderer.init()" instead.' ); // @deprecated r181
-
-		await this._renderer.init();
-
-		return this.fromScene( scene, sigma, near, far, options );
-
-	}
-
-	/**
 	 * Generates a PMREM from an LDR or HDR equirectangular texture. The cube face
 	 * size is one quarter of the image width, rounded down to a power of two and
 	 * at least 256.
@@ -200,7 +174,6 @@ class PMREMGenerator {
 	 * @param {Texture} equirectangular - The equirectangular texture to be converted.
 	 * @param {?CubeRenderTarget} [renderTarget=null] - A PMREM previously returned by this generator to reuse. Its size must match the PMREM being generated.
 	 * @return {CubeRenderTarget} The resulting PMREM.
-	 * @see {@link PMREMGenerator#fromEquirectangularAsync}
 	 */
 	fromEquirectangular( equirectangular, renderTarget = null ) {
 
@@ -215,32 +188,12 @@ class PMREMGenerator {
 	}
 
 	/**
-	 * Asynchronous version of {@link PMREMGenerator#fromEquirectangular}.
-	 *
-	 * @deprecated
-	 * @param {Texture} equirectangular - The equirectangular texture to be converted.
-	 * @param {?CubeRenderTarget} [renderTarget=null] - A PMREM previously returned by this generator to reuse. Its size must match the PMREM being generated.
-	 * @return {Promise<CubeRenderTarget>} The resulting PMREM.
-	 * @see {@link PMREMGenerator#fromEquirectangular}
-	 */
-	async fromEquirectangularAsync( equirectangular, renderTarget = null ) {
-
-		warnOnce( 'PMREMGenerator: ".fromEquirectangularAsync()" is deprecated. Use "await renderer.init()" instead.' ); // @deprecated r181
-
-		await this._renderer.init();
-
-		return this._fromTexture( equirectangular, renderTarget );
-
-	}
-
-	/**
 	 * Generates a PMREM from an LDR or HDR cubemap. The cube face size matches
 	 * the input, rounded down to a power of two and at least 256.
 	 *
 	 * @param {Texture} cubemap - The cubemap texture to be converted.
 	 * @param {?CubeRenderTarget} [renderTarget=null] - A PMREM previously returned by this generator to reuse. Its size must match the PMREM being generated.
 	 * @return {CubeRenderTarget} The resulting PMREM.
-	 * @see {@link PMREMGenerator#fromCubemapAsync}
 	 */
 	fromCubemap( cubemap, renderTarget = null ) {
 
@@ -249,25 +202,6 @@ class PMREMGenerator {
 			throw new Error( 'THREE.PMREMGenerator: .fromCubemap() called before the backend is initialized. Use "await renderer.init();" before using this method.' );
 
 		}
-
-		return this._fromTexture( cubemap, renderTarget );
-
-	}
-
-	/**
-	 * Asynchronous version of {@link PMREMGenerator#fromCubemap}.
-	 *
-	 * @deprecated
-	 * @param {Texture} cubemap - The cubemap texture to be converted.
-	 * @param {?CubeRenderTarget} [renderTarget=null] - A PMREM previously returned by this generator to reuse. Its size must match the PMREM being generated.
-	 * @return {Promise<CubeRenderTarget>} The resulting PMREM.
-	 * @see {@link PMREMGenerator#fromCubemap}
-	 */
-	async fromCubemapAsync( cubemap, renderTarget = null ) {
-
-		warnOnce( 'PMREMGenerator: ".fromCubemapAsync()" is deprecated. Use "await renderer.init()" instead.' ); // @deprecated r181
-
-		await this._renderer.init();
 
 		return this._fromTexture( cubemap, renderTarget );
 

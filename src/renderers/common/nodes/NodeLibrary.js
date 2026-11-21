@@ -1,4 +1,4 @@
-import { warn, warnOnce } from '../../../utils.js';
+import { warn } from '../../../utils.js';
 
 /**
  * The purpose of a node library is to assign node implementations
@@ -111,36 +111,6 @@ class NodeLibrary {
 	addMaterial( materialNodeClass, materialClassType ) {
 
 		this.addType( materialNodeClass, materialClassType, this.materialNodes );
-
-	}
-
-	/**
-	 * Returns a light node class definition for a light class definition.
-	 *
-	 * @deprecated since r187. Use `Light.registerNode()` to assign light node classes instead.
-	 * @param {Light.constructor} lightClass - The light class definition.
-	 * @return {?AnalyticLightNode.constructor} The light node class definition. Returns `null` if no light node is found.
-	 */
-	getLightNodeClass( lightClass ) {
-
-		warnOnce( 'NodeLibrary: "getLightNodeClass()" has been deprecated. Use "Light.registerNode()" to assign light node classes instead.' ); // @deprecated r187
-
-		return lightClass.prototype._lightNode || null;
-
-	}
-
-	/**
-	 * Adds a light node class definition for a given light class definition.
-	 *
-	 * @deprecated since r187. Use `Light.registerNode()` instead.
-	 * @param {AnalyticLightNode.constructor} lightNodeClass - The light node class definition.
-	 * @param {Light.constructor} lightClass - The light class definition.
-	 */
-	addLight( lightNodeClass, lightClass ) {
-
-		warnOnce( 'NodeLibrary: "addLight()" has been deprecated. Use "Light.registerNode()" instead.' ); // @deprecated r187
-
-		lightClass.registerNode( lightNodeClass );
 
 	}
 

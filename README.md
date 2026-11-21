@@ -8,11 +8,12 @@
 
 #### JavaScript 3D library
 
-The aim of the project is to create an easy-to-use, lightweight, cross-browser, general-purpose 3D library. The current builds only include WebGL and WebGPU renderers but SVG and CSS3D renderers are also available as addons.
+The aim of the project is to create an easy-to-use, lightweight, cross-browser, general-purpose 3D library.
+
+This fork ([aphrody-labs/three.js](https://github.com/aphrody-labs/three.js)) is WebGPU-only and Bun-only: `three` and `three/webgpu` resolve to the same `WebGPURenderer` build, materials are compiled to WGSL by the TSL node system, and the WebGL renderer, the WebGL 2 fallback backend, GLSL `ShaderMaterial`/`ShaderChunk` and the WebGL examples are removed. SVG and CSS3D renderers remain available as addons.
 
 [Examples](https://threejs.org/examples/) &mdash;
 [Docs](https://threejs.org/docs/) &mdash;
-[Manual](https://threejs.org/manual/) &mdash;
 [Wiki](https://github.com/mrdoob/three.js/wiki) &mdash;
 [Migrating](https://github.com/mrdoob/three.js/wiki/Migration-Guide) &mdash;
 [Questions](https://stackoverflow.com/questions/tagged/three.js) &mdash;
@@ -21,7 +22,7 @@ The aim of the project is to create an easy-to-use, lightweight, cross-browser, 
 
 ### Usage
 
-This code creates a scene, a camera, and a geometric cube, and it adds the cube to the scene. It then creates a `WebGL` renderer for the scene and camera, and it adds that viewport to the `document.body` element. Finally, it animates the cube within the scene for the camera.
+This code creates a scene, a camera, and a geometric cube, and it adds the cube to the scene. It then creates a `WebGPU` renderer for the scene and camera, and it adds that viewport to the `document.body` element. Finally, it animates the cube within the scene for the camera.
 
 ```javascript
 import * as THREE from 'three';
@@ -41,8 +42,9 @@ const material = new THREE.MeshNormalMaterial();
 const mesh = new THREE.Mesh( geometry, material );
 scene.add( mesh );
 
-const renderer = new THREE.WebGLRenderer( { antialias: true } );
+const renderer = new THREE.WebGPURenderer( { antialias: true } );
 renderer.setSize( width, height );
+await renderer.init();
 renderer.setAnimationLoop( animate );
 document.body.appendChild( renderer.domElement );
 
@@ -58,14 +60,21 @@ function animate( time ) {
 }
 ```
 
-If everything goes well, you should see [this](https://jsfiddle.net/w43x5Lgh/).
+
+### Development
+
+```sh
+bun install
+bun run build
+bun test
+```
 
 ### Cloning this repository
 
 Cloning the repo with all its history results in a ~2 GB download. If you don't need the whole history you can use the `depth` parameter to significantly reduce download size.
 
 ```sh
-git clone --depth=1 https://github.com/mrdoob/three.js.git
+git clone --depth=1 https://github.com/aphrody-labs/three.js.git
 ```
 
 ### Change log

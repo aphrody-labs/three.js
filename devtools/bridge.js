@@ -78,14 +78,11 @@
 
 	function getRendererProperties( renderer ) {
 
-		// WebGL reports its context attributes, WebGPU exposes them directly
-		const parameters = renderer.getContextAttributes?.() || { alpha: renderer.alpha, antialias: renderer.samples > 0 };
-
 		return {
 			width: renderer.domElement.clientWidth,
 			height: renderer.domElement.clientHeight,
-			alpha: parameters.alpha || false,
-			antialias: parameters.antialias || false,
+			alpha: renderer.alpha,
+			antialias: renderer.samples > 0,
 			outputColorSpace: renderer.outputColorSpace,
 			toneMapping: renderer.toneMapping,
 			toneMappingExposure: renderer.toneMappingExposure,
@@ -97,8 +94,8 @@
 			localClipping: renderer.localClippingEnabled,
 			info: {
 				render: {
-					frame: renderer.isWebGPURenderer ? renderer.info.frame : renderer.info.render.frame,
-					calls: renderer.isWebGPURenderer ? renderer.info.render.drawCalls : renderer.info.render.calls,
+					frame: renderer.info.frame,
+					calls: renderer.info.render.drawCalls,
 					triangles: renderer.info.render.triangles,
 					points: renderer.info.render.points,
 					lines: renderer.info.render.lines
@@ -106,8 +103,7 @@
 				memory: {
 					geometries: renderer.info.memory.geometries,
 					textures: renderer.info.memory.textures,
-					// WebGPU counts its programs instead of listing them
-					programs: renderer.info.programs ? renderer.info.programs.length : renderer.info.memory.programs
+					programs: renderer.info.memory.programs
 				}
 			}
 		};
@@ -300,7 +296,7 @@
 
 		const object = event.detail;
 
-		if ( object.isWebGLRenderer || object.isWebGPURenderer ) {
+		if ( object.isWebGPURenderer ) {
 
 			// Renderers have no uuid of their own
 			object.uuid = [ ...crypto.getRandomValues( new Uint8Array( 16 ) ) ].map( b => b.toString( 16 ).padStart( 2, '0' ) ).join( '' );
@@ -404,7 +400,7 @@
 
 			postToPanel( EVENT_RENDERER, {
 				uuid: renderer.uuid,
-				type: renderer.isWebGLRenderer ? 'WebGLRenderer' : 'WebGPURenderer',
+				type: 'WebGPURenderer',
 				properties: getRendererProperties( renderer ),
 				canvasInDOM: document.contains( renderer.domElement )
 			} );

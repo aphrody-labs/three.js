@@ -73,47 +73,11 @@ class StorageArrayElementNode extends ArrayElementNode {
 
 	}
 
-	setup( builder ) {
-
-		if ( builder.isAvailable( 'storageBuffer' ) === false ) {
-
-			if ( this.node.isPBO === true ) {
-
-				builder.setupPBO( this.node );
-
-			}
-
-		}
-
-		return super.setup( builder );
-
-	}
-
 	generate( builder, output ) {
-
-		let snippet;
 
 		const isAssignContext = builder.isContextAssign();
 
-		//
-
-		if ( builder.isAvailable( 'storageBuffer' ) === false ) {
-
-			if ( this.node.isPBO === true && isAssignContext !== true && ( this.node.value.isInstancedBufferAttribute || builder.shaderStage !== 'compute' ) ) {
-
-				snippet = builder.generatePBO( this );
-
-			} else {
-
-				snippet = this.node.build( builder );
-
-			}
-
-		} else {
-
-			snippet = super.generate( builder );
-
-		}
+		let snippet = super.generate( builder );
 
 		if ( isAssignContext !== true ) {
 

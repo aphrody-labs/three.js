@@ -1,4 +1,3 @@
-import { WebGLCoordinateSystem } from '../../constants.js';
 import Node from '../core/Node.js';
 import { addMethodChaining, Fn, int, nodeProxyAssignable } from '../tsl/TSLCore.js';
 
@@ -283,29 +282,9 @@ class OperatorNode extends Node {
 
 		if ( output !== 'void' ) {
 
-			const isGLSL = builder.renderer.coordinateSystem === WebGLCoordinateSystem;
-
 			if ( op === '==' || op === '!=' || op === '<' || op === '>' || op === '<=' || op === '>=' ) {
 
-				if ( isGLSL ) {
-
-					if ( builder.isVector( typeA ) ) {
-
-						return builder.format( `${ this.getOperatorMethod( builder, output ) }( ${ a }, ${ b } )`, type, output );
-
-					} else {
-
-						return builder.format( `( ${ a } ${ op } ${ b } )`, type, output );
-
-					}
-
-				} else {
-
-					// WGSL
-
-					return builder.format( `( ${ a } ${ op } ${ b } )`, type, output );
-
-				}
+				return builder.format( `( ${ a } ${ op } ${ b } )`, type, output );
 
 			} else if ( op === '%' ) {
 
@@ -321,17 +300,7 @@ class OperatorNode extends Node {
 
 			} else if ( op === '!' ) {
 
-				if ( isGLSL && builder.isVector( typeA ) ) {
-
-					return builder.format( `not( ${a} )`, output );
-
-				} else {
-
-					// WGSL and scalars on GLSL
-
-					return builder.format( `( ${op} ${a} )`, typeA, output );
-
-				}
+				return builder.format( `( ${op} ${a} )`, typeA, output );
 
 			} else if ( op === '~' ) {
 
@@ -357,7 +326,7 @@ class OperatorNode extends Node {
 
 					let snippet = `( ${ a } ${ op } ${ b } )`;
 
-					if ( ! isGLSL && type === 'bool' && builder.isVector( typeA ) && builder.isVector( typeB ) ) {
+					if ( type === 'bool' && builder.isVector( typeA ) && builder.isVector( typeB ) ) {
 
 						snippet = `all${ snippet }`;
 
@@ -464,8 +433,7 @@ export const div = /*@__PURE__*/ nodeProxyAssignable( OperatorNode, '/' ).setPar
 /**
  * Computes the remainder of dividing the first node by the second one. Float operands
  * use floored modulo (`a - b * floor( a / b )`, the result has the sign of `b`), integer
- * operands use the `%` operator (truncated remainder with WebGPU, undefined for negative
- * operands with WebGL).
+ * operands use the `%` operator (truncated remainder).
  *
  * @tsl
  * @function

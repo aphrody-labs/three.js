@@ -654,19 +654,6 @@ class BufferGeometry extends EventDispatcher {
 		const position = this.attributes.position;
 		const morphAttributesPosition = this.morphAttributes.position;
 
-		if ( position && position.isGLBufferAttribute ) {
-
-			error( 'BufferGeometry.computeBoundingBox(): GLBufferAttribute requires a manual bounding box.', this );
-
-			this.boundingBox.set(
-				new Vector3( - Infinity, - Infinity, - Infinity ),
-				new Vector3( + Infinity, + Infinity, + Infinity )
-			);
-
-			return;
-
-		}
-
 		if ( position !== undefined ) {
 
 			this.boundingBox.setFromBufferAttribute( position );
@@ -728,16 +715,6 @@ class BufferGeometry extends EventDispatcher {
 
 		const position = this.attributes.position;
 		const morphAttributesPosition = this.morphAttributes.position;
-
-		if ( position && position.isGLBufferAttribute ) {
-
-			error( 'BufferGeometry.computeBoundingSphere(): GLBufferAttribute requires a manual bounding sphere.', this );
-
-			this.boundingSphere.set( new Vector3(), Infinity );
-
-			return;
-
-		}
 
 		if ( position ) {
 

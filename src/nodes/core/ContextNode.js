@@ -1,6 +1,5 @@
 import Node from './Node.js';
 import { addMethodChaining } from '../tsl/TSLCore.js';
-import { warn } from '../../utils.js';
 import { mergeContext } from './NodeUtils.js';
 
 /**
@@ -295,26 +294,7 @@ export function builtinGIContext( aoNode, giNode, node = null ) {
 
 }
 
-/**
- * TSL function for defining a label context value for a given node.
- *
- * @tsl
- * @function
- * @deprecated
- * @param {Node} node - The node whose context should be modified.
- * @param {string} name - The name/label to set.
- * @returns {ContextNode}
- */
-export function label( node, name ) {
-
-	warn( 'TSL: "label()" has been deprecated. Use "setName()" instead.' ); // @deprecated r179
-
-	return setName( node, name );
-
-}
-
 addMethodChaining( 'context', context );
-addMethodChaining( 'label', label );
 addMethodChaining( 'uniformFlow', uniformFlow );
 addMethodChaining( 'setName', setName );
 addMethodChaining( 'builtinShadowContext', ( node, shadowNode, light ) => builtinShadowContext( shadowNode, light, node ) );

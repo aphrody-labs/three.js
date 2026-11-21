@@ -120,7 +120,7 @@ class MeshDepthMaterial extends Material {
 		/**
 		 * Controls the thickness of the wireframe.
 		 *
-		 * WebGL and WebGPU ignore this property and always render
+		 * WebGPU ignores this property and always renders
 		 * 1 pixel wide lines.
 		 *
 		 * @type {number}

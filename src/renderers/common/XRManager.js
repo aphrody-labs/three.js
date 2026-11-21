@@ -1,25 +1,13 @@
 import { ArrayCamera } from '../../cameras/ArrayCamera.js';
 import { EventDispatcher } from '../../core/EventDispatcher.js';
 import { PerspectiveCamera } from '../../cameras/PerspectiveCamera.js';
-import { Quaternion } from '../../math/Quaternion.js';
 import { RAD2DEG } from '../../math/MathUtils.js';
 import { Vector2 } from '../../math/Vector2.js';
-import { Vector3 } from '../../math/Vector3.js';
 import { Vector4 } from '../../math/Vector4.js';
 import { WebXRController } from '../webxr/WebXRController.js';
-import { AddEquation, BackSide, CustomBlending, DepthFormat, DepthStencilFormat, FrontSide, RGBAFormat, UnsignedByteType, UnsignedInt248Type, UnsignedIntType, ZeroFactor, LinearFilter } from '../../constants.js';
-import { DepthTexture } from '../../textures/DepthTexture.js';
-import { XRRenderTarget } from './XRRenderTarget.js';
-import { CylinderGeometry } from '../../geometries/CylinderGeometry.js';
-import { PlaneGeometry } from '../../geometries/PlaneGeometry.js';
-import { MeshBasicMaterial } from '../../materials/MeshBasicMaterial.js';
-import { Mesh } from '../../objects/Mesh.js';
-import { warn, warnOnce } from '../../utils.js';
-import { renderOutput } from '../../nodes/display/RenderOutputNode.js';
+import { LinearFilter } from '../../constants.js';
+import { warn } from '../../utils.js';
 import { RenderTarget } from '../../core/RenderTarget.js';
-import { context } from '../../nodes/core/ContextNode.js';
-
-const _contextNodeLib = /*@__PURE__*/ new WeakMap();
 
 /**
  * The XR manager is built on top of the WebXR Device API to
@@ -33,9 +21,8 @@ class XRManager extends EventDispatcher {
 	 * Constructs a new XR manager.
 	 *
 	 * @param {Renderer} renderer - The renderer.
-	 * @param {boolean} [multiview=false] - Enables multiview if the device supports it.
 	 */
-	constructor( renderer, multiview = false ) {
+	constructor( renderer ) {
 
 		super();
 
@@ -156,49 +143,13 @@ class XRManager extends EventDispatcher {
 		this._xrRenderTarget = null;
 
 		/**
-		 * An array holding all the non-projection layers
-		 *
-		 * @private
-		 * @type {Array<Object>}
-		 * @default []
-		 */
-		this._layers = [];
-
-		/**
-		 * Whether the XR session uses layers.
-		 *
-		 * @private
-		 * @type {boolean}
-		 * @default false
-		 */
-		this._sessionUsesLayers = false;
-
-		/**
-		 * Whether the device supports binding gl objects.
+		 * Whether the device supports binding WebGPU objects.
 		 *
 		 * @private
 		 * @type {boolean}
 		 * @readonly
 		 */
-		this._supportsGlBinding = typeof XRWebGLBinding !== 'undefined';
 		this._supportsWebGPUBinding = typeof globalThis.XRGPUBinding !== 'undefined';
-
-		/**
-		 * Helper function to create native WebXR Layer.
-		 *
-		 * @private
-		 * @type {Function}
-		 */
-		this._createXRLayer = createXRLayer.bind( this );
-
-		/**
-		* The current WebGL context.
-		*
-		* @private
-		* @type {?WebGL2RenderingContext}
-		* @default null
-		*/
-		this._gl = null;
 
 		/**
 		 * The current animation context.
@@ -334,31 +285,12 @@ class XRManager extends EventDispatcher {
 		this._session = null;
 
 		/**
-		 * A reference to the current XR base layer.
-		 *
-		 * @private
-		 * @type {?XRWebGLLayer}
-		 * @default null
-		 */
-		this._glBaseLayer = null;
-
-		/**
-		 * A reference to the current XR binding.
-		 *
-		 * @private
-		 * @type {?XRWebGLBinding}
-		 * @default null
-		 */
-		this._glBinding = null;
-
-		/**
 		 * A reference to the current XR WebGPU binding.
 		 *
 		 * @private
 		 * @type {?XRGPUBinding}
 		 * @default null
 		 */
-
 		this._webgpuBinding = null;
 
 		/**
@@ -368,7 +300,7 @@ class XRManager extends EventDispatcher {
 		 * @type {?XRProjectionLayer}
 		 * @default null
 		 */
-		this._glProjLayer = null;
+		this._projectionLayer = null;
 
 		/**
 		 * A reference to the current XR frame.
@@ -378,38 +310,6 @@ class XRManager extends EventDispatcher {
 		 * @default null
 		 */
 		this._xrFrame = null;
-
-		/**
-		 * Whether the browser supports the APIs necessary to use XRProjectionLayers.
-		 *
-		 * Note: this does not represent XRSession explicitly requesting
-		 * `'layers'` as a feature - see `_sessionUsesLayers` and #30112
-		 *
-		 * @private
-		 * @type {boolean}
-		 * @readonly
-		 */
-		this._supportsLayers = ( this._supportsGlBinding && 'createProjectionLayer' in XRWebGLBinding.prototype ); // eslint-disable-line compat/compat
-
-		/**
-		 * Whether the usage of multiview has been requested by the application or not.
-		 *
-		 * @private
-		 * @type {boolean}
-		 * @default false
-		 * @readonly
-		 */
-		this._useMultiviewIfPossible = multiview;
-
-		/**
-		 * Whether the usage of multiview is actually enabled. This flag only evaluates to `true`
-		 * if multiview has been requested by the application and the `OVR_multiview2` is available.
-		 *
-		 * @private
-		 * @type {boolean}
-		 * @readonly
-		 */
-		this._useMultiview = false;
 
 	}
 
@@ -482,15 +382,9 @@ class XRManager extends EventDispatcher {
 
 		this._foveation = foveation;
 
-		if ( this._glProjLayer !== null ) {
+		if ( this._projectionLayer !== null ) {
 
-			this._glProjLayer.fixedFoveation = foveation;
-
-		}
-
-		if ( this._glBaseLayer !== null && this._glBaseLayer.fixedFoveation !== undefined ) {
-
-			this._glBaseLayer.fixedFoveation = foveation;
+			this._projectionLayer.fixedFoveation = foveation;
 
 		}
 
@@ -610,90 +504,11 @@ class XRManager extends EventDispatcher {
 	/**
 	 * Returns the current base layer.
 	 *
-	 * This is an `XRProjectionLayer` when the targeted XR device supports the
-	 * WebXR Layers API, or an `XRWebGLLayer` otherwise.
-	 *
-	 * @return {?(XRWebGLLayer|XRProjectionLayer)} The XR base layer.
+	 * @return {?XRProjectionLayer} The XR projection layer. Returns `null` when used outside a XR session.
 	 */
 	getBaseLayer() {
 
-		return this._glProjLayer !== null ? this._glProjLayer : this._glBaseLayer;
-
-	}
-
-
-	/**
-	 * Returns the current XR binding.
-	 *
-	 * Creates a new binding if needed and the browser is
-	 * capable of doing so.
-	 *
-	 * @return {?XRWebGLBinding} The XR binding. Returns `null` if one cannot be created.
-	 */
-	getBinding() {
-
-		if ( this._glBinding === null && this._supportsGlBinding ) {
-
-			this._glBinding = new XRWebGLBinding( this._session, this._gl );
-
-		}
-
-		return this._glBinding;
-
-	}
-
-	/**
-	 * Applies WebXR fixed foveation to the internal post-processing render target
-	 * used by the first XR render pass before compositing into a projection layer.
-	 *
-	 * Browser-side `XRWebGLBinding.foveateBoundTexture()` failures are treated as
-	 * non-fatal so they do not interrupt rendering.
-	 *
-	 * @param {?RenderTarget} renderTarget - The internal render target.
-	 */
-	foveateBoundTexture( renderTarget ) {
-
-		if ( renderTarget === null || renderTarget.isPostProcessingRenderTarget !== true ) return;
-		if ( this.isPresenting !== true ) return;
-		if ( this._glProjLayer === null ) return;
-
-		const backend = this._renderer.backend;
-
-		if ( backend === undefined || backend.isWebGLBackend !== true ) return;
-		if ( backend.state === null ) return;
-
-		const outputRenderTarget = this._renderer.getOutputRenderTarget();
-
-		if ( outputRenderTarget === null || outputRenderTarget.isXRRenderTarget !== true ) return;
-
-		const glBinding = this.getBinding();
-
-		if ( glBinding === null || typeof glBinding.foveateBoundTexture !== 'function' ) return;
-
-		this._renderer._textures.updateRenderTarget( renderTarget );
-
-		const { textureGPU, glTextureType } = backend.get( renderTarget.texture );
-
-		if ( textureGPU === undefined || glTextureType === undefined ) return;
-		if ( renderTarget._xrFoveationTextureGPU === textureGPU ) return;
-
-		renderTarget._xrFoveationTextureGPU = textureGPU;
-
-		backend.state.bindTexture( glTextureType, textureGPU );
-
-		try {
-
-			glBinding.foveateBoundTexture( glTextureType, this.getFoveation() );
-
-		} catch ( error ) {
-
-			warnOnce( `XRManager: Unable to foveate bound XR post-processing texture. ${error.name}: ${error.message}` );
-
-		} finally {
-
-			backend.state.unbindTexture();
-
-		}
+		return this._projectionLayer;
 
 	}
 
@@ -718,37 +533,6 @@ class XRManager extends EventDispatcher {
 	}
 
 	/**
-	 * Returns whether the current XR session is using WebGPU.
-	 *
-	 * @private
-	 * @return {boolean} Whether the current session uses the WebGPU backend and the `webgpu` session feature.
-	 */
-	_isWebGPUSession() {
-
-		return this._renderer.backend.isWebGPUBackend === true &&
-			this._session !== null &&
-			this._session.enabledFeatures.includes( 'webgpu' );
-
-	}
-
-	/**
-	 * Validates the current WebGPU XR session requirements.
-	 *
-	 * @private
-	 */
-	_validateWebGPUSession() {
-
-		if ( this._renderer.backend.isWebGPUBackend !== true ) return;
-
-		if ( this._session.enabledFeatures.includes( 'webgpu' ) === false ) {
-
-			throw new Error( 'THREE.XRManager: WebGPU XR sessions require the "webgpu" session feature. Use VRButtonGPU/XRButton with "webgpu" enabled or use a WebGL backend.' );
-
-		}
-
-	}
-
-	/**
 	 * Initializes the WebGPU XR projection layer and render target.
 	 *
 	 * @private
@@ -759,22 +543,22 @@ class XRManager extends EventDispatcher {
 	async _initWebGPUSession( session ) {
 
 		const webgpuBinding = this.getWebGPUBinding();
-		const glProjLayer = webgpuBinding.createProjectionLayer( {
-			colorFormat: webgpuBinding.getPreferredColorFormat()
+		const projectionLayer = webgpuBinding.createProjectionLayer( {
+			colorFormat: webgpuBinding.getPreferredColorFormat(),
+			scaleFactor: this._framebufferScaleFactor
 		} );
 
-		this._glProjLayer = glProjLayer;
+		this._projectionLayer = projectionLayer;
 
-		session.updateRenderState( { layers: [ glProjLayer ] } );
+		session.updateRenderState( { layers: [ projectionLayer ] } );
 
 		this._referenceSpace = await session.requestReferenceSpace( this.getReferenceSpaceType() );
 
-		this._xrRenderTarget = new RenderTarget( glProjLayer.textureWidth, glProjLayer.textureHeight, {
+		this._xrRenderTarget = new RenderTarget( projectionLayer.textureWidth, projectionLayer.textureHeight, {
 			depth: 2,
 			minFilter: LinearFilter,
 			magFilter: LinearFilter,
 			depthBuffer: true,
-			multiview: false,
 			useArrayDepthTexture: true,
 			storeMultisampledColorBuffer: false,
 			storeMultisampledDepthBuffer: false,
@@ -783,14 +567,6 @@ class XRManager extends EventDispatcher {
 		} );
 
 		this._xrRenderTarget.texture.isArrayTexture = true;
-
-		if ( this._useMultiviewIfPossible === true ) {
-
-			warnOnce( 'THREE.XRManager: WebGPU XR does not support multiview yet. Disabling multiview for this XR session.' );
-
-		}
-
-		this._useMultiview = false;
 
 	}
 
@@ -805,7 +581,7 @@ class XRManager extends EventDispatcher {
 		const backend = renderer.backend;
 		const xrRenderTarget = this._xrRenderTarget;
 
-		if ( xrRenderTarget === null || backend.isWebGPUBackend !== true ) return;
+		if ( xrRenderTarget === null ) return;
 
 		if ( renderer._renderContexts && renderer._renderContexts.dispose ) {
 
@@ -844,7 +620,7 @@ class XRManager extends EventDispatcher {
 
 		for ( let i = 0; i < views.length; i ++ ) {
 
-			const gpuSubImage = webgpuBinding.getViewSubImage( this._glProjLayer, views[ i ] );
+			const gpuSubImage = webgpuBinding.getViewSubImage( this._projectionLayer, views[ i ] );
 
 			if ( viewData.colorTexture === null ) {
 
@@ -878,298 +654,6 @@ class XRManager extends EventDispatcher {
 	}
 
 	/**
-	 * Returns `true` if the engine renders to a multiview target.
-	 *
-	 * @return {boolean} Whether the engine renders to a multiview render target or not.
-	 */
-	useMultiview() {
-
-		return this._useMultiview;
-
-	}
-
-	/**
-	 * This method can be used in XR applications to create a quadratic layer that presents a separate
-	 * rendered scene.
-	 *
-	 * @param {number} width - The width of the layer plane in world units.
-	 * @param {number} height - The height of the layer plane in world units.
-	 * @param {Vector3} translation - The position/translation of the layer plane in world units.
-	 * @param {Quaternion} quaternion - The orientation of the layer plane expressed as a quaternion.
-	 * @param {number} pixelwidth - The width of the layer's render target in pixels.
-	 * @param {number} pixelheight - The height of the layer's render target in pixels.
-	 * @param {Function} rendercall - A callback function that renders the layer. Similar to code in
-	 * the default animation loop, this method can be used to update/transform 3D object in the layer's scene.
-	 * @param {Object} [attributes={}] - Allows to configure the layer's render target.
-	 * @param {number} [attributes.samples] - The scene MSAA sample count. Defaults to the renderer's sample count.
-	 * @return {Mesh} A mesh representing the quadratic XR layer. This mesh should be added to the XR scene.
-	 */
-	createQuadLayer( width, height, translation, quaternion, pixelwidth, pixelheight, rendercall, attributes = {} ) {
-
-		const geometry = new PlaneGeometry( width, height );
-		const renderTarget = new XRRenderTarget(
-			pixelwidth,
-			pixelheight,
-			{
-				format: RGBAFormat,
-				type: UnsignedByteType,
-				depthTexture: new DepthTexture(
-					pixelwidth,
-					pixelheight,
-					attributes.stencil ? UnsignedInt248Type : UnsignedIntType,
-					undefined,
-					undefined,
-					undefined,
-					undefined,
-					undefined,
-					undefined,
-					attributes.stencil ? DepthStencilFormat : DepthFormat
-				),
-				stencilBuffer: attributes.stencil,
-				samples: attributes.samples ?? this._renderer.samples,
-				resolveDepthBuffer: false,
-				resolveStencilBuffer: false,
-				storeMultisampledColorBuffer: false,
-				storeMultisampledDepthBuffer: false,
-				storeMultisampledStencilBuffer: false
-			} );
-
-		const material = new MeshBasicMaterial( { color: 0xffffff, side: FrontSide } );
-		material.map = renderTarget.texture;
-		material.map.offset.y = 1;
-		material.map.repeat.y = - 1;
-		const plane = new Mesh( geometry, material );
-		plane.position.copy( translation );
-		plane.quaternion.copy( quaternion );
-
-		const layer = {
-			type: 'quad',
-			width: width,
-			height: height,
-			translation: translation,
-			quaternion: quaternion,
-			pixelwidth: pixelwidth,
-			pixelheight: pixelheight,
-			samples: renderTarget.samples,
-			plane: plane,
-			material: material,
-			rendercall: rendercall,
-			renderTarget: renderTarget };
-
-		this._layers.push( layer );
-
-		if ( this._session !== null ) {
-
-			layer.plane.material = new MeshBasicMaterial( { color: 0xffffff, side: FrontSide } );
-			layer.plane.material.blending = CustomBlending;
-			layer.plane.material.blendEquation = AddEquation;
-			layer.plane.material.blendSrc = ZeroFactor;
-			layer.plane.material.blendDst = ZeroFactor;
-
-			layer.xrlayer = this._createXRLayer( layer );
-
-			const xrlayers = this._session.renderState.layers;
-			xrlayers.unshift( layer.xrlayer );
-			this._session.updateRenderState( { layers: xrlayers } );
-
-		} else {
-
-			renderTarget.isXRRenderTarget = false;
-
-		}
-
-		return plane;
-
-	}
-
-	/**
-	 * This method can be used in XR applications to create a cylindrical layer that presents a separate
-	 * rendered scene.
-	 *
-	 * @param {number} radius - The radius of the cylinder in world units.
-	 * @param {number} centralAngle - The central angle of the cylinder in radians.
-	 * @param {number} aspectratio - The aspect ratio.
-	 * @param {Vector3} translation - The position/translation of the layer plane in world units.
-	 * @param {Quaternion} quaternion - The orientation of the layer plane expressed as a quaternion.
-	 * @param {number} pixelwidth - The width of the layer's render target in pixels.
-	 * @param {number} pixelheight - The height of the layer's render target in pixels.
-	 * @param {Function} rendercall - A callback function that renders the layer. Similar to code in
-	 * the default animation loop, this method can be used to update/transform 3D object in the layer's scene.
-	 * @param {Object} [attributes={}] - Allows to configure the layer's render target.
-	 * @param {number} [attributes.samples] - The scene MSAA sample count. Defaults to the renderer's sample count.
-	 * @return {Mesh} A mesh representing the cylindrical XR layer. This mesh should be added to the XR scene.
-	 */
-	createCylinderLayer( radius, centralAngle, aspectratio, translation, quaternion, pixelwidth, pixelheight, rendercall, attributes = {} ) {
-
-		const geometry = new CylinderGeometry( radius, radius, radius * centralAngle / aspectratio, 64, 64, true, Math.PI - centralAngle / 2, centralAngle );
-		const renderTarget = new XRRenderTarget(
-			pixelwidth,
-			pixelheight,
-			{
-				format: RGBAFormat,
-				type: UnsignedByteType,
-				depthTexture: new DepthTexture(
-					pixelwidth,
-					pixelheight,
-					attributes.stencil ? UnsignedInt248Type : UnsignedIntType,
-					undefined,
-					undefined,
-					undefined,
-					undefined,
-					undefined,
-					undefined,
-					attributes.stencil ? DepthStencilFormat : DepthFormat
-				),
-				stencilBuffer: attributes.stencil,
-				samples: attributes.samples ?? this._renderer.samples,
-				resolveDepthBuffer: false,
-				resolveStencilBuffer: false,
-				storeMultisampledColorBuffer: false,
-				storeMultisampledDepthBuffer: false,
-				storeMultisampledStencilBuffer: false
-			} );
-
-		const material = new MeshBasicMaterial( { color: 0xffffff, side: BackSide } );
-		material.map = renderTarget.texture;
-		material.map.offset.y = 1;
-		material.map.repeat.y = - 1;
-		const plane = new Mesh( geometry, material );
-		plane.position.copy( translation );
-		plane.quaternion.copy( quaternion );
-
-		const layer = {
-			type: 'cylinder',
-			radius: radius,
-			centralAngle: centralAngle,
-			aspectratio: aspectratio,
-			translation: translation,
-			quaternion: quaternion,
-			pixelwidth: pixelwidth,
-			pixelheight: pixelheight,
-			samples: renderTarget.samples,
-			plane: plane,
-			material: material,
-			rendercall: rendercall,
-			renderTarget: renderTarget };
-
-		this._layers.push( layer );
-
-		if ( this._session !== null ) {
-
-			layer.plane.material = new MeshBasicMaterial( { color: 0xffffff, side: BackSide } );
-			layer.plane.material.blending = CustomBlending;
-			layer.plane.material.blendEquation = AddEquation;
-			layer.plane.material.blendSrc = ZeroFactor;
-			layer.plane.material.blendDst = ZeroFactor;
-
-			layer.xrlayer = this._createXRLayer( layer );
-
-			const xrlayers = this._session.renderState.layers;
-			xrlayers.unshift( layer.xrlayer );
-			this._session.updateRenderState( { layers: xrlayers } );
-
-		} else {
-
-			renderTarget.isXRRenderTarget = false;
-
-		}
-
-		return plane;
-
-	}
-
-	/**
-	 * Renders the XR layers that have been previously added to the scene.
-	 *
-	 * This method is usually called in your animation loop before rendering
-	 * the actual scene via `renderer.render( scene, camera );`.
-	 */
-	renderLayers( ) {
-
-		const translationObject = new Vector3();
-		const quaternionObject = new Quaternion();
-		const renderer = this._renderer;
-
-		const wasPresenting = this.isPresenting;
-
-		this.isPresenting = false;
-
-		const rendererSize = new Vector2();
-		renderer.getSize( rendererSize );
-
-		const currentRenderTarget = renderer.getRenderTarget();
-
-		for ( const layer of this._layers ) {
-
-			layer.renderTarget.isXRRenderTarget = this._session !== null;
-			layer.renderTarget._hasExternalTextures = layer.renderTarget.isXRRenderTarget;
-
-			const currentContextNode = renderer.contextNode;
-
-			let contextNode;
-
-			if ( layer.renderTarget.isXRRenderTarget && this._sessionUsesLayers ) {
-
-				layer.xrlayer.transform = new XRRigidTransform( layer.plane.getWorldPosition( translationObject ), layer.plane.getWorldQuaternion( quaternionObject ) );
-
-				const glSubImage = this._glBinding.getSubImage( layer.xrlayer, this._xrFrame );
-				renderer.backend.setXRRenderTargetTextures(
-					layer.renderTarget,
-					glSubImage.colorTexture,
-					undefined );
-
-				renderer._setXRLayerSize( layer.renderTarget.width, layer.renderTarget.height );
-
-				contextNode = _contextNodeLib.get( currentContextNode );
-
-				if ( contextNode === undefined ) {
-
-					// Apply ToneMapping and OutputColorSpace directly in the material shader
-
-					contextNode = context( {
-
-						getOutput: ( outputNode, builder ) => {
-
-							const renderOutputNode = renderOutput( outputNode, renderer.toneMapping, renderer.outputColorSpace );
-							renderOutputNode.premultipliedAlpha = builder.material.premultipliedAlpha;
-
-							return renderOutputNode;
-
-						},
-
-						... currentContextNode.getFlowContextData()
-
-					} );
-
-					_contextNodeLib.set( currentContextNode, contextNode );
-
-				}
-
-			} else {
-
-				contextNode = currentContextNode;
-
-			}
-
-			renderer.contextNode = contextNode;
-
-			renderer.setRenderTarget( layer.renderTarget );
-
-			layer.rendercall();
-
-			renderer.contextNode = currentContextNode;
-
-		}
-
-		renderer.setRenderTarget( currentRenderTarget );
-		renderer._setXRLayerSize( rendererSize.x, rendererSize.y );
-
-		this.isPresenting = wasPresenting;
-
-	}
-
-
-	/**
 	 * Returns the current XR session.
 	 *
 	 * @return {?XRSession} The XR session. Returns `null` when used outside a XR session.
@@ -1195,8 +679,11 @@ class XRManager extends EventDispatcher {
 
 		if ( renderer.initialized === false ) await renderer.init();
 
-		this._gl = renderer.getContext();
-		const gl = this._gl;
+		if ( session !== null && session.enabledFeatures.includes( 'webgpu' ) === false ) {
+
+			throw new Error( 'THREE.XRManager: XR sessions require the "webgpu" session feature. Request the session with "webgpu" as a required or optional feature, e.g. by using XRButton, VRButton or ARButton.' );
+
+		}
 
 		this._session = session;
 
@@ -1211,8 +698,6 @@ class XRManager extends EventDispatcher {
 			session.addEventListener( 'end', this._onSessionEnd );
 			session.addEventListener( 'inputsourceschange', this._onInputSourcesChange );
 
-			this._validateWebGPUSession();
-
 			this._currentPixelRatio = renderer.getPixelRatio();
 			renderer.getSize( this._currentSize );
 
@@ -1222,141 +707,7 @@ class XRManager extends EventDispatcher {
 
 			//
 
-			if ( this._isWebGPUSession() ) {
-
-				await this._initWebGPUSession( session );
-
-			} else if ( this._supportsLayers === true ) {
-
-				// default path using XRProjectionLayer
-
-				let depthFormat = null;
-				let depthType = null;
-				let glDepthFormat = null;
-
-				const attributes = gl.getContextAttributes();
-				await renderer.backend.makeXRCompatible();
-				this.setFoveation( this.getFoveation() );
-
-				if ( renderer.depth ) {
-
-					glDepthFormat = renderer.stencil ? gl.DEPTH24_STENCIL8 : gl.DEPTH_COMPONENT24;
-					depthFormat = renderer.stencil ? DepthStencilFormat : DepthFormat;
-					depthType = renderer.stencil ? UnsignedInt248Type : UnsignedIntType;
-
-				}
-
-				const projectionlayerInit = {
-					colorFormat: gl.RGBA8,
-					depthFormat: glDepthFormat,
-					scaleFactor: this._framebufferScaleFactor,
-					clearOnAccess: false
-				};
-
-				if ( this._useMultiviewIfPossible && renderer.hasFeature( 'OVR_multiview2' ) ) {
-
-					projectionlayerInit.textureType = 'texture-array';
-					this._useMultiview = true;
-
-				}
-
-				this._glBinding = this.getBinding();
-				const glProjLayer = this._glBinding.createProjectionLayer( projectionlayerInit );
-				const layersArray = [ glProjLayer ];
-
-				this._glProjLayer = glProjLayer;
-
-				renderer.setPixelRatio( 1 );
-				renderer._setXRLayerSize( glProjLayer.textureWidth, glProjLayer.textureHeight );
-
-				const depth = this._useMultiview ? 2 : 1;
-				const depthTexture = new DepthTexture( glProjLayer.textureWidth, glProjLayer.textureHeight, depthType, undefined, undefined, undefined, undefined, undefined, undefined, depthFormat, depth );
-
-				this._xrRenderTarget = new XRRenderTarget(
-					glProjLayer.textureWidth,
-					glProjLayer.textureHeight,
-					{
-						format: RGBAFormat,
-						type: UnsignedByteType,
-						colorSpace: renderer.outputColorSpace,
-						depthTexture: depthTexture,
-						stencilBuffer: renderer.stencil,
-						samples: attributes.antialias ? 4 : 0,
-						resolveDepthBuffer: ( glProjLayer.ignoreDepthValues === false ),
-						resolveStencilBuffer: ( glProjLayer.ignoreDepthValues === false ),
-						storeMultisampledColorBuffer: false,
-						storeMultisampledDepthBuffer: ( glProjLayer.ignoreDepthValues === false ),
-						storeMultisampledStencilBuffer: ( glProjLayer.ignoreDepthValues === false ),
-						depth: this._useMultiview ? 2 : 1,
-						multiview: this._useMultiview
-					} );
-
-				this._xrRenderTarget._hasExternalTextures = true;
-				this._xrRenderTarget.depth = this._useMultiview ? 2 : 1;
-
-				this._sessionUsesLayers = session.enabledFeatures.includes( 'layers' );
-
-				this._referenceSpace = await session.requestReferenceSpace( this.getReferenceSpaceType() );
-
-				if ( this._sessionUsesLayers ) {
-
-					// switch layers to native
-					for ( const layer of this._layers ) {
-
-						// change material so it "punches" out a hole to show the XR Layer.
-						layer.plane.material = new MeshBasicMaterial( { color: 0xffffff, side: layer.type === 'cylinder' ? BackSide : FrontSide } );
-						layer.plane.material.blending = CustomBlending;
-						layer.plane.material.blendEquation = AddEquation;
-						layer.plane.material.blendSrc = ZeroFactor;
-						layer.plane.material.blendDst = ZeroFactor;
-
-						layer.xrlayer = this._createXRLayer( layer );
-
-						layersArray.unshift( layer.xrlayer );
-
-					}
-
-				}
-
-				session.updateRenderState( { layers: layersArray } );
-
-			} else {
-
-				// fallback to XRWebGLLayer
-				await renderer.backend.makeXRCompatible();
-				this.setFoveation( this.getFoveation() );
-
-				const layerInit = {
-					antialias: renderer.currentSamples > 0,
-					alpha: true,
-					depth: renderer.depth,
-					stencil: renderer.stencil,
-					framebufferScaleFactor: this.getFramebufferScaleFactor()
-				};
-
-				const glBaseLayer = new XRWebGLLayer( session, gl, layerInit );
-				this._glBaseLayer = glBaseLayer;
-
-				session.updateRenderState( { baseLayer: glBaseLayer } );
-
-				renderer.setPixelRatio( 1 );
-				renderer._setXRLayerSize( glBaseLayer.framebufferWidth, glBaseLayer.framebufferHeight );
-
-				this._xrRenderTarget = new XRRenderTarget(
-					glBaseLayer.framebufferWidth,
-					glBaseLayer.framebufferHeight,
-					{
-						format: RGBAFormat,
-						type: UnsignedByteType,
-						colorSpace: renderer.outputColorSpace,
-						stencilBuffer: renderer.stencil
-					}
-				);
-
-				this._xrRenderTarget._isOpaqueFramebuffer = true;
-				this._referenceSpace = await session.requestReferenceSpace( this.getReferenceSpaceType() );
-
-			}
+			await this._initWebGPUSession( session );
 
 			//
 
@@ -1394,7 +745,6 @@ class XRManager extends EventDispatcher {
 
 		cameraXR.near = cameraR.near = cameraL.near = depthNear;
 		cameraXR.far = cameraR.far = cameraL.far = depthFar;
-		cameraXR.isMultiViewCamera = this._useMultiview;
 
 		if ( this._currentDepthNear !== cameraXR.near || this._currentDepthFar !== cameraXR.far ) {
 
@@ -1587,60 +937,10 @@ function onSessionEnd() {
 
 	this._session = null;
 	this._xrRenderTarget = null;
-	this._glBinding = null;
 	this._webgpuBinding = null;
-	this._glBaseLayer = null;
-	this._glProjLayer = null;
-
-	// switch layers back to emulated
-	if ( this._sessionUsesLayers === true ) {
-
-		for ( const layer of this._layers ) {
-
-			// Recreate layer render target to reset state
-			layer.renderTarget = new XRRenderTarget(
-				layer.pixelwidth,
-				layer.pixelheight,
-				{
-					format: RGBAFormat,
-					type: UnsignedByteType,
-					depthTexture: new DepthTexture(
-						layer.pixelwidth,
-						layer.pixelheight,
-						layer.stencilBuffer ? UnsignedInt248Type : UnsignedIntType,
-						undefined,
-						undefined,
-						undefined,
-						undefined,
-						undefined,
-						undefined,
-						layer.stencilBuffer ? DepthStencilFormat : DepthFormat
-					),
-					stencilBuffer: layer.stencilBuffer,
-					samples: layer.samples,
-					resolveDepthBuffer: false,
-					resolveStencilBuffer: false,
-					storeMultisampledColorBuffer: false,
-					storeMultisampledDepthBuffer: false,
-					storeMultisampledStencilBuffer: false
-				} );
-
-			layer.renderTarget.isXRRenderTarget = false;
-
-			layer.plane.material = layer.material;
-			layer.material.map = layer.renderTarget.texture;
-			layer.material.map.offset.y = 1;
-			layer.material.map.repeat.y = - 1;
-			delete layer.xrlayer;
-
-		}
-
-	}
-
-	//
+	this._projectionLayer = null;
 
 	this.isPresenting = false;
-	this._useMultiview = false;
 
 	renderer._animation.stop();
 	renderer._animation.setAnimationLoop( this._currentAnimationLoop );
@@ -1735,38 +1035,6 @@ function onInputSourcesChange( event ) {
 
 }
 
-// Creation method for native WebXR layers
-function createXRLayer( layer ) {
-
-	if ( layer.type === 'quad' ) {
-
-		return this._glBinding.createQuadLayer( {
-			transform: new XRRigidTransform( layer.translation, layer.quaternion ),
-			width: layer.width / 2,
-			height: layer.height / 2,
-			space: this._referenceSpace,
-			viewPixelWidth: layer.pixelwidth,
-			viewPixelHeight: layer.pixelheight,
-			clearOnAccess: false
-		} );
-
-	} else {
-
-		return this._glBinding.createCylinderLayer( {
-			transform: new XRRigidTransform( layer.translation, layer.quaternion ),
-			radius: layer.radius,
-			centralAngle: layer.centralAngle,
-			aspectRatio: layer.aspectRatio,
-			space: this._referenceSpace,
-			viewPixelWidth: layer.pixelwidth,
-			viewPixelHeight: layer.pixelheight,
-			clearOnAccess: false
-		} );
-
-	}
-
-}
-
 // Animation Loop
 
 function onAnimationFrame( time, frame ) {
@@ -1777,8 +1045,6 @@ function onAnimationFrame( time, frame ) {
 	const renderer = this._renderer;
 	const backend = renderer.backend;
 
-	const glBaseLayer = this._glBaseLayer;
-
 	const referenceSpace = this.getReferenceSpace();
 	const pose = frame.getViewerPose( referenceSpace );
 
@@ -1788,13 +1054,7 @@ function onAnimationFrame( time, frame ) {
 
 		const views = pose.views;
 
-		const webgpuViewData = this._isWebGPUSession() ? this._getWebGPUViewData( views ) : null;
-
-		if ( this._glBaseLayer !== null && webgpuViewData === null ) {
-
-			backend.setXRTarget( glBaseLayer.framebuffer );
-
-		}
+		const webgpuViewData = this._getWebGPUViewData( views );
 
 		let cameraXRNeedsUpdate = false;
 
@@ -1811,34 +1071,7 @@ function onAnimationFrame( time, frame ) {
 
 			const view = views[ i ];
 
-			let viewport;
-
-			if ( webgpuViewData !== null ) {
-
-				viewport = webgpuViewData.viewports[ i ];
-
-			} else if ( this._supportsLayers === true ) {
-
-				// WebGL path: Use XRWebGLBinding
-				const glSubImage = this._glBinding.getViewSubImage( this._glProjLayer, view );
-				viewport = glSubImage.viewport;
-
-				// For side-by-side projection, we only produce a single texture for both eyes.
-				if ( i === 0 ) {
-
-					backend.setXRRenderTargetTextures(
-						this._xrRenderTarget,
-						glSubImage.colorTexture,
-						( this._glProjLayer.ignoreDepthValues && ! this._useMultiview ) ? undefined : glSubImage.depthStencilTexture
-					);
-
-				}
-
-			} else {
-
-				viewport = glBaseLayer.getViewport( view );
-
-			}
+			const viewport = webgpuViewData.viewports[ i ];
 
 			let camera = this._cameras[ i ];
 
@@ -1873,7 +1106,7 @@ function onAnimationFrame( time, frame ) {
 
 		}
 
-		if ( webgpuViewData !== null && webgpuViewData.colorTexture !== null ) {
+		if ( webgpuViewData.colorTexture !== null ) {
 
 			backend.setXRRenderTargetTextures(
 				this._xrRenderTarget,
@@ -1887,14 +1120,8 @@ function onAnimationFrame( time, frame ) {
 
 		const frameBufferTarget = renderer._getFrameBufferTarget();
 
-		if ( webgpuViewData !== null ) {
-
-			this._xrRenderTarget.samples = frameBufferTarget === null ? renderer.samples : 0;
-			this._xrRenderTarget.depthBuffer = frameBufferTarget === null;
-
-		}
-
-		renderer.xr.foveateBoundTexture( frameBufferTarget );
+		this._xrRenderTarget.samples = frameBufferTarget === null ? renderer.samples : 0;
+		this._xrRenderTarget.depthBuffer = frameBufferTarget === null;
 
 	}
 

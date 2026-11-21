@@ -42,7 +42,7 @@ class BarrierNode extends Node {
 	generate( builder ) {
 
 		const { scope } = this;
-		const { renderer, shaderStage } = builder;
+		const { shaderStage } = builder;
 
 		const barrierMethod = `${scope}Barrier`;
 
@@ -52,15 +52,7 @@ class BarrierNode extends Node {
 
 		}
 
-		if ( renderer.backend.isWebGLBackend === true ) {
-
-			builder.addFlowCode( `\t// ${barrierMethod}() \n` );
-
-		} else {
-
-			builder.addLineFlowCode( `${barrierMethod}()`, this );
-
-		}
+		builder.addLineFlowCode( `${barrierMethod}()`, this );
 
 	}
 

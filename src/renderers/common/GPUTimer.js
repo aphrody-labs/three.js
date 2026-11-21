@@ -2,8 +2,7 @@
  * Measures the GPU time of the render and compute passes issued between {@link GPUTimer#begin} and
  * {@link GPUTimer#end}, from the start of the first pass to the end of the last one.
  *
- * Requires the `timestamp-query` feature in WebGPU or the `EXT_disjoint_timer_query_webgl2` extension
- * in WebGL. Otherwise the results are `null`.
+ * Requires the `timestamp-query` feature in WebGPU. Otherwise the results are `null`.
  *
  * ```js
  * const timer = new GPUTimer( renderer );
@@ -65,7 +64,7 @@ class GPUTimer {
 	 * - `end`: The GPU timestamp of the end of the last pass.
 	 * - `delta`: The time between them, `0` without any pass.
 	 *
-	 * The timestamps can only be compared with each other, and are `null` in WebGL or without any pass.
+	 * The timestamps can only be compared with each other, and are `null` without any pass.
 	 * The result is `null` when the backend doesn't support timing.
 	 *
 	 * @async

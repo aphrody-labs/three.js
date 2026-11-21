@@ -4,7 +4,7 @@ import StackTrace from '../core/StackTrace.js';
 import { uniform } from '../core/UniformNode.js';
 import { NodeUpdateType } from '../core/constants.js';
 import { addMethodChaining, nodeObject } from '../tsl/TSLCore.js';
-import { warn, error } from '../../utils.js';
+import { error } from '../../utils.js';
 
 /**
  * Represents a compute shader node.
@@ -127,21 +127,6 @@ class ComputeNode extends Node {
 		this.name = name;
 
 		return this;
-
-	}
-
-	/**
-	 * Sets the {@link ComputeNode#name} property.
-	 *
-	 * @deprecated
-	 * @param {string} name - The name of the uniform.
-	 * @return {ComputeNode} A reference to this node.
-	 */
-	label( name ) {
-
-		warn( 'TSL: "label()" has been deprecated. Use "setName()" instead.', new StackTrace() ); // @deprecated r179
-
-		return this.setName( name );
 
 	}
 

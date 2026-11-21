@@ -3,7 +3,6 @@ import { renderGroup, sharedUniformGroup } from '../core/UniformGroupNode.js';
 import { Vector3 } from '../../math/Vector3.js';
 import { Fn, vec4 } from '../tsl/TSLBase.js';
 import { uniformArray } from './UniformArrayNode.js';
-import { builtin } from './BuiltinNode.js';
 import { screenSize } from '../display/ScreenNode.js';
 
 // Cache single-camera uniforms globally. Array uniforms are cached per renderer and
@@ -104,7 +103,7 @@ export const cameraProjectionMatrix = /*@__PURE__*/ ( Fn( ( { camera, renderer }
 
 		} );
 
-		cameraProjectionMatrix = cameraArray.element( camera.isMultiViewCamera ? builtin( 'gl_ViewID_OVR' ) : cameraIndex );
+		cameraProjectionMatrix = cameraArray.element( cameraIndex );
 
 	} else {
 
@@ -150,7 +149,7 @@ export const cameraProjectionMatrixInverse = /*@__PURE__*/ ( Fn( ( { camera, ren
 
 		} );
 
-		cameraProjectionMatrixInverse = cameraArray.element( camera.isMultiViewCamera ? builtin( 'gl_ViewID_OVR' ) : cameraIndex );
+		cameraProjectionMatrixInverse = cameraArray.element( cameraIndex );
 
 	} else {
 
@@ -196,7 +195,7 @@ export const cameraViewMatrix = /*@__PURE__*/ ( Fn( ( { camera, renderer } ) => 
 
 		} );
 
-		cameraViewMatrix = cameraArray.element( camera.isMultiViewCamera ? builtin( 'gl_ViewID_OVR' ) : cameraIndex );
+		cameraViewMatrix = cameraArray.element( cameraIndex );
 
 	} else {
 
@@ -242,7 +241,7 @@ export const cameraWorldMatrix = /*@__PURE__*/ ( Fn( ( { camera, renderer } ) =>
 
 		} );
 
-		cameraWorldMatrix = cameraArray.element( camera.isMultiViewCamera ? builtin( 'gl_ViewID_OVR' ) : cameraIndex );
+		cameraWorldMatrix = cameraArray.element( cameraIndex );
 
 	} else {
 
@@ -288,7 +287,7 @@ export const cameraNormalMatrix = /*@__PURE__*/ ( Fn( ( { camera, renderer } ) =
 
 		} );
 
-		cameraNormalMatrix = cameraArray.element( camera.isMultiViewCamera ? builtin( 'gl_ViewID_OVR' ) : cameraIndex );
+		cameraNormalMatrix = cameraArray.element( cameraIndex );
 
 	} else {
 
@@ -343,7 +342,7 @@ export const cameraPosition = /*@__PURE__*/ ( Fn( ( { camera, renderer } ) => {
 
 		} );
 
-		cameraPosition = cameraArray.element( camera.isMultiViewCamera ? builtin( 'gl_ViewID_OVR' ) : cameraIndex );
+		cameraPosition = cameraArray.element( cameraIndex );
 
 	} else {
 

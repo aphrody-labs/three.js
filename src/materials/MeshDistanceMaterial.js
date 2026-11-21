@@ -1,13 +1,7 @@
 import { Material } from './Material.js';
 
 /**
- * A material used internally for implementing shadow mapping with
- * point lights.
- *
- * Can also be used to customize the shadow casting of an object by assigning
- * an instance of `MeshDistanceMaterial` to {@link Object3D#customDistanceMaterial}.
- * This approach can be used to ensure transparent parts of objects do not
- * cast shadows.
+ * A material that stores the distance of fragments to a reference position.
  *
  * @augments Material
  */

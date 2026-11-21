@@ -3,8 +3,6 @@ import { Loader } from './Loader.js';
 import {
 	ShadowMaterial,
 	SpriteMaterial,
-	RawShaderMaterial,
-	ShaderMaterial,
 	PointsMaterial,
 	MeshPhysicalMaterial,
 	MeshStandardMaterial,
@@ -154,8 +152,6 @@ class MaterialLoader extends Loader {
 		const materialLib = {
 			ShadowMaterial,
 			SpriteMaterial,
-			RawShaderMaterial,
-			ShaderMaterial,
 			PointsMaterial,
 			MeshPhysicalMaterial,
 			MeshStandardMaterial,

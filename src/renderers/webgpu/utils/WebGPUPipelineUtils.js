@@ -660,7 +660,6 @@ class WebGPUPipelineUtils {
 	 * for the pipeline creation.
 	 *
 	 * WebGPU requires both factors to be `one` for the `min` and `max` operations.
-	 * WebGL ignores the factors for these operations, so they are set to `one`.
 	 *
 	 * @private
 	 * @param {number} blendSrc - source blend factor.

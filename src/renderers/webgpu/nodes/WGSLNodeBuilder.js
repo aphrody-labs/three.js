@@ -1988,13 +1988,6 @@ ${ flowData.code }
 			this.getBuiltin( 'local_invocation_id', 'localId', 'vec3<u32>', 'attribute' );
 			this.getBuiltin( 'num_workgroups', 'numWorkgroups', 'vec3<u32>', 'attribute' );
 
-			if ( this.renderer.hasFeature( 'subgroups' ) ) {
-
-				this.enableDirective( 'subgroups', shaderStage );
-				this.getBuiltin( 'subgroup_size', 'subgroupSize', 'u32', 'attribute' );
-
-			}
-
 		}
 
 		if ( shaderStage === 'vertex' || shaderStage === 'compute' ) {

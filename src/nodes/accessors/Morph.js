@@ -81,7 +81,7 @@ export const morphColor = /*@__PURE__*/ Fn( ( [ color ], { geometry } ) => {
 } );
 
 /**
- * Resolves or creates a compiled DataArrayTexture containing encoded vertex morph targets data for WebGL2/WebGPU.
+ * Resolves or creates a compiled DataArrayTexture containing encoded vertex morph targets data.
  *
  * @param {BufferGeometry} geometry - The geometry to parse.
  * @returns {Object} The resolved morph targets texture data mapping entry.
@@ -92,7 +92,7 @@ function getEntry( geometry ) {
 	const hasMorphNormals = geometry.morphAttributes.normal !== undefined;
 	const hasMorphColors = geometry.morphAttributes.color !== undefined;
 
-	// instead of using attributes, the WebGL 2 code path encodes morph targets
+	// instead of using attributes, morph targets are encoded
 	// into an array of data textures. Each layer represents a single morph target.
 
 	const morphAttribute = geometry.morphAttributes.position || geometry.morphAttributes.normal || geometry.morphAttributes.color;

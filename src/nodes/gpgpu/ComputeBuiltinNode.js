@@ -112,7 +112,10 @@ class ComputeBuiltinNode extends Node {
 
 		if ( builder.shaderStage === 'compute' ) {
 
-			return builder.format( builtinName, nodeType, output );
+			// the subgroup size is declared on demand since it requires the `subgroups` extension
+			const property = builtinName === 'subgroupSize' ? builder.getSubgroupSize() : builtinName;
+
+			return builder.format( property, nodeType, output );
 
 		} else {
 

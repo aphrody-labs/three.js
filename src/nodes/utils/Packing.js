@@ -1,6 +1,5 @@
 import { nodeObject, vec2, vec3, float, Fn } from '../tsl/TSLBase.js';
 import { dot, sqrt, saturate } from '../math/MathNode.js';
-import { warnOnce } from '../../utils.js';
 
 /**
  * Packs a normal vector into a color value.
@@ -73,33 +72,3 @@ export const unpackOctahedralToNormal = /*@__PURE__*/ Fn( ( [ encoded ] ) => {
  * @return {Node<vec3>} The resulting normal.
  */
 export const unpackNormal = ( xy ) => vec3( xy, sqrt( saturate( float( 1.0 ).sub( dot( xy, xy ) ) ) ) );
-
-/**
- * @tsl
- * @function
- * @deprecated since r185. Use {@link packNormalToRGB} instead.
- * @param {Node<vec3>} node - The direction to pack.
- * @returns {Node<vec3>}
- */
-export const directionToColor = ( node ) => {
-
-	warnOnce( 'TSL: "directionToColor()" has been renamed to "packNormalToRGB()".' ); // @deprecated r185
-
-	return packNormalToRGB( node );
-
-};
-
-/**
- * @tsl
- * @function
- * @deprecated since r185. Use {@link unpackRGBToNormal} instead.
- * @param {Node<vec3>} node - The color to unpack.
- * @returns {Node<vec3>}
- */
-export const colorToDirection = ( node ) => {
-
-	warnOnce( 'TSL: "colorToDirection()" has been renamed to "unpackRGBToNormal()".' ); // @deprecated r185
-
-	return unpackRGBToNormal( node );
-
-};

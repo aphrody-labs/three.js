@@ -3,11 +3,8 @@ import { nodeProxyConstructor } from '../tsl/TSLCore.js';
 
 /**
  * This class represents a native shader function. It can be used to implement
- * certain aspects of a node material with native shader code. There are two predefined
- * TSL functions for easier usage.
- *
- * - `wgslFn`: Creates a WGSL function node.
- * - `glslFn`: Creates a GLSL function node.
+ * certain aspects of a node material with native shader code. The predefined TSL function
+ * `wgslFn` creates a WGSL function node.
  *
  * A basic example with one include looks like so:
  *
@@ -40,7 +37,7 @@ class FunctionNode extends CodeNode {
 	 *
 	 * @param {string} [code=''] - The native code.
 	 * @param {Array<Node>} [includes=[]] - An array of includes.
-	 * @param {('js'|'wgsl'|'glsl')} [language=''] - The used language.
+	 * @param {('js'|'wgsl')} [language=''] - The used language.
 	 */
 	constructor( code = '', includes = [], language = '' ) {
 
@@ -176,5 +173,4 @@ const nativeFn = ( code, includes = [], language = '' ) => {
 
 };
 
-export const glslFn = ( code, includes ) => nativeFn( code, includes, 'glsl' );
 export const wgslFn = ( code, includes ) => nativeFn( code, includes, 'wgsl' );

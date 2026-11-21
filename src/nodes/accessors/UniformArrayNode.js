@@ -42,7 +42,7 @@ class UniformArrayElementNode extends ArrayElementNode {
 
 		const snippet = super.generate( builder );
 		const type = this.getNodeType( builder );
-		const paddedType = this.node.getPaddedType( builder );
+		const paddedType = this.node.getPaddedType();
 
 		return builder.format( snippet, paddedType, type );
 
@@ -127,9 +127,9 @@ class UniformArrayNode extends BufferNode {
 	 * @param {NodeBuilder} builder - The current node builder.
 	 * @return {string} The node type.
 	 */
-	generateNodeType( builder ) {
+	generateNodeType( /* builder */ ) {
 
-		return this.getPaddedType( builder );
+		return this.getPaddedType();
 
 	}
 
@@ -148,10 +148,9 @@ class UniformArrayNode extends BufferNode {
 	/**
 	 * Returns the padded type based on the element type.
 	 *
-	 * @param {NodeBuilder} builder - The current node builder.
 	 * @return {string} The padded type.
 	 */
-	getPaddedType( builder ) {
+	getPaddedType() {
 
 		const elementType = this.elementType;
 
@@ -159,7 +158,7 @@ class UniformArrayNode extends BufferNode {
 
 		if ( elementType === 'mat2' ) {
 
-			paddedType = builder.renderer.backend.isWebGLBackend === true ? 'vec4' : 'mat2';
+			paddedType = 'mat2';
 
 		} else if ( /mat/.test( elementType ) === true ) {
 
@@ -323,7 +322,7 @@ class UniformArrayNode extends BufferNode {
 
 		let arrayType = Float32Array;
 
-		const paddedType = this.getPaddedType( builder );
+		const paddedType = this.getPaddedType();
 		const paddedElementLength = builder.getTypeLength( paddedType );
 
 		if ( elementType.charAt( 0 ) === 'i' ) arrayType = Int32Array;

@@ -127,8 +127,7 @@ class Packed4x8IntegerNode extends Node {
 
 		// check for native language support
 
-		if ( builder.renderer.backend.isWebGPUBackend === true &&
-			typeof navigator !== 'undefined' && navigator.gpu !== undefined &&
+		if ( typeof navigator !== 'undefined' && navigator.gpu !== undefined &&
 			navigator.gpu.wgslLanguageFeatures !== undefined && navigator.gpu.wgslLanguageFeatures.has( 'packed_4x8_integer_dot_product' )
 		) {
 

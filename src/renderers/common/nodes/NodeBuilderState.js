@@ -24,9 +24,8 @@ class NodeBuilderState {
 	 * @param {Array<Node>} updateAfterNodes - An array of nodes that implement their `updateAfter()` method.
 	 * @param {NodeMaterialObserver} observer - A node material observer.
 	 * @param {boolean} hardwareClipping - Whether the built material uses hardware clipping or not.
-	 * @param {Array<Object>} transforms - An array with transform attribute objects. Only relevant when using compute shaders with WebGL 2.
 	 */
-	constructor( vertexShader, fragmentShader, computeShader, nodeAttributes, bindings, updateNodes, updateBeforeNodes, updateAfterNodes, observer, hardwareClipping, transforms = [] ) {
+	constructor( vertexShader, fragmentShader, computeShader, nodeAttributes, bindings, updateNodes, updateBeforeNodes, updateAfterNodes, observer, hardwareClipping ) {
 
 		/**
 		 * The native vertex shader code.
@@ -48,14 +47,6 @@ class NodeBuilderState {
 		 * @type {string}
 		 */
 		this.computeShader = computeShader;
-
-		/**
-		 * An array with transform attribute objects.
-		 * Only relevant when using compute shaders with WebGL 2.
-		 *
-		 * @type {Array<Object>}
-		 */
-		this.transforms = transforms;
 
 		/**
 		 * An array of node attributes representing

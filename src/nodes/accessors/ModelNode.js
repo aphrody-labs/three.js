@@ -3,7 +3,6 @@ import { Fn, nodeImmutable } from '../tsl/TSLBase.js';
 import { uniform } from '../core/UniformNode.js';
 
 import { Matrix4 } from '../../math/Matrix4.js';
-import { builtin } from './BuiltinNode.js';
 import { cameraIndex, cameraViewMatrix } from './Camera.js';
 import { uniformArray } from './UniformArrayNode.js';
 import { Matrix3 } from '../../math/Matrix3.js';
@@ -183,7 +182,7 @@ export const highpModelViewMatrix = /*@__PURE__*/ ( Fn( ( builder ) => {
 
 		} );
 
-		highpModelViewMatrix = modelViewMatrices.element( camera.isMultiViewCamera ? builtin( 'gl_ViewID_OVR' ) : cameraIndex );
+		highpModelViewMatrix = modelViewMatrices.element( cameraIndex );
 
 	} else {
 
@@ -239,7 +238,7 @@ export const highpModelNormalViewMatrix = /*@__PURE__*/ ( Fn( ( builder ) => {
 
 		} );
 
-		highpModelNormalViewMatrix = normalViewMatrices.element( camera.isMultiViewCamera ? builtin( 'gl_ViewID_OVR' ) : cameraIndex );
+		highpModelNormalViewMatrix = normalViewMatrices.element( cameraIndex );
 
 	} else {
 
