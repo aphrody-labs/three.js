@@ -48,7 +48,7 @@ const loader2 = new ColladaLoader( manager );
 										<strong translate="no">onProgress</strong>
 									</td>
 									<td class="description last">
-										<p>Executes when single items have been loaded.</p>
+										<p>Executes when single items have been loaded. Receives <code>( url, itemsLoaded, itemsTotal )</code>.</p>
 									</td>
 								</tr>
 								<tr>
@@ -56,7 +56,7 @@ const loader2 = new ColladaLoader( manager );
 										<strong translate="no">onError</strong>
 									</td>
 									<td class="description last">
-										<p>Executes when an error occurs.</p>
+										<p>Executes when an error occurs. Receives the <code>url</code> of the item that failed.</p>
 									</td>
 								</tr>
 							</tbody>
@@ -73,7 +73,7 @@ const loader2 = new ColladaLoader( manager );
 				<div class="member">
 					<h3 class="name" id="onError" translate="no">.<a href="#onError">onError</a><span class="type-signature"> : function | undefined</span> </h3>
 					<div class="description">
-						<p>Executes when an error occurs.</p>
+						<p>Executes when an error occurs. Receives the <code>url</code> of the item that failed.</p>
 						<p>Default is <code>undefined</code>.</p>
 					</div>
 				</div>
@@ -87,14 +87,16 @@ const loader2 = new ColladaLoader( manager );
 				<div class="member">
 					<h3 class="name" id="onProgress" translate="no">.<a href="#onProgress">onProgress</a><span class="type-signature"> : function | undefined</span> </h3>
 					<div class="description">
-						<p>Executes when single items have been loaded.</p>
+						<p>Executes when single items have been loaded.
+Receives <code>( url, itemsLoaded, itemsTotal )</code>.</p>
 						<p>Default is <code>undefined</code>.</p>
 					</div>
 				</div>
 				<div class="member">
 					<h3 class="name" id="onStart" translate="no">.<a href="#onStart">onStart</a><span class="type-signature"> : function | undefined</span> </h3>
 					<div class="description">
-						<p>Executes when an item starts loading.</p>
+						<p>Executes when the first item of a new loading batch starts loading.
+Receives <code>( url, itemsLoaded, itemsTotal )</code>.</p>
 						<p>Default is <code>undefined</code>.</p>
 					</div>
 				</div>
@@ -103,14 +105,15 @@ const loader2 = new ColladaLoader( manager );
 					<div class="method">
 						<div class="description">
 							<p>Can be used to abort ongoing loading requests in loaders using this manager.
-The abort only works if the loaders implement <a href="Loader.html#abort">Loader#abort</a> and <code>AbortSignal.any()</code>
+The abort only works for loaders that observe <a href="LoadingManager.html#abortController">LoadingManager#abortController</a>
+(e.g. <a href="FileLoader.html">FileLoader</a> and <a href="ImageBitmapLoader.html">ImageBitmapLoader</a>) and if <code>AbortSignal.any()</code>
 is supported in the browser.</p>
 						</div>
 						<dl class="details">
 							<dt class="tag-returns"><strong>Returns:</strong> A reference to this loading manager.</dt>
 						</dl>
 					</div>
-					<h3 class="name name-method" id="addHandler" translate="no">.<a href="#addHandler">addHandler</a><span class="signature">( regex : <span class="param-type">string</span>, loader : <span class="param-type"><a href="Loader.html">Loader</a></span> )</span><span class="type-signature"> : <a href="LoadingManager.html">LoadingManager</a></span> </h3>
+					<h3 class="name name-method" id="addHandler" translate="no">.<a href="#addHandler">addHandler</a><span class="signature">( regex : <span class="param-type">RegExp</span>, loader : <span class="param-type"><a href="Loader.html">Loader</a></span> )</span><span class="type-signature"> : <a href="LoadingManager.html">LoadingManager</a></span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>Registers a loader with the given regular expression. Can be used to
@@ -222,7 +225,7 @@ starts loading an item.</p>
 							</tbody>
 						</table>
 					</div>
-					<h3 class="name name-method" id="removeHandler" translate="no">.<a href="#removeHandler">removeHandler</a><span class="signature">( regex : <span class="param-type">string</span> )</span><span class="type-signature"> : <a href="LoadingManager.html">LoadingManager</a></span> </h3>
+					<h3 class="name name-method" id="removeHandler" translate="no">.<a href="#removeHandler">removeHandler</a><span class="signature">( regex : <span class="param-type">RegExp</span> )</span><span class="type-signature"> : <a href="LoadingManager.html">LoadingManager</a></span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>Removes the loader for the given regular expression.</p>
@@ -234,7 +237,7 @@ starts loading an item.</p>
 										<strong translate="no">regex</strong>
 									</td>
 									<td class="description last">
-										<p>A regular expression.</p>
+										<p>The same regular expression instance that was passed to <a href="LoadingManager.html#addHandler">LoadingManager#addHandler</a>.</p>
 									</td>
 								</tr>
 							</tbody>
@@ -277,7 +280,10 @@ const manager = new THREE.LoadingManager();
 // Initialize loading manager with URL callback.
 const objectURLs = [];
 manager.setURLModifier( ( url ) => {
-	url = URL.createObjectURL( blobs[ url ] );
+	// resources of the glTF asset are requested relative to it, e.g. './diffuse.png'
+	const blob = blobs[ url.replace( /^\.\//, '' ) ];
+	if ( blob === undefined ) return url;
+	url = URL.createObjectURL( blob );
 	objectURLs.push( url );
 	return url;
 } );

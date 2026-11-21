@@ -71,7 +71,7 @@ The width of the base mip.
 **height**  
 number
 
-The width of the base mip.
+The height of the base mip.
 
 **data**  
 TypedArray

@@ -146,7 +146,7 @@ The sixth plane that encloses the frustum.
 
 ### .setFromProjectionMatrix( m : Matrix4, coordinateSystem : WebGLCoordinateSystem | WebGPUCoordinateSystem, reversedDepth : boolean ) : Frustum
 
-Sets the frustum planes from the given projection matrix.
+Sets the frustum planes from the given projection matrix. The planes are expressed in the space the matrix maps from, so pass `camera.projectionMatrix` multiplied by `camera.matrixWorldInverse` to get world space planes.
 
 **m**
 
@@ -155,6 +155,8 @@ The projection matrix.
 **coordinateSystem**
 
 The coordinate system.
+
+Default is `WebGLCoordinateSystem`.
 
 **reversedDepth**
 

@@ -92,11 +92,11 @@ The x value.
 
 **y**
 
-The x value.
+The y value.
 
 **z**
 
-The x value.
+The z value.
 
 **Returns:** A reference to this cylindrical.
 

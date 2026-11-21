@@ -7,7 +7,7 @@ A curve representing a Catmull-Rom spline.
 ## Code Example
 
 ```js
-//Create a closed wavey loop
+//Create a wavey curve
 const curve = new THREE.CatmullRomCurve3( [
 	new THREE.Vector3( -10, 0, 10 ),
 	new THREE.Vector3( -5, 5, 5 ),
@@ -46,7 +46,7 @@ Default is `'centripetal'`.
 
 **tension**
 
-Tension of the curve.
+Tension of the curve. Only used when `curveType` is `'catmullrom'`.
 
 Default is `0.5`.
 
@@ -76,7 +76,7 @@ An array of 3D points defining the curve.
 
 ### .tension : number
 
-Tension of the curve.
+Tension of the curve. Only used when [CatmullRomCurve3#curveType](CatmullRomCurve3.html#curveType) is `'catmullrom'`.
 
 Default is `0.5`.
 

@@ -40,18 +40,6 @@ Renders the quad mesh
 
 The renderer.
 
-### .renderAsync( renderer : Renderer ) : Promise (async)
-
-Async version of `render()`.
-
-**renderer**
-
-The renderer.
-
-**Deprecated:** Yes
-
-**Returns:** A Promise that resolves when the render has been finished.
-
 ## Source
 
 [src/renderers/common/QuadMesh.js](https://github.com/mrdoob/three.js/blob/master/src/renderers/common/QuadMesh.js)

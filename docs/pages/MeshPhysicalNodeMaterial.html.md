@@ -16,9 +16,9 @@ The configuration parameter.
 
 ## Properties
 
-### .anisotropyNode : Node.<float>
+### .anisotropyNode : Node.<vec2>
 
-The anisotropy of physical materials is by default inferred from the `anisotropy` property. This node property allows to overwrite the default and define the anisotropy with a node instead.
+The anisotropy of physical materials is by default inferred from the `anisotropy`, `anisotropyRotation` and `anisotropyMap` properties. This node property allows to overwrite the default and define the anisotropy with a tangent-space vector instead. Its direction is the anisotropy direction and its length is the anisotropy strength in the range `[0,1]`.
 
 If you don't want to overwrite the anisotropy but modify the existing value instead, use [materialAnisotropy](TSL.html#materialAnisotropy).
 
@@ -50,7 +50,7 @@ Default is `null`.
 
 ### .clearcoatNormalNode : Node.<vec3>
 
-The clearcoat normal of physical materials is by default inferred from the `clearcoatNormalMap` property. This node property allows to overwrite the default and define the clearcoat normal with a node instead.
+The clearcoat normal of physical materials is by default inferred from the `clearcoatNormalMap` property. This node property allows to overwrite the default and define the clearcoat normal with a node instead. The node must return a normal in view space.
 
 If you don't want to overwrite the clearcoat normal but modify the existing value instead, use [materialClearcoatNormal](TSL.html#materialClearcoatNormal).
 
@@ -174,53 +174,53 @@ If you don't want to overwrite the transmission but modify the existing value in
 
 Default is `null`.
 
-### .useAnisotropy : boolean
+### .useAnisotropy : boolean (readonly)
 
 Whether the lighting model should use anisotropy or not.
 
-Default is `true`.
+Default is `false`.
 
-### .useClearcoat : boolean
+### .useClearcoat : boolean (readonly)
 
 Whether the lighting model should use clearcoat or not.
 
-Default is `true`.
+Default is `false`.
 
-### .useDiffuseRoughness : boolean
+### .useDiffuseRoughness : boolean (readonly)
 
 Whether the lighting model should use EON rough diffuse reflection or not.
 
 Default is `false`.
 
-### .useDispersion : boolean
+### .useDispersion : boolean (readonly)
 
 Whether the lighting model should use dispersion or not.
 
-Default is `true`.
+Default is `false`.
 
-### .useIridescence : boolean
+### .useIridescence : boolean (readonly)
 
 Whether the lighting model should use iridescence or not.
 
-Default is `true`.
+Default is `false`.
 
-### .useRetroreflection : boolean
+### .useRetroreflection : boolean (readonly)
 
 Whether the lighting model should use retroreflection or not.
 
-Default is `true`.
+Default is `false`.
 
-### .useSheen : boolean
+### .useSheen : boolean (readonly)
 
 Whether the lighting model should use sheen or not.
 
-Default is `true`.
+Default is `false`.
 
-### .useTransmission : boolean
+### .useTransmission : boolean (readonly)
 
 Whether the lighting model should use transmission or not.
 
-Default is `true`.
+Default is `false`.
 
 ## Methods
 

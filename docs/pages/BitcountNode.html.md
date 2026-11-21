@@ -8,7 +8,7 @@ This node represents an operation that counts the bits of a piece of shader data
 
 ### new BitcountNode( method : 'countTrailingZeros' | 'countLeadingZeros' | 'countOneBits', aNode : Node )
 
-Constructs a new math node.
+Constructs a new bitcount node.
 
 **method**
 

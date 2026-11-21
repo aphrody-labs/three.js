@@ -56,6 +56,18 @@ This method is intended for implementing the indirect light term.
 
 The current node builder.
 
+### .indirectRadiance( irradianceAt : function, builder : NodeBuilder ) (abstract)
+
+This method is intended for reflecting ambient and hemisphere lights, which stand in for a distant environment. It is called by the light nodes while they are set up.
+
+**irradianceAt**
+
+Returns the light's irradiance for a world space direction.
+
+**builder**
+
+The current node builder.
+
 ### .start( builder : NodeBuilder ) (abstract)
 
 This method is intended for setting up lighting model and context data which are later used in the evaluation process.

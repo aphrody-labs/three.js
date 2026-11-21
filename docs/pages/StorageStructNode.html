@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>StorageStructNode - Three.js Docs</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+		<p class="inheritance" translate="no"><a href="EventDispatcher.html">EventDispatcher</a> → <a href="Node.html">Node</a> → <a href="InputNode.html">InputNode</a> → <a href="UniformNode.html">UniformNode</a> → <a href="BufferNode.html">BufferNode</a> → <a href="StorageBufferNode.html">StorageBufferNode</a> → </p>
+	<h1 translate="no">StorageStructNode</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>A storage buffer bound as a single struct instead of an array of elements. This allows
+the struct's last member to be a runtime-sized array, whose length follows the size of
+the bound buffer. A typical use is a queue with an atomic length ahead of its elements.</p>
+<p>The node is only supported with the WebGPU backend.</p></div>
+				<h2>Code Example</h2>
+				<div translate="no"><pre><code class="language-js">const Queue = struct( {
+	length: { type: 'uint', atomic: true },
+	elements: 'array&lt;u32>'
+}, 'Queue' );
+const queue = storageStruct( new THREE.StorageBufferAttribute( new Uint32Array( count + 1 ), 1 ), Queue );
+</code></pre></div>
+			</header>
+			<article>
+				<div class="container-overview">
+					<h2>Constructor</h2>
+					<h3 class="name name-method" id="StorageStructNode" translate="no">new <a href="#StorageStructNode">StorageStructNode</a><span class="signature">( value : <span class="param-type"><a href="StorageBufferAttribute.html">StorageBufferAttribute</a></span>, structType : <span class="param-type">Struct</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>Constructs a new storage struct node.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">value</strong>
+									</td>
+									<td class="description last">
+										<p>The buffer data.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">structType</strong>
+									</td>
+									<td class="description last">
+										<p>The struct type of the buffer.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">Properties</h2>
+				<div class="member">
+					<h3 class="name" id="isStorageStructNode" translate="no">.<a href="#isStorageStructNode">isStorageStructNode</a><span class="type-signature"> : boolean</span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>This flag can be used for type testing.</p>
+						<p>Default is <code>true</code>.</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">Source</h2>
+				<p>
+					<a href="https://github.com/mrdoob/three.js/blob/master/src/nodes/accessors/StorageStructNode.js" translate="no" target="_blank" rel="noopener">src/nodes/accessors/StorageStructNode.js</a>
+				</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

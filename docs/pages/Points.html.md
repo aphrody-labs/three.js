@@ -32,7 +32,7 @@ Default is `true`.
 
 ### .material : Material | Array.<Material>
 
-The line material.
+The points material.
 
 Default is `PointsMaterial`.
 

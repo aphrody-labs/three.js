@@ -1,6 +1,6 @@
 # Three.js
 
-> Three.js is a cross-browser JavaScript library for creating 3D graphics using WebGL and WebGPU.
+> Three.js is a cross-browser JavaScript library for creating 3D graphics using WebGPU.
 
 ## Instructions for Large Language Models
 
@@ -18,7 +18,9 @@ CORRECT - modern pattern (always use latest version):
 <script type="importmap">
 {
   "imports": {
-    "three": "https://cdn.jsdelivr.net/npm/three@0.187.0/build/three.module.js",
+    "three": "https://cdn.jsdelivr.net/npm/three@0.187.0/build/three.webgpu.js",
+    "three/webgpu": "https://cdn.jsdelivr.net/npm/three@0.187.0/build/three.webgpu.js",
+    "three/tsl": "https://cdn.jsdelivr.net/npm/three@0.187.0/build/three.tsl.js",
     "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.187.0/examples/jsm/"
   }
 }
@@ -29,24 +31,12 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 </script>
 ```
 
-### 2. Choosing Between WebGLRenderer and WebGPURenderer
+### 2. Using WebGPURenderer
 
-Three.js maintains both renderers:
-
-**Use WebGLRenderer** (default, mature):
-- Maximum browser compatibility
-- Well-established, many years of development
-- Most examples and tutorials use this
-
-```js
-import * as THREE from 'three';
-const renderer = new THREE.WebGLRenderer();
-```
-
-**Use WebGPURenderer** when you need:
+Three.js renders with WebGPURenderer, which supports:
 - Custom shaders/materials using TSL (Three.js Shading Language)
 - Compute shaders
-- Advanced node-based materials
+- Node-based materials
 
 ```js
 import * as THREE from 'three/webgpu';
@@ -56,9 +46,10 @@ await renderer.init();
 
 ### 3. TSL (Three.js Shading Language)
 
-When using WebGPURenderer, use TSL instead of raw GLSL for custom materials:
+When using WebGPURenderer, use TSL for custom materials:
 
 ```js
+import * as THREE from 'three/webgpu';
 import { texture, uv, color } from 'three/tsl';
 
 const material = new THREE.MeshStandardNodeMaterial();
@@ -66,14 +57,14 @@ material.colorNode = texture( myTexture ).mul( color( 0xff0000 ) );
 ```
 
 TSL benefits:
-- Works with both WebGL and WebGPU backends
+- Compiles to WGSL for the WebGPU backend
 - No string manipulation or onBeforeCompile hacks
 - Type-safe, composable shader nodes
 - Automatic optimization
 
-### 4. NodeMaterial Classes (for WebGPU/TSL)
+### 4. NodeMaterial Classes (for TSL)
 
-When using TSL, use node-based materials:
+Use node-based materials with TSL:
 - MeshBasicNodeMaterial
 - MeshStandardNodeMaterial
 - MeshPhysicalNodeMaterial
@@ -83,81 +74,6 @@ When using TSL, use node-based materials:
 ---
 
 ## Complete Code Examples
-
-### Basic Scene with WebGLRenderer
-
-```html
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>Three.js Basic Scene</title>
-  <style>
-    body { margin: 0; }
-  </style>
-</head>
-<body>
-<script type="importmap">
-{
-  "imports": {
-    "three": "https://cdn.jsdelivr.net/npm/three@0.187.0/build/three.module.js",
-    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.187.0/examples/jsm/"
-  }
-}
-</script>
-<script type="module">
-import * as THREE from 'three';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-
-// Scene
-const scene = new THREE.Scene();
-
-// Camera
-const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-camera.position.z = 5;
-
-// Renderer
-const renderer = new THREE.WebGLRenderer( { antialias: true } );
-renderer.setSize( window.innerWidth, window.innerHeight );
-renderer.setPixelRatio( window.devicePixelRatio );
-document.body.appendChild( renderer.domElement );
-
-// Controls
-const controls = new OrbitControls( camera, renderer.domElement );
-
-// Lighting
-const ambientLight = new THREE.AmbientLight( 0x404040 );
-scene.add( ambientLight );
-
-const directionalLight = new THREE.DirectionalLight( 0xffffff, 1 );
-directionalLight.position.set( 5, 5, 5 );
-scene.add( directionalLight );
-
-// Mesh
-const geometry = new THREE.BoxGeometry( 1, 1, 1 );
-const material = new THREE.MeshStandardMaterial( { color: 0x00ff00 } );
-const cube = new THREE.Mesh( geometry, material );
-scene.add( cube );
-
-// Handle resize
-window.addEventListener( 'resize', () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize( window.innerWidth, window.innerHeight );
-} );
-
-// Animation loop
-function animate() {
-  cube.rotation.x += 0.01;
-  cube.rotation.y += 0.01;
-  controls.update();
-  renderer.render( scene, camera );
-}
-renderer.setAnimationLoop( animate );
-</script>
-</body>
-</html>
-```
 
 ### Basic Scene with WebGPURenderer and TSL
 
@@ -176,13 +92,14 @@ renderer.setAnimationLoop( animate );
 {
   "imports": {
     "three": "https://cdn.jsdelivr.net/npm/three@0.187.0/build/three.webgpu.js",
+    "three/webgpu": "https://cdn.jsdelivr.net/npm/three@0.187.0/build/three.webgpu.js",
     "three/tsl": "https://cdn.jsdelivr.net/npm/three@0.187.0/build/three.tsl.js",
     "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.187.0/examples/jsm/"
   }
 }
 </script>
 <script type="module">
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 import { color, positionLocal, sin, time } from 'three/tsl';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
@@ -256,7 +173,10 @@ loader.load(
     scene.add( gltf.scene );
   },
   ( progress ) => {
-    console.log( ( progress.loaded / progress.total * 100 ) + '% loaded' );
+    // total is 0 when the server sends no Content-Length header
+    if ( progress.lengthComputable ) {
+      console.log( ( progress.loaded / progress.total * 100 ) + '% loaded' );
+    }
   },
   ( error ) => {
     console.error( 'Error loading model:', error );
@@ -7723,7 +7643,6 @@ The following documentation pages are available in markdown format at `https://t
 - [BufferAttribute](https://threejs.org/docs/pages/BufferAttribute.html.md)
 - [BundleGroup](https://threejs.org/docs/pages/BundleGroup.html.md)
 - [CCDIKSolver](https://threejs.org/docs/pages/CCDIKSolver.html.md)
-- [CSM](https://threejs.org/docs/pages/CSM.html.md)
 - [CSMFrustum](https://threejs.org/docs/pages/CSMFrustum.html.md)
 - [CSS2DObject](https://threejs.org/docs/pages/CSS2DObject.html.md)
 - [CSS2DRenderer](https://threejs.org/docs/pages/CSS2DRenderer.html.md)
@@ -7737,7 +7656,6 @@ The following documentation pages are available in markdown format at `https://t
 - [CinquefoilKnot](https://threejs.org/docs/pages/CinquefoilKnot.html.md)
 - [CityGenerator](https://threejs.org/docs/pages/CityGenerator.html.md)
 - [ClippingGroup](https://threejs.org/docs/pages/ClippingGroup.html.md)
-- [Clock](https://threejs.org/docs/pages/Clock.html.md)
 - [ClusteredLighting](https://threejs.org/docs/pages/ClusteredLighting.html.md)
 - [ColladaComposer](https://threejs.org/docs/pages/ColladaComposer.html.md)
 - [ColladaParser](https://threejs.org/docs/pages/ColladaParser.html.md)
@@ -7764,30 +7682,25 @@ The following documentation pages are available in markdown format at `https://t
 - [DynamicLighting](https://threejs.org/docs/pages/DynamicLighting.html.md)
 - [Earcut](https://threejs.org/docs/pages/Earcut.html.md)
 - [EdgeSplitModifier](https://threejs.org/docs/pages/EdgeSplitModifier.html.md)
-- [EffectComposer](https://threejs.org/docs/pages/EffectComposer.html.md)
 - [EnvMapCDFGenerator](https://threejs.org/docs/pages/EnvMapCDFGenerator.html.md)
 - [EventDispatcher](https://threejs.org/docs/pages/EventDispatcher.html.md)
 - [FaceFrame](https://threejs.org/docs/pages/FaceFrame.html.md)
 - [FigureEightPolynomialKnot](https://threejs.org/docs/pages/FigureEightPolynomialKnot.html.md)
 - [Float16BufferAttribute](https://threejs.org/docs/pages/Float16BufferAttribute.html.md)
 - [Float32BufferAttribute](https://threejs.org/docs/pages/Float32BufferAttribute.html.md)
-- [Flow](https://threejs.org/docs/pages/Flow.html.md)
 - [Fog](https://threejs.org/docs/pages/Fog.html.md)
 - [FogExp2](https://threejs.org/docs/pages/FogExp2.html.md)
 - [Font](https://threejs.org/docs/pages/Font.html.md)
 - [ForestGenerator](https://threejs.org/docs/pages/ForestGenerator.html.md)
 - [FullScreenQuad](https://threejs.org/docs/pages/FullScreenQuad.html.md)
-- [GLBufferAttribute](https://threejs.org/docs/pages/GLBufferAttribute.html.md)
-- [GLSLNodeBuilder](https://threejs.org/docs/pages/GLSLNodeBuilder.html.md)
-- [GLSLNodeFunction](https://threejs.org/docs/pages/GLSLNodeFunction.html.md)
-- [GLSLNodeParser](https://threejs.org/docs/pages/GLSLNodeParser.html.md)
 - [GLTFExporter](https://threejs.org/docs/pages/GLTFExporter.html.md)
 - [GLTFGaussianSplatLoaderExtension](https://threejs.org/docs/pages/GLTFGaussianSplatLoaderExtension.html.md)
-- [GPUComputationRenderer](https://threejs.org/docs/pages/GPUComputationRenderer.html.md)
+- [GPUTimer](https://threejs.org/docs/pages/GPUTimer.html.md)
 - [GaussianSplat](https://threejs.org/docs/pages/GaussianSplat.html.md)
 - [GrannyKnot](https://threejs.org/docs/pages/GrannyKnot.html.md)
 - [GroundedSkybox](https://threejs.org/docs/pages/GroundedSkybox.html.md)
 - [Group](https://threejs.org/docs/pages/Group.html.md)
+- [GutterFillGenerator](https://threejs.org/docs/pages/GutterFillGenerator.html.md)
 - [Gyroscope](https://threejs.org/docs/pages/Gyroscope.html.md)
 - [HTMLMesh](https://threejs.org/docs/pages/HTMLMesh.html.md)
 - [HydrantGenerator](https://threejs.org/docs/pages/HydrantGenerator.html.md)
@@ -7798,7 +7711,6 @@ The following documentation pages are available in markdown format at `https://t
 - [Info](https://threejs.org/docs/pages/Info.html.md)
 - [InspectorBase](https://threejs.org/docs/pages/InspectorBase.html.md)
 - [InstancedBufferAttribute](https://threejs.org/docs/pages/InstancedBufferAttribute.html.md)
-- [InstancedFlow](https://threejs.org/docs/pages/InstancedFlow.html.md)
 - [InstancedInterleavedBuffer](https://threejs.org/docs/pages/InstancedInterleavedBuffer.html.md)
 - [InstancedMesh](https://threejs.org/docs/pages/InstancedMesh.html.md)
 - [Int16BufferAttribute](https://threejs.org/docs/pages/Int16BufferAttribute.html.md)
@@ -7816,23 +7728,15 @@ The following documentation pages are available in markdown format at `https://t
 - [LOD](https://threejs.org/docs/pages/LOD.html.md)
 - [LUT3DStyle](https://threejs.org/docs/pages/LUT3DStyle.html.md)
 - [Layers](https://threejs.org/docs/pages/Layers.html.md)
-- [Lensflare](https://threejs.org/docs/pages/Lensflare.html.md)
-- [LensflareElement](https://threejs.org/docs/pages/LensflareElement.html.md)
 - [LensflareMesh](https://threejs.org/docs/pages/LensflareMesh.html.md)
 - [LightMapper](https://threejs.org/docs/pages/LightMapper.html.md)
-- [LightProbe](https://threejs.org/docs/pages/LightProbe.html.md)
-- [LightProbeGenerator](https://threejs.org/docs/pages/LightProbeGenerator.html.md)
 - [LightProbeGrid](https://threejs.org/docs/pages/LightProbeGrid.html.md)
-- [LightProbeGridHelperWebGL](https://threejs.org/docs/pages/LightProbeGridHelperWebGL.html.md)
-- [LightProbeGridWebGL](https://threejs.org/docs/pages/LightProbeGridWebGL.html.md)
 - [LightShadow](https://threejs.org/docs/pages/LightShadow.html.md)
 - [LightingModel](https://threejs.org/docs/pages/LightingModel.html.md)
 - [Line](https://threejs.org/docs/pages/Line.html.md)
-- [Line2](https://threejs.org/docs/pages/Line2.html.md)
 - [Line3](https://threejs.org/docs/pages/Line3.html.md)
 - [LineLoop](https://threejs.org/docs/pages/LineLoop.html.md)
 - [LineSegments](https://threejs.org/docs/pages/LineSegments.html.md)
-- [LineSegments2](https://threejs.org/docs/pages/LineSegments2.html.md)
 - [LinearInterpolant](https://threejs.org/docs/pages/LinearInterpolant.html.md)
 - [LoaderUtils](https://threejs.org/docs/pages/LoaderUtils.html.md)
 - [LoadingManager](https://threejs.org/docs/pages/LoadingManager.html.md)
@@ -7871,15 +7775,12 @@ The following documentation pages are available in markdown format at `https://t
 - [OculusHandModel](https://threejs.org/docs/pages/OculusHandModel.html.md)
 - [OculusHandPointerModel](https://threejs.org/docs/pages/OculusHandPointerModel.html.md)
 - [PLYExporter](https://threejs.org/docs/pages/PLYExporter.html.md)
-- [PMREMGenerator](https://threejs.org/docs/pages/PMREMGenerator.html.md)
 - [Path](https://threejs.org/docs/pages/Path.html.md)
 - [PersonGenerator](https://threejs.org/docs/pages/PersonGenerator.html.md)
 - [PhongLightingModel](https://threejs.org/docs/pages/PhongLightingModel.html.md)
 - [PhysicalLightingModel](https://threejs.org/docs/pages/PhysicalLightingModel.html.md)
 - [PointLightShadow](https://threejs.org/docs/pages/PointLightShadow.html.md)
 - [Points](https://threejs.org/docs/pages/Points.html.md)
-- [PostProcessing](https://threejs.org/docs/pages/PostProcessing.html.md)
-- [ProgressiveLightMap](https://threejs.org/docs/pages/ProgressiveLightMap.html.md)
 - [Projector](https://threejs.org/docs/pages/Projector.html.md)
 - [PropertyBinding](https://threejs.org/docs/pages/PropertyBinding.html.md)
 - [PropertyMixer](https://threejs.org/docs/pages/PropertyMixer.html.md)
@@ -7887,9 +7788,6 @@ The following documentation pages are available in markdown format at `https://t
 - [RapierPhysics](https://threejs.org/docs/pages/RapierPhysics.html.md)
 - [ReadbackBuffer](https://threejs.org/docs/pages/ReadbackBuffer.html.md)
 - [RectAreaLightTexturesLib](https://threejs.org/docs/pages/RectAreaLightTexturesLib.html.md)
-- [RectAreaLightUniformsLib](https://threejs.org/docs/pages/RectAreaLightUniformsLib.html.md)
-- [Reflector](https://threejs.org/docs/pages/Reflector.html.md)
-- [Refractor](https://threejs.org/docs/pages/Refractor.html.md)
 - [RenderPipeline](https://threejs.org/docs/pages/RenderPipeline.html.md)
 - [RenderTarget](https://threejs.org/docs/pages/RenderTarget.html.md)
 - [RenderTarget3D](https://threejs.org/docs/pages/RenderTarget3D.html.md)
@@ -7902,8 +7800,8 @@ The following documentation pages are available in markdown format at `https://t
 - [Scene](https://threejs.org/docs/pages/Scene.html.md)
 - [SceneOptimizer](https://threejs.org/docs/pages/SceneOptimizer.html.md)
 - [Sculptor](https://threejs.org/docs/pages/Sculptor.html.md)
+- [SeamStitchGenerator](https://threejs.org/docs/pages/SeamStitchGenerator.html.md)
 - [SelectionBox](https://threejs.org/docs/pages/SelectionBox.html.md)
-- [ShadowMapViewer](https://threejs.org/docs/pages/ShadowMapViewer.html.md)
 - [ShadowMaskModel](https://threejs.org/docs/pages/ShadowMaskModel.html.md)
 - [ShadowMesh](https://threejs.org/docs/pages/ShadowMesh.html.md)
 - [Shape](https://threejs.org/docs/pages/Shape.html.md)
@@ -7914,10 +7812,8 @@ The following documentation pages are available in markdown format at `https://t
 - [SimplifyModifier](https://threejs.org/docs/pages/SimplifyModifier.html.md)
 - [Skeleton](https://threejs.org/docs/pages/Skeleton.html.md)
 - [SkinnedMesh](https://threejs.org/docs/pages/SkinnedMesh.html.md)
-- [Sky](https://threejs.org/docs/pages/Sky.html.md)
 - [SkyMesh](https://threejs.org/docs/pages/SkyMesh.html.md)
 - [SkyscraperGenerator](https://threejs.org/docs/pages/SkyscraperGenerator.html.md)
-- [Source](https://threejs.org/docs/pages/Source.html.md)
 - [Spherical](https://threejs.org/docs/pages/Spherical.html.md)
 - [SphericalHarmonics3](https://threejs.org/docs/pages/SphericalHarmonics3.html.md)
 - [SpotLightShadow](https://threejs.org/docs/pages/SpotLightShadow.html.md)
@@ -7955,8 +7851,6 @@ The following documentation pages are available in markdown format at `https://t
 - [Uint32BufferAttribute](https://threejs.org/docs/pages/Uint32BufferAttribute.html.md)
 - [Uint8BufferAttribute](https://threejs.org/docs/pages/Uint8BufferAttribute.html.md)
 - [Uint8ClampedBufferAttribute](https://threejs.org/docs/pages/Uint8ClampedBufferAttribute.html.md)
-- [Uniform](https://threejs.org/docs/pages/Uniform.html.md)
-- [UniformsGroup](https://threejs.org/docs/pages/UniformsGroup.html.md)
 - [VRButton](https://threejs.org/docs/pages/VRButton.html.md)
 - [VXGIVolume](https://threejs.org/docs/pages/VXGIVolume.html.md)
 - [VisibilityBufferDrawingPipeline](https://threejs.org/docs/pages/VisibilityBufferDrawingPipeline.html.md)
@@ -7966,20 +7860,10 @@ The following documentation pages are available in markdown format at `https://t
 - [WGSLNodeBuilder](https://threejs.org/docs/pages/WGSLNodeBuilder.html.md)
 - [WGSLNodeFunction](https://threejs.org/docs/pages/WGSLNodeFunction.html.md)
 - [WGSLNodeParser](https://threejs.org/docs/pages/WGSLNodeParser.html.md)
-- [Water](https://threejs.org/docs/pages/Water.html.md)
 - [WaterMesh](https://threejs.org/docs/pages/WaterMesh.html.md)
-- [WebGL](https://threejs.org/docs/pages/WebGL.html.md)
-- [WebGL3DRenderTarget](https://threejs.org/docs/pages/WebGL3DRenderTarget.html.md)
-- [WebGLArrayRenderTarget](https://threejs.org/docs/pages/WebGLArrayRenderTarget.html.md)
-- [WebGLCubeRenderTarget](https://threejs.org/docs/pages/WebGLCubeRenderTarget.html.md)
-- [WebGLNodesHandler](https://threejs.org/docs/pages/WebGLNodesHandler.html.md)
-- [WebGLRenderTarget](https://threejs.org/docs/pages/WebGLRenderTarget.html.md)
-- [WebGLRenderer](https://threejs.org/docs/pages/WebGLRenderer.html.md)
-- [WebGLTimestampQueryPool](https://threejs.org/docs/pages/WebGLTimestampQueryPool.html.md)
 - [WebGPU](https://threejs.org/docs/pages/WebGPU.html.md)
 - [WebGPURenderer](https://threejs.org/docs/pages/WebGPURenderer.html.md)
 - [WebGPUTimestampQueryPool](https://threejs.org/docs/pages/WebGPUTimestampQueryPool.html.md)
-- [Wireframe](https://threejs.org/docs/pages/Wireframe.html.md)
 - [WireframeGeometry2](https://threejs.org/docs/pages/WireframeGeometry2.html.md)
 - [WorkerPool](https://threejs.org/docs/pages/WorkerPool.html.md)
 
@@ -8004,17 +7888,14 @@ The following documentation pages are available in markdown format at `https://t
 - [RectAreaLight](https://threejs.org/docs/pages/RectAreaLight.html.md)
 - [SpotLight](https://threejs.org/docs/pages/SpotLight.html.md)
 - [SunLight](https://threejs.org/docs/pages/SunLight.html.md)
-- [XREstimatedLight](https://threejs.org/docs/pages/XREstimatedLight.html.md)
 
 ### Materials
 
-- [LDrawConditionalLineMaterial](https://threejs.org/docs/pages/LDrawConditionalLineMaterial.html.md)
 - [Line2NodeMaterial](https://threejs.org/docs/pages/Line2NodeMaterial.html.md)
 - [LineBasicMaterial](https://threejs.org/docs/pages/LineBasicMaterial.html.md)
 - [LineBasicNodeMaterial](https://threejs.org/docs/pages/LineBasicNodeMaterial.html.md)
 - [LineDashedMaterial](https://threejs.org/docs/pages/LineDashedMaterial.html.md)
 - [LineDashedNodeMaterial](https://threejs.org/docs/pages/LineDashedNodeMaterial.html.md)
-- [LineMaterial](https://threejs.org/docs/pages/LineMaterial.html.md)
 - [Material](https://threejs.org/docs/pages/Material.html.md)
 - [MeshBasicMaterial](https://threejs.org/docs/pages/MeshBasicMaterial.html.md)
 - [MeshBasicNodeMaterial](https://threejs.org/docs/pages/MeshBasicNodeMaterial.html.md)
@@ -8038,8 +7919,6 @@ The following documentation pages are available in markdown format at `https://t
 - [NodeMaterial](https://threejs.org/docs/pages/NodeMaterial.html.md)
 - [PointsMaterial](https://threejs.org/docs/pages/PointsMaterial.html.md)
 - [PointsNodeMaterial](https://threejs.org/docs/pages/PointsNodeMaterial.html.md)
-- [RawShaderMaterial](https://threejs.org/docs/pages/RawShaderMaterial.html.md)
-- [ShaderMaterial](https://threejs.org/docs/pages/ShaderMaterial.html.md)
 - [ShadowMaterial](https://threejs.org/docs/pages/ShadowMaterial.html.md)
 - [ShadowNodeMaterial](https://threejs.org/docs/pages/ShadowNodeMaterial.html.md)
 - [SpriteMaterial](https://threejs.org/docs/pages/SpriteMaterial.html.md)
@@ -8206,7 +8085,6 @@ The following documentation pages are available in markdown format at `https://t
 - [DirectionalLightHelper](https://threejs.org/docs/pages/DirectionalLightHelper.html.md)
 - [GridHelper](https://threejs.org/docs/pages/GridHelper.html.md)
 - [HemisphereLightHelper](https://threejs.org/docs/pages/HemisphereLightHelper.html.md)
-- [LightProbeHelper](https://threejs.org/docs/pages/LightProbeHelper.html.md)
 - [OctreeHelper](https://threejs.org/docs/pages/OctreeHelper.html.md)
 - [PlaneHelper](https://threejs.org/docs/pages/PlaneHelper.html.md)
 - [PointLightHelper](https://threejs.org/docs/pages/PointLightHelper.html.md)
@@ -8217,7 +8095,6 @@ The following documentation pages are available in markdown format at `https://t
 - [SelectionHelper](https://threejs.org/docs/pages/SelectionHelper.html.md)
 - [SkeletonHelper](https://threejs.org/docs/pages/SkeletonHelper.html.md)
 - [SpotLightHelper](https://threejs.org/docs/pages/SpotLightHelper.html.md)
-- [TextureHelper](https://threejs.org/docs/pages/TextureHelper.html.md)
 - [TileShadowNodeHelper](https://threejs.org/docs/pages/TileShadowNodeHelper.html.md)
 - [VertexNormalsHelper](https://threejs.org/docs/pages/VertexNormalsHelper.html.md)
 - [VertexTangentsHelper](https://threejs.org/docs/pages/VertexTangentsHelper.html.md)
@@ -8256,6 +8133,7 @@ The following documentation pages are available in markdown format at `https://t
 - [QuaternionKeyframeTrack](https://threejs.org/docs/pages/QuaternionKeyframeTrack.html.md)
 - [QuaternionLinearInterpolant](https://threejs.org/docs/pages/QuaternionLinearInterpolant.html.md)
 - [Ray](https://threejs.org/docs/pages/Ray.html.md)
+- [RayTracedRadiosity](https://threejs.org/docs/pages/RayTracedRadiosity.html.md)
 - [Raycaster](https://threejs.org/docs/pages/Raycaster.html.md)
 - [Sphere](https://threejs.org/docs/pages/Sphere.html.md)
 - [Triangle](https://threejs.org/docs/pages/Triangle.html.md)
@@ -8286,55 +8164,26 @@ The following documentation pages are available in markdown format at `https://t
 
 ### Effects
 
-- [AnaglyphEffect](https://threejs.org/docs/pages/AnaglyphEffect.html.md)
 - [AsciiEffect](https://threejs.org/docs/pages/AsciiEffect.html.md)
-- [OutlineEffect](https://threejs.org/docs/pages/OutlineEffect.html.md)
-- [ParallaxBarrierEffect](https://threejs.org/docs/pages/ParallaxBarrierEffect.html.md)
 - [StereoEffect](https://threejs.org/docs/pages/StereoEffect.html.md)
 
 ### Post-Processing
 
-- [AfterimagePass](https://threejs.org/docs/pages/AfterimagePass.html.md)
 - [AnaglyphPassNode](https://threejs.org/docs/pages/AnaglyphPassNode.html.md)
-- [BloomPass](https://threejs.org/docs/pages/BloomPass.html.md)
-- [BokehPass](https://threejs.org/docs/pages/BokehPass.html.md)
 - [ClearMaskPass](https://threejs.org/docs/pages/ClearMaskPass.html.md)
 - [ClearPass](https://threejs.org/docs/pages/ClearPass.html.md)
-- [CubeTexturePass](https://threejs.org/docs/pages/CubeTexturePass.html.md)
-- [DotScreenPass](https://threejs.org/docs/pages/DotScreenPass.html.md)
-- [FXAAPass](https://threejs.org/docs/pages/FXAAPass.html.md)
-- [FilmPass](https://threejs.org/docs/pages/FilmPass.html.md)
-- [GTAOPass](https://threejs.org/docs/pages/GTAOPass.html.md)
-- [GlitchPass](https://threejs.org/docs/pages/GlitchPass.html.md)
-- [HalftonePass](https://threejs.org/docs/pages/HalftonePass.html.md)
-- [LUTPass](https://threejs.org/docs/pages/LUTPass.html.md)
 - [MaskPass](https://threejs.org/docs/pages/MaskPass.html.md)
 - [OITPassNode](https://threejs.org/docs/pages/OITPassNode.html.md)
-- [OutlinePass](https://threejs.org/docs/pages/OutlinePass.html.md)
-- [OutputPass](https://threejs.org/docs/pages/OutputPass.html.md)
 - [ParallaxBarrierPassNode](https://threejs.org/docs/pages/ParallaxBarrierPassNode.html.md)
 - [Pass](https://threejs.org/docs/pages/Pass.html.md)
 - [PassNode](https://threejs.org/docs/pages/PassNode.html.md)
 - [PixelationPassNode](https://threejs.org/docs/pages/PixelationPassNode.html.md)
-- [ReflectorForSSRPass](https://threejs.org/docs/pages/ReflectorForSSRPass.html.md)
 - [RenderPass](https://threejs.org/docs/pages/RenderPass.html.md)
-- [RenderPixelatedPass](https://threejs.org/docs/pages/RenderPixelatedPass.html.md)
-- [RenderTransitionPass](https://threejs.org/docs/pages/RenderTransitionPass.html.md)
 - [RetroPassNode](https://threejs.org/docs/pages/RetroPassNode.html.md)
-- [SAOPass](https://threejs.org/docs/pages/SAOPass.html.md)
-- [SMAAPass](https://threejs.org/docs/pages/SMAAPass.html.md)
 - [SSAAPassNode](https://threejs.org/docs/pages/SSAAPassNode.html.md)
-- [SSAARenderPass](https://threejs.org/docs/pages/SSAARenderPass.html.md)
-- [SSAOPass](https://threejs.org/docs/pages/SSAOPass.html.md)
-- [SSRPass](https://threejs.org/docs/pages/SSRPass.html.md)
-- [SavePass](https://threejs.org/docs/pages/SavePass.html.md)
-- [ShaderPass](https://threejs.org/docs/pages/ShaderPass.html.md)
 - [StereoCompositePassNode](https://threejs.org/docs/pages/StereoCompositePassNode.html.md)
 - [StereoPassNode](https://threejs.org/docs/pages/StereoPassNode.html.md)
-- [TAARenderPass](https://threejs.org/docs/pages/TAARenderPass.html.md)
-- [TexturePass](https://threejs.org/docs/pages/TexturePass.html.md)
 - [ToonOutlinePassNode](https://threejs.org/docs/pages/ToonOutlinePassNode.html.md)
-- [UnrealBloomPass](https://threejs.org/docs/pages/UnrealBloomPass.html.md)
 
 ### Nodes (TSL)
 
@@ -8404,7 +8253,6 @@ The following documentation pages are available in markdown format at `https://t
 - [IsolateNode](https://threejs.org/docs/pages/IsolateNode.html.md)
 - [JoinNode](https://threejs.org/docs/pages/JoinNode.html.md)
 - [LensflareNode](https://threejs.org/docs/pages/LensflareNode.html.md)
-- [LightProbeNode](https://threejs.org/docs/pages/LightProbeNode.html.md)
 - [LightingContextNode](https://threejs.org/docs/pages/LightingContextNode.html.md)
 - [LightingNode](https://threejs.org/docs/pages/LightingNode.html.md)
 - [LightsNode](https://threejs.org/docs/pages/LightsNode.html.md)
@@ -8420,6 +8268,7 @@ The following documentation pages are available in markdown format at `https://t
 - [Node](https://threejs.org/docs/pages/Node.html.md)
 - [NormalMapNode](https://threejs.org/docs/pages/NormalMapNode.html.md)
 - [Object3DNode](https://threejs.org/docs/pages/Object3DNode.html.md)
+- [OcclusionAwareIrradianceNode](https://threejs.org/docs/pages/OcclusionAwareIrradianceNode.html.md)
 - [OperatorNode](https://threejs.org/docs/pages/OperatorNode.html.md)
 - [OutlineNode](https://threejs.org/docs/pages/OutlineNode.html.md)
 - [OutputStructNode](https://threejs.org/docs/pages/OutputStructNode.html.md)
@@ -8433,7 +8282,6 @@ The following documentation pages are available in markdown format at `https://t
 - [PointLightDataNode](https://threejs.org/docs/pages/PointLightDataNode.html.md)
 - [PointLightNode](https://threejs.org/docs/pages/PointLightNode.html.md)
 - [PointShadowNode](https://threejs.org/docs/pages/PointShadowNode.html.md)
-- [PointUVNode](https://threejs.org/docs/pages/PointUVNode.html.md)
 - [ProjectorLightNode](https://threejs.org/docs/pages/ProjectorLightNode.html.md)
 - [PropertyNode](https://threejs.org/docs/pages/PropertyNode.html.md)
 - [RGBShiftNode](https://threejs.org/docs/pages/RGBShiftNode.html.md)
@@ -8455,7 +8303,6 @@ The following documentation pages are available in markdown format at `https://t
 - [SSRNode](https://threejs.org/docs/pages/SSRNode.html.md)
 - [SSSNode](https://threejs.org/docs/pages/SSSNode.html.md)
 - [SampleNode](https://threejs.org/docs/pages/SampleNode.html.md)
-- [ScreenNode](https://threejs.org/docs/pages/ScreenNode.html.md)
 - [SetNode](https://threejs.org/docs/pages/SetNode.html.md)
 - [ShadowBaseNode](https://threejs.org/docs/pages/ShadowBaseNode.html.md)
 - [ShadowNode](https://threejs.org/docs/pages/ShadowNode.html.md)
@@ -8467,6 +8314,7 @@ The following documentation pages are available in markdown format at `https://t
 - [StackNode](https://threejs.org/docs/pages/StackNode.html.md)
 - [StorageArrayElementNode](https://threejs.org/docs/pages/StorageArrayElementNode.html.md)
 - [StorageBufferNode](https://threejs.org/docs/pages/StorageBufferNode.html.md)
+- [StorageStructNode](https://threejs.org/docs/pages/StorageStructNode.html.md)
 - [StorageTexture3DNode](https://threejs.org/docs/pages/StorageTexture3DNode.html.md)
 - [StorageTextureNode](https://threejs.org/docs/pages/StorageTextureNode.html.md)
 - [StructNode](https://threejs.org/docs/pages/StructNode.html.md)
@@ -8477,7 +8325,6 @@ The following documentation pages are available in markdown format at `https://t
 - [SunShadowNode](https://threejs.org/docs/pages/SunShadowNode.html.md)
 - [TAAUNode](https://threejs.org/docs/pages/TAAUNode.html.md)
 - [TRAANode](https://threejs.org/docs/pages/TRAANode.html.md)
-- [TempNode](https://threejs.org/docs/pages/TempNode.html.md)
 - [TemporalReprojectNode](https://threejs.org/docs/pages/TemporalReprojectNode.html.md)
 - [Texture3DNode](https://threejs.org/docs/pages/Texture3DNode.html.md)
 - [TextureNode](https://threejs.org/docs/pages/TextureNode.html.md)
@@ -8506,8 +8353,6 @@ The following documentation pages are available in markdown format at `https://t
 ### WebXR
 
 - [EXRExporter](https://threejs.org/docs/pages/EXRExporter.html.md)
-- [WebXRDepthSensing](https://threejs.org/docs/pages/WebXRDepthSensing.html.md)
-- [WebXRManager](https://threejs.org/docs/pages/WebXRManager.html.md)
 - [XRButton](https://threejs.org/docs/pages/XRButton.html.md)
 - [XRControllerModel](https://threejs.org/docs/pages/XRControllerModel.html.md)
 - [XRControllerModelFactory](https://threejs.org/docs/pages/XRControllerModelFactory.html.md)
@@ -8520,77 +8365,24 @@ The following documentation pages are available in markdown format at `https://t
 
 ### Shader Modules
 
-- [module-ACESFilmicToneMappingShader](https://threejs.org/docs/pages/module-ACESFilmicToneMappingShader.html.md)
-- [module-AfterimageShader](https://threejs.org/docs/pages/module-AfterimageShader.html.md)
-- [module-BasicShader](https://threejs.org/docs/pages/module-BasicShader.html.md)
 - [module-Bayer](https://threejs.org/docs/pages/module-Bayer.html.md)
-- [module-BleachBypassShader](https://threejs.org/docs/pages/module-BleachBypassShader.html.md)
-- [module-BlendShader](https://threejs.org/docs/pages/module-BlendShader.html.md)
-- [module-BokehShader](https://threejs.org/docs/pages/module-BokehShader.html.md)
-- [module-BokehShader2](https://threejs.org/docs/pages/module-BokehShader2.html.md)
-- [module-BrightnessContrastShader](https://threejs.org/docs/pages/module-BrightnessContrastShader.html.md)
 - [module-BufferGeometryUtils](https://threejs.org/docs/pages/module-BufferGeometryUtils.html.md)
-- [module-CSMShader](https://threejs.org/docs/pages/module-CSMShader.html.md)
 - [module-CameraUtils](https://threejs.org/docs/pages/module-CameraUtils.html.md)
-- [module-ColorCorrectionShader](https://threejs.org/docs/pages/module-ColorCorrectionShader.html.md)
 - [module-ColorSpaces](https://threejs.org/docs/pages/module-ColorSpaces.html.md)
 - [module-ColorUtils](https://threejs.org/docs/pages/module-ColorUtils.html.md)
-- [module-ColorifyShader](https://threejs.org/docs/pages/module-ColorifyShader.html.md)
-- [module-ConvolutionShader](https://threejs.org/docs/pages/module-ConvolutionShader.html.md)
-- [module-CopyShader](https://threejs.org/docs/pages/module-CopyShader.html.md)
-- [module-DOFMipMapShader](https://threejs.org/docs/pages/module-DOFMipMapShader.html.md)
-- [module-DepthLimitedBlurShader](https://threejs.org/docs/pages/module-DepthLimitedBlurShader.html.md)
-- [module-DigitalGlitch](https://threejs.org/docs/pages/module-DigitalGlitch.html.md)
-- [module-DotScreenShader](https://threejs.org/docs/pages/module-DotScreenShader.html.md)
-- [module-ExposureShader](https://threejs.org/docs/pages/module-ExposureShader.html.md)
-- [module-FXAAShader](https://threejs.org/docs/pages/module-FXAAShader.html.md)
-- [module-FilmShader](https://threejs.org/docs/pages/module-FilmShader.html.md)
-- [module-FocusShader](https://threejs.org/docs/pages/module-FocusShader.html.md)
-- [module-FreiChenShader](https://threejs.org/docs/pages/module-FreiChenShader.html.md)
-- [module-GTAOShader](https://threejs.org/docs/pages/module-GTAOShader.html.md)
-- [module-GammaCorrectionShader](https://threejs.org/docs/pages/module-GammaCorrectionShader.html.md)
 - [module-GeometryCompressionUtils](https://threejs.org/docs/pages/module-GeometryCompressionUtils.html.md)
 - [module-GeometryUtils](https://threejs.org/docs/pages/module-GeometryUtils.html.md)
 - [module-GroundedSkybox](https://threejs.org/docs/pages/module-GroundedSkybox.html.md)
-- [module-HalftoneShader](https://threejs.org/docs/pages/module-HalftoneShader.html.md)
-- [module-HorizontalBlurShader](https://threejs.org/docs/pages/module-HorizontalBlurShader.html.md)
-- [module-HorizontalTiltShiftShader](https://threejs.org/docs/pages/module-HorizontalTiltShiftShader.html.md)
-- [module-HueSaturationShader](https://threejs.org/docs/pages/module-HueSaturationShader.html.md)
 - [module-Interpolations](https://threejs.org/docs/pages/module-Interpolations.html.md)
-- [module-KaleidoShader](https://threejs.org/docs/pages/module-KaleidoShader.html.md)
-- [module-LuminosityHighPassShader](https://threejs.org/docs/pages/module-LuminosityHighPassShader.html.md)
-- [module-LuminosityShader](https://threejs.org/docs/pages/module-LuminosityShader.html.md)
 - [module-MeshletGeometryUtils](https://threejs.org/docs/pages/module-MeshletGeometryUtils.html.md)
-- [module-MirrorShader](https://threejs.org/docs/pages/module-MirrorShader.html.md)
 - [module-NURBSUtils](https://threejs.org/docs/pages/module-NURBSUtils.html.md)
-- [module-NormalMapShader](https://threejs.org/docs/pages/module-NormalMapShader.html.md)
-- [module-OutputShader](https://threejs.org/docs/pages/module-OutputShader.html.md)
 - [module-ParametricFunctions](https://threejs.org/docs/pages/module-ParametricFunctions.html.md)
-- [module-PoissonDenoiseShader](https://threejs.org/docs/pages/module-PoissonDenoiseShader.html.md)
-- [module-RGBShiftShader](https://threejs.org/docs/pages/module-RGBShiftShader.html.md)
 - [module-Raymarching](https://threejs.org/docs/pages/module-Raymarching.html.md)
-- [module-SAOShader](https://threejs.org/docs/pages/module-SAOShader.html.md)
-- [module-SMAAShader](https://threejs.org/docs/pages/module-SMAAShader.html.md)
-- [module-SSAOShader](https://threejs.org/docs/pages/module-SSAOShader.html.md)
-- [module-SSRShader](https://threejs.org/docs/pages/module-SSRShader.html.md)
 - [module-SceneUtils](https://threejs.org/docs/pages/module-SceneUtils.html.md)
-- [module-SepiaShader](https://threejs.org/docs/pages/module-SepiaShader.html.md)
 - [module-SkeletonUtils](https://threejs.org/docs/pages/module-SkeletonUtils.html.md)
-- [module-SobelOperatorShader](https://threejs.org/docs/pages/module-SobelOperatorShader.html.md)
 - [module-SoftParticles](https://threejs.org/docs/pages/module-SoftParticles.html.md)
 - [module-SortUtils](https://threejs.org/docs/pages/module-SortUtils.html.md)
-- [module-SubsurfaceScatteringShader](https://threejs.org/docs/pages/module-SubsurfaceScatteringShader.html.md)
 - [module-Text2D](https://threejs.org/docs/pages/module-Text2D.html.md)
-- [module-TriangleBlurShader](https://threejs.org/docs/pages/module-TriangleBlurShader.html.md)
 - [module-UVsDebug](https://threejs.org/docs/pages/module-UVsDebug.html.md)
-- [module-UniformsUtils](https://threejs.org/docs/pages/module-UniformsUtils.html.md)
-- [module-UnpackDepthRGBAShader](https://threejs.org/docs/pages/module-UnpackDepthRGBAShader.html.md)
-- [module-VelocityShader](https://threejs.org/docs/pages/module-VelocityShader.html.md)
-- [module-VerticalBlurShader](https://threejs.org/docs/pages/module-VerticalBlurShader.html.md)
-- [module-VerticalTiltShiftShader](https://threejs.org/docs/pages/module-VerticalTiltShiftShader.html.md)
-- [module-VignetteShader](https://threejs.org/docs/pages/module-VignetteShader.html.md)
-- [module-VolumeShader](https://threejs.org/docs/pages/module-VolumeShader.html.md)
 - [module-VoronoiNoise](https://threejs.org/docs/pages/module-VoronoiNoise.html.md)
-- [module-WaterRefractionShader](https://threejs.org/docs/pages/module-WaterRefractionShader.html.md)
-- [module-WebGLTextureUtils](https://threejs.org/docs/pages/module-WebGLTextureUtils.html.md)
 - [module-WebGPUTextureUtils](https://threejs.org/docs/pages/module-WebGPUTextureUtils.html.md)

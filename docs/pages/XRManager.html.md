@@ -6,19 +6,13 @@ The XR manager is built on top of the WebXR Device API to manage XR sessions wit
 
 ## Constructor
 
-### new XRManager( renderer : Renderer, multiview : boolean )
+### new XRManager( renderer : Renderer )
 
 Constructs a new XR manager.
 
 **renderer**
 
 The renderer.
-
-**multiview**
-
-Enables multiview if the device supports it.
-
-Default is `false`.
 
 ## Properties
 
@@ -42,123 +36,11 @@ Default is `false`.
 
 ## Methods
 
-### .createCylinderLayer( radius : number, centralAngle : number, aspectratio : number, translation : Vector3, quaternion : Quaternion, pixelwidth : number, pixelheight : number, rendercall : function, attributes : Object ) : Mesh
-
-This method can be used in XR applications to create a cylindrical layer that presents a separate rendered scene.
-
-**radius**
-
-The radius of the cylinder in world units.
-
-**centralAngle**
-
-The central angle of the cylinder in radians.
-
-**aspectratio**
-
-The aspect ratio.
-
-**translation**
-
-The position/translation of the layer plane in world units.
-
-**quaternion**
-
-The orientation of the layer plane expressed as a quaternion.
-
-**pixelwidth**
-
-The width of the layer's render target in pixels.
-
-**pixelheight**
-
-The height of the layer's render target in pixels.
-
-**rendercall**
-
-A callback function that renders the layer. Similar to code in the default animation loop, this method can be used to update/transform 3D object in the layer's scene.
-
-**attributes**
-
-Allows to configure the layer's render target.
-
-Default is `{}`.
-
-**samples**
-
-The scene MSAA sample count. Defaults to the renderer's sample count.
-
-**Returns:** A mesh representing the cylindrical XR layer. This mesh should be added to the XR scene.
-
-### .createQuadLayer( width : number, height : number, translation : Vector3, quaternion : Quaternion, pixelwidth : number, pixelheight : number, rendercall : function, attributes : Object ) : Mesh
-
-This method can be used in XR applications to create a quadratic layer that presents a separate rendered scene.
-
-**width**
-
-The width of the layer plane in world units.
-
-**height**
-
-The height of the layer plane in world units.
-
-**translation**
-
-The position/translation of the layer plane in world units.
-
-**quaternion**
-
-The orientation of the layer plane expressed as a quaternion.
-
-**pixelwidth**
-
-The width of the layer's render target in pixels.
-
-**pixelheight**
-
-The height of the layer's render target in pixels.
-
-**rendercall**
-
-A callback function that renders the layer. Similar to code in the default animation loop, this method can be used to update/transform 3D object in the layer's scene.
-
-**attributes**
-
-Allows to configure the layer's render target.
-
-Default is `{}`.
-
-**samples**
-
-The scene MSAA sample count. Defaults to the renderer's sample count.
-
-**Returns:** A mesh representing the quadratic XR layer. This mesh should be added to the XR scene.
-
-### .foveateBoundTexture( renderTarget : RenderTarget )
-
-Applies WebXR fixed foveation to the internal post-processing render target used by the first XR render pass before compositing into a projection layer.
-
-Browser-side `XRWebGLBinding.foveateBoundTexture()` failures are treated as non-fatal so they do not interrupt rendering.
-
-**renderTarget**
-
-The internal render target.
-
-### .getBaseLayer() : XRWebGLLayer | XRProjectionLayer
+### .getBaseLayer() : XRProjectionLayer
 
 Returns the current base layer.
 
-This is an `XRProjectionLayer` when the targeted XR device supports the WebXR Layers API, or an `XRWebGLLayer` otherwise.
-
-**Returns:** The XR base layer.
-
-### .getBinding() : XRWebGLBinding
-
-Returns the current XR binding.
-
-Creates a new binding if needed and the browser is capable of doing so.
-
-**Returns:** The XR binding. Returns `null` if one cannot be created.
+**Returns:** The XR projection layer. Returns `null` when used outside a XR session.
 
 ### .getCamera() : ArrayCamera
 
@@ -248,12 +130,6 @@ Creates a new binding if needed and the browser is capable of doing so.
 
 **Returns:** The XR WebGPU binding. Returns `null` if one cannot be created.
 
-### .renderLayers()
-
-Renders the XR layers that have been previously added to the scene.
-
-This method is usually called in your animation loop before rendering the actual scene via `renderer.render( scene, camera );`.
-
 ### .setFoveation( foveation : number )
 
 Sets the foveation value.
@@ -307,12 +183,6 @@ This method is called by the renderer per frame and updates the XR camera and it
 **camera**
 
 The camera.
-
-### .useMultiview() : boolean
-
-Returns `true` if the engine renders to a multiview target.
-
-**Returns:** Whether the engine renders to a multiview render target or not.
 
 ## Source
 

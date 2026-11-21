@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>RayTracedRadiosity - Three.js Docs</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+	<h1 translate="no">RayTracedRadiosity</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>Approximates diffuse global illumination with ray traced radiosity, as a source of irradiance for
+<a href="LightMapper.html">LightMapper</a>. Every sample casts cosine-distributed rays from each point through a
+<a href="https://github.com/gkjohnson/three-mesh-bvh" target="_blank" rel="noopener">three-mesh-bvh</a> BVH of the scene, and looks up
+the light leaving the hit surfaces in a light map of the bounces. Emissive surfaces and the sky are
+also sampled directly with shadow rays, so small area lights and suns converge quickly.</p>
+<p>The bounces are cached in a light map that <code>update()</code> solves iteratively, so the meshes need light
+map UVs in <code>uv1</code>, e.g. generated with <a href="global.html#unwrapUVs">unwrapUVs</a>. Meshes without them block light but do not
+reflect it.</p>
+<p>The scene is collected by <code>update()</code>: call it again after changing the scene or the lighting and
+create new samplers afterwards. The direct light of directional, point and spot lights is left to
+the materials, like with the other irradiance sources, but the cached bounces include it with shadow
+rays, so their indirect light is baked. The light of emissive surfaces is baked, since materials do
+not light each other, and so is the light of an equirectangular or cube texture in <code>scene.background</code>,
+scaled by <code>scene.backgroundIntensity</code>; background colors are ignored. Only the colors of the
+materials are used, texture maps are ignored and all surfaces are opaque. Other lights, and skinned,
+instanced and batched meshes are ignored.</p>
+<p>This class can only be used with <a href="WebGPURenderer.html">WebGPURenderer</a> and a WebGPU backend.
+Requires <code>three-mesh-bvh</code> 0.9.18 or later.</p></div>
+				<h2>Code Example</h2>
+				<div translate="no"><pre><code class="language-js">const radiosity = new RayTracedRadiosity();
+radiosity.update( renderer, scene );
+const lightMapper = new LightMapper( renderer, size, rayTracedRadiosityIrradiance( radiosity ) );
+</code></pre></div>
+			</header>
+			<article>
+				<h2 class="subsection-title">Import</h2>
+				<p><span translate="no">RayTracedRadiosity</span> is an addon, and must be imported explicitly, see <a href="https://threejs.org/manual/#installation#addons" target="_blank" rel="noopener">Installation#Addons</a>.</p>
+				<pre><code class="language-js">import { RayTracedRadiosity, rayTracedRadiosityIrradiance } from 'three/addons/lighting/RayTracedRadiosity.js';</code></pre>
+				<div class="container-overview">
+					<h2>Constructor</h2>
+					<h3 class="name name-method" id="RayTracedRadiosity" translate="no">new <a href="#RayTracedRadiosity">RayTracedRadiosity</a><span class="signature">( options : <span class="param-type">Object</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>Constructs a new ray traced radiosity solver.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">options</strong>
+									</td>
+									<td class="description last">
+										<p>The options.</p>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">rays</strong>
+									</td>
+									<td class="description last">
+										<p>The number of rays cast per point and sample.</p>
+										<p>Default is <code>8</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">bounces</strong>
+									</td>
+									<td class="description last">
+										<p>The number of iterations used to solve the cached bounces. Each iteration adds one bounce, <code>0</code> disables the cache.</p>
+										<p>Default is <code>16</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">cacheSamples</strong>
+									</td>
+									<td class="description last">
+										<p>The number of samples accumulated into the bounce cache after the iterations.</p>
+										<p>Default is <code>32</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">cacheSize</strong>
+									</td>
+									<td class="description last">
+										<p>The size of the bounce cache light map in texels.</p>
+										<p>Default is <code>256</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">Properties</h2>
+				<div class="member">
+					<h3 class="name" id="bias" translate="no">.<a href="#bias">bias</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>World space distance that rays start above the receiving face, to avoid hitting it.</p>
+						<p>Default is <code>0.001</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="bounces" translate="no">.<a href="#bounces">bounces</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>The number of iterations used to solve the cached bounces.</p>
+						<p>Default is <code>16</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="cacheSamples" translate="no">.<a href="#cacheSamples">cacheSamples</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>The number of samples accumulated into the bounce cache after the iterations.</p>
+						<p>Default is <code>32</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="cacheSize" translate="no">.<a href="#cacheSize">cacheSize</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>The size of the bounce cache light map in texels.</p>
+						<p>Default is <code>256</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="rays" translate="no">.<a href="#rays">rays</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>The number of rays cast per point and sample. It can change between samples, e.g. to keep the
+frame rate of a progressive bake: the samples continue the same sequences of rays.</p>
+						<p>Default is <code>8</code>.</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">Methods</h2>
+					<h3 class="name name-method" id="dispose" translate="no">.<a href="#dispose">dispose</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>Frees all internal resources.</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="update" translate="no">.<a href="#update">update</a><span class="signature">( renderer : <span class="param-type"><a href="WebGPURenderer.html">WebGPURenderer</a></span>, scene : <span class="param-type"><a href="Scene.html">Scene</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>Collects the meshes of the scene, builds the BVH and solves the cached bounces. Call this again
+after changing the scene or the lighting.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">renderer</strong>
+									</td>
+									<td class="description last">
+										<p>The renderer.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">scene</strong>
+									</td>
+									<td class="description last">
+										<p>The scene.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				<h2 class="subsection-title">Source</h2>
+				<p>
+					<a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/lighting/RayTracedRadiosity.js" translate="no" target="_blank" rel="noopener">examples/jsm/lighting/RayTracedRadiosity.js</a>
+				</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

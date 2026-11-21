@@ -4,7 +4,7 @@
 
 A minimal renderer for 3D Gaussian splat geometry.
 
-Note that this class can only be used with [WebGPURenderer](WebGPURenderer.html). The `forceWebGL` fallback of [WebGPURenderer](WebGPURenderer.html) is supported, but [WebGLRenderer](WebGLRenderer.html) is not. Import maps or package exports must resolve both `three/webgpu` and `three/tsl`.
+Note that this class can only be used with [WebGPURenderer](WebGPURenderer.html). Import maps or package exports must resolve both `three/webgpu` and `three/tsl`.
 
 ## Code Example
 
@@ -82,6 +82,12 @@ Each splat is expanded by its own extent rather than treated as a point, so the 
 Computes the bounding sphere of the splats, updating [GaussianSplat#boundingSphere](GaussianSplat.html#boundingSphere).
 
 Each splat is expanded by its own extent rather than treated as a point, so the bounds cover what is drawn.
+
+### .dispose()
+
+Frees the GPU-related resources allocated by this instance. Call this method whenever the splat instance is no longer used in your app.
+
+**Overrides:** [Mesh#dispose](Mesh.html#dispose)
 
 ### .raycast( raycaster : Raycaster, intersects : Array.<Object> )
 

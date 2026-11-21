@@ -28,7 +28,7 @@ Default is `true`.
 
 ### .blending : number
 
-Blending is set to `NoBlending` since transparency is not supported, yet.
+Blending is set to `NoBlending`. When `transparent` is `true`, the line is blended in the shader over the opaque scene, so other transparent objects are not visible behind it.
 
 Default is `0`.
 
@@ -69,12 +69,6 @@ Default is `null`.
 This flag can be used for type testing.
 
 Default is `true`.
-
-### .lineColorNode : Node.<vec3>
-
-Defines the lines color.
-
-**Deprecated:** since r185. Use [NodeMaterial#colorNode](NodeMaterial.html#colorNode) instead.
 
 ### .offsetNode : Node.<float>
 

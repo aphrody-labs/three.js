@@ -19,7 +19,7 @@ write data into a 3D storage texture with a compute shader.</p></div>
 			<article>
 				<div class="container-overview">
 					<h2>Constructor</h2>
-					<h3 class="name name-method" id="StorageTexture3DNode" translate="no">new <a href="#StorageTexture3DNode">StorageTexture3DNode</a><span class="signature">( value : <span class="param-type"><a href="Storage3DTexture.html">Storage3DTexture</a></span>, uvNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;vec3></span>, storeNode : <span class="param-type"><a href="Node.html">Node</a></span> )</span> </h3>
+					<h3 class="name name-method" id="StorageTexture3DNode" translate="no">new <a href="#StorageTexture3DNode">StorageTexture3DNode</a><span class="signature">( value : <span class="param-type"><a href="Storage3DTexture.html">Storage3DTexture</a></span>, uvNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;uvec3></span>, storeNode : <span class="param-type"><a href="Node.html">Node</a></span> )</span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>Constructs a new 3D storage texture node.</p>
@@ -39,7 +39,7 @@ write data into a 3D storage texture with a compute shader.</p></div>
 										<strong translate="no">uvNode</strong>
 									</td>
 									<td class="description last">
-										<p>The uv node.</p>
+										<p>The integer texel coordinates (not normalized uvs).</p>
 									</td>
 								</tr>
 								<tr>

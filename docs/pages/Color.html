@@ -795,7 +795,7 @@ you don't need the other CSS-style formats.</p>
 					<h3 class="name name-method" id="setHSL" translate="no">.<a href="#setHSL">setHSL</a><span class="signature">( h : <span class="param-type">number</span>, s : <span class="param-type">number</span>, l : <span class="param-type">number</span>, colorSpace : <span class="param-type">string</span> )</span><span class="type-signature"> : <a href="Color.html">Color</a></span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Sets this color from RGB values.</p>
+							<p>Sets this color from HSL values.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -971,7 +971,8 @@ all 140 color names are supported).</p>
 					<h3 class="name name-method" id="sub" translate="no">.<a href="#sub">sub</a><span class="signature">( color : <span class="param-type"><a href="Color.html">Color</a></span> )</span><span class="type-signature"> : <a href="Color.html">Color</a></span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Subtracts the RGB values of the given color from the RGB values of this color.</p>
+							<p>Subtracts the RGB values of the given color from the RGB values of this color.
+The resulting components are clamped to a minimum of <code>0</code>.</p>
 						</div>
 						<table class="params">
 							<tbody>

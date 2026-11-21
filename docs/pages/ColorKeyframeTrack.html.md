@@ -6,7 +6,7 @@ A track for color keyframe values.
 
 ## Constructor
 
-### new ColorKeyframeTrack( name : string, times : Array.<number>, values : Array.<number>, interpolation : InterpolateLinear | InterpolateDiscrete | InterpolateSmooth )
+### new ColorKeyframeTrack( name : string, times : Array.<number>, values : Array.<number>, interpolation : InterpolateLinear | InterpolateDiscrete | InterpolateSmooth | InterpolateBezier )
 
 Constructs a new color keyframe track.
 

@@ -16,7 +16,7 @@ Limitations:
 
 References:
 
-*   [https://panoskarabelas.com/posts/screen\_space\_shadows/](https://panoskarabelas.com/posts/screen_space_shadows/).
+*   [https://panoskarabelas.com/blog/posts/screen\_space\_shadows/](https://panoskarabelas.com/blog/posts/screen_space_shadows/).
 *   [https://www.bendstudio.com/blog/inside-bend-screen-space-shadows/](https://www.bendstudio.com/blog/inside-bend-screen-space-shadows/).
 
 ## Code Example

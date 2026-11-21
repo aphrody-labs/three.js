@@ -32,7 +32,7 @@ The total number of threads (invocations) to execute. If it is a number, it will
 
 A uniform node holding the dispatch count for bounds checking. Created automatically when `count` is a number.
 
-### .dispatchSize : number | Array.<number>
+### .dispatchSize : number | Array.<number> | IndirectStorageBufferAttribute
 
 The dispatch size for workgroups on X, Y, and Z axes. Used directly if `count` is not provided.
 
@@ -87,18 +87,6 @@ The current node frame.
 **Overrides:** [Node#getUpdateBeforeType](Node.html#getUpdateBeforeType)
 
 **Returns:** The update type.
-
-### .label( name : string ) : ComputeNode
-
-Sets the [ComputeNode#name](ComputeNode.html#name) property.
-
-**name**
-
-The name of the uniform.
-
-**Deprecated:** Yes
-
-**Returns:** A reference to this node.
 
 ### .onInit( callback : function ) : ComputeNode
 

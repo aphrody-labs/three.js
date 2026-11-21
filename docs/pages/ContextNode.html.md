@@ -88,14 +88,6 @@ The member name.
 
 **Returns:** The member type.
 
-### .getScope() : Node
-
-This method is overwritten to ensure it returns the reference to [ContextNode#node](ContextNode.html#node).
-
-**Overrides:** [Node#getScope](Node.html#getScope)
-
-**Returns:** A reference to [ContextNode#node](ContextNode.html#node).
-
 ## Source
 
 [src/nodes/core/ContextNode.js](https://github.com/mrdoob/three.js/blob/master/src/nodes/core/ContextNode.js)

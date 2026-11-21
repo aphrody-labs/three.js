@@ -25,7 +25,9 @@
 		<script type="importmap">
 			{
 				"imports": {
-					"three": "../../build/three.module.js",
+					"three": "../../build/three.webgpu.js",
+					"three/webgpu": "../../build/three.webgpu.js",
+					"three/tsl": "../../build/three.tsl.js",
 					"three/addons/": "../../examples/jsm/"
 				}
 			}
@@ -70,7 +72,7 @@
 				Vector2,
 				Vector3,
 				WireframeGeometry,
-				WebGLRenderer
+				WebGPURenderer
 			} from 'three';
 
 			import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -743,10 +745,12 @@
 			const camera = new PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 50 );
 			camera.position.z = 30;
 
-			const renderer = new WebGLRenderer( { antialias: true } );
+			const renderer = new WebGPURenderer( { antialias: true } );
 			renderer.setPixelRatio( window.devicePixelRatio );
 			renderer.setSize( window.innerWidth, window.innerHeight );
 			document.body.appendChild( renderer.domElement );
+
+			await renderer.init();
 
 			const orbit = new OrbitControls( camera, renderer.domElement );
 			orbit.enableZoom = false;
@@ -781,8 +785,6 @@
 
 			function render() {
 
-				requestAnimationFrame( render );
-
 				group.rotation.x += 0.005;
 				group.rotation.y += 0.005;
 
@@ -799,7 +801,7 @@
 
 			}, false );
 
-			render();
+			renderer.setAnimationLoop( render );
 
 		</script>
 	</body>

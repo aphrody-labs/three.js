@@ -21,7 +21,7 @@ import { XRPlanes } from 'three/addons/webxr/XRPlanes.js';
 
 ## Constructor
 
-### new XRPlanes( renderer : WebGLRenderer | WebGPURenderer )
+### new XRPlanes( renderer : WebGPURenderer )
 
 Constructs a new XR plane container.
 

@@ -138,15 +138,11 @@ Adds an arc as an instance of [EllipseCurve](EllipseCurve.html) to the path, pos
 
 **aX**
 
-The x coordinate of the center of the arc offsetted from the previous curve.
-
-Default is `0`.
+The x offset of the center of the arc from [Path#currentPoint](Path.html#currentPoint).
 
 **aY**
 
-The y coordinate of the center of the arc offsetted from the previous curve.
-
-Default is `0`.
+The y offset of the center of the arc from [Path#currentPoint](Path.html#currentPoint).
 
 **aRadius**
 
@@ -210,15 +206,11 @@ Adds an ellipse as an instance of [EllipseCurve](EllipseCurve.html) to the path,
 
 **aX**
 
-The x coordinate of the center of the ellipse offsetted from the previous curve.
-
-Default is `0`.
+The x offset of the center of the ellipse from [Path#currentPoint](Path.html#currentPoint).
 
 **aY**
 
-The y coordinate of the center of the ellipse offsetted from the previous curve.
-
-Default is `0`.
+The y offset of the center of the ellipse from [Path#currentPoint](Path.html#currentPoint).
 
 **xRadius**
 

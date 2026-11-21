@@ -65,7 +65,7 @@ Executed while the loading is in progress.
 
 **Returns:** A Promise that resolves with the loaded 3D object.
 
-### .parse( json : Object, onLoad : onLoad ) : Object3D
+### .parse( json : Object, onLoad : function ) : Object3D
 
 Parses the given JSON. This is used internally by [ObjectLoader#load](ObjectLoader.html#load) but can also be used directly to parse a previously loaded JSON structure.
 
@@ -103,7 +103,7 @@ The geometry type.
 
 **geometryClass**
 
-The geometry class.
+The geometry class. It must implement a static `fromJSON( data, shapes )` method.
 
 ## Source
 

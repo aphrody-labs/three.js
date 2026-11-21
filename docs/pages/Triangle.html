@@ -217,7 +217,7 @@ Returns <code>null</code> if the triangle is degenerate.</p>
 							<dt class="tag-returns"><strong>Returns:</strong> The barycentric coordinates for the given point</dt>
 						</dl>
 					</div>
-					<h3 class="name name-method" id="getInterpolation" translate="no">.<a href="#getInterpolation">getInterpolation</a><span class="signature">( point : <span class="param-type"><a href="Vector3.html">Vector3</a></span>, v1 : <span class="param-type"><a href="Vector3.html">Vector3</a></span>, v2 : <span class="param-type"><a href="Vector3.html">Vector3</a></span>, v3 : <span class="param-type"><a href="Vector3.html">Vector3</a></span>, target : <span class="param-type"><a href="Vector3.html">Vector3</a></span> )</span><span class="type-signature"> : <a href="Vector3.html">Vector3</a></span> </h3>
+					<h3 class="name name-method" id="getInterpolation" translate="no">.<a href="#getInterpolation">getInterpolation</a><span class="signature">( point : <span class="param-type"><a href="Vector3.html">Vector3</a></span>, v1 : <span class="param-type"><a href="Vector2.html">Vector2</a> | <a href="Vector3.html">Vector3</a> | <a href="Vector4.html">Vector4</a></span>, v2 : <span class="param-type"><a href="Vector2.html">Vector2</a> | <a href="Vector3.html">Vector3</a> | <a href="Vector4.html">Vector4</a></span>, v3 : <span class="param-type"><a href="Vector2.html">Vector2</a> | <a href="Vector3.html">Vector3</a> | <a href="Vector4.html">Vector4</a></span>, target : <span class="param-type"><a href="Vector2.html">Vector2</a> | <a href="Vector3.html">Vector3</a> | <a href="Vector4.html">Vector4</a></span> )</span><span class="type-signature"> : <a href="Vector2.html">Vector2</a> | <a href="Vector3.html">Vector3</a> | <a href="Vector4.html">Vector4</a></span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>Computes the value barycentrically interpolated for the given point on the
@@ -358,7 +358,8 @@ triangle. Returns <code>null</code> if the triangle is degenerate.</p>
 					<h3 class="name name-method" id="isFrontFacing" translate="no">.<a href="#isFrontFacing">isFrontFacing</a><span class="signature">( direction : <span class="param-type"><a href="Vector3.html">Vector3</a></span> )</span><span class="type-signature"> : boolean</span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Returns <code>true</code> if the triangle is oriented towards the given direction.</p>
+							<p>Returns <code>true</code> if the triangle is front facing when viewed along the given
+direction, that is, its normal points against <code>direction</code>.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -373,7 +374,7 @@ triangle. Returns <code>null</code> if the triangle is degenerate.</p>
 							</tbody>
 						</table>
 						<dl class="details">
-							<dt class="tag-returns"><strong>Returns:</strong> Whether the triangle is oriented towards the given direction or not.</dt>
+							<dt class="tag-returns"><strong>Returns:</strong> Whether the triangle is front facing when viewed along the given direction or not.</dt>
 						</dl>
 					</div>
 					<h3 class="name name-method" id="set" translate="no">.<a href="#set">set</a><span class="signature">( a : <span class="param-type"><a href="Vector3.html">Vector3</a></span>, b : <span class="param-type"><a href="Vector3.html">Vector3</a></span>, c : <span class="param-type"><a href="Vector3.html">Vector3</a></span> )</span><span class="type-signature"> : <a href="Triangle.html">Triangle</a></span> </h3>
@@ -605,7 +606,7 @@ Returns <code>null</code> if the triangle is degenerate.</p>
 							<dt class="tag-returns"><strong>Returns:</strong> The barycentric coordinates for the given point</dt>
 						</dl>
 					</div>
-					<h3 class="name name-method" id=".getInterpolatedAttribute" translate="no">.<a href="#.getInterpolatedAttribute">getInterpolatedAttribute</a><span class="signature">( attr : <span class="param-type"><a href="BufferAttribute.html">BufferAttribute</a></span>, i1 : <span class="param-type">number</span>, i2 : <span class="param-type">number</span>, i3 : <span class="param-type">number</span>, barycoord : <span class="param-type"><a href="Vector3.html">Vector3</a></span>, target : <span class="param-type"><a href="Vector3.html">Vector3</a></span> )</span><span class="type-signature"> : <a href="Vector3.html">Vector3</a></span> </h3>
+					<h3 class="name name-method" id=".getInterpolatedAttribute" translate="no">.<a href="#.getInterpolatedAttribute">getInterpolatedAttribute</a><span class="signature">( attr : <span class="param-type"><a href="BufferAttribute.html">BufferAttribute</a></span>, i1 : <span class="param-type">number</span>, i2 : <span class="param-type">number</span>, i3 : <span class="param-type">number</span>, barycoord : <span class="param-type"><a href="Vector3.html">Vector3</a></span>, target : <span class="param-type"><a href="Vector2.html">Vector2</a> | <a href="Vector3.html">Vector3</a> | <a href="Vector4.html">Vector4</a></span> )</span><span class="type-signature"> : <a href="Vector2.html">Vector2</a> | <a href="Vector3.html">Vector3</a> | <a href="Vector4.html">Vector4</a></span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>Computes the value barycentrically interpolated for the given attribute and indices.</p>
@@ -666,7 +667,7 @@ Returns <code>null</code> if the triangle is degenerate.</p>
 							<dt class="tag-returns"><strong>Returns:</strong> The interpolated attribute value.</dt>
 						</dl>
 					</div>
-					<h3 class="name name-method" id=".getInterpolation" translate="no">.<a href="#.getInterpolation">getInterpolation</a><span class="signature">( point : <span class="param-type"><a href="Vector3.html">Vector3</a></span>, p1 : <span class="param-type"><a href="Vector3.html">Vector3</a></span>, p2 : <span class="param-type"><a href="Vector3.html">Vector3</a></span>, p3 : <span class="param-type"><a href="Vector3.html">Vector3</a></span>, v1 : <span class="param-type"><a href="Vector3.html">Vector3</a></span>, v2 : <span class="param-type"><a href="Vector3.html">Vector3</a></span>, v3 : <span class="param-type"><a href="Vector3.html">Vector3</a></span>, target : <span class="param-type"><a href="Vector3.html">Vector3</a></span> )</span><span class="type-signature"> : <a href="Vector3.html">Vector3</a></span> </h3>
+					<h3 class="name name-method" id=".getInterpolation" translate="no">.<a href="#.getInterpolation">getInterpolation</a><span class="signature">( point : <span class="param-type"><a href="Vector3.html">Vector3</a></span>, p1 : <span class="param-type"><a href="Vector3.html">Vector3</a></span>, p2 : <span class="param-type"><a href="Vector3.html">Vector3</a></span>, p3 : <span class="param-type"><a href="Vector3.html">Vector3</a></span>, v1 : <span class="param-type"><a href="Vector2.html">Vector2</a> | <a href="Vector3.html">Vector3</a> | <a href="Vector4.html">Vector4</a></span>, v2 : <span class="param-type"><a href="Vector2.html">Vector2</a> | <a href="Vector3.html">Vector3</a> | <a href="Vector4.html">Vector4</a></span>, v3 : <span class="param-type"><a href="Vector2.html">Vector2</a> | <a href="Vector3.html">Vector3</a> | <a href="Vector4.html">Vector4</a></span>, target : <span class="param-type"><a href="Vector2.html">Vector2</a> | <a href="Vector3.html">Vector3</a> | <a href="Vector4.html">Vector4</a></span> )</span><span class="type-signature"> : <a href="Vector2.html">Vector2</a> | <a href="Vector3.html">Vector3</a> | <a href="Vector4.html">Vector4</a></span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>Computes the value barycentrically interpolated for the given point on the
@@ -792,7 +793,8 @@ triangle. Returns <code>null</code> if the triangle is degenerate.</p>
 					<h3 class="name name-method" id=".isFrontFacing" translate="no">.<a href="#.isFrontFacing">isFrontFacing</a><span class="signature">( a : <span class="param-type"><a href="Vector3.html">Vector3</a></span>, b : <span class="param-type"><a href="Vector3.html">Vector3</a></span>, c : <span class="param-type"><a href="Vector3.html">Vector3</a></span>, direction : <span class="param-type"><a href="Vector3.html">Vector3</a></span> )</span><span class="type-signature"> : boolean</span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Returns <code>true</code> if the triangle is oriented towards the given direction.</p>
+							<p>Returns <code>true</code> if the triangle is front facing when viewed along the given
+direction, that is, its normal points against <code>direction</code>.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -831,7 +833,7 @@ triangle. Returns <code>null</code> if the triangle is degenerate.</p>
 							</tbody>
 						</table>
 						<dl class="details">
-							<dt class="tag-returns"><strong>Returns:</strong> Whether the triangle is oriented towards the given direction or not.</dt>
+							<dt class="tag-returns"><strong>Returns:</strong> Whether the triangle is front facing when viewed along the given direction or not.</dt>
 						</dl>
 					</div>
 				<h2 class="subsection-title">Source</h2>

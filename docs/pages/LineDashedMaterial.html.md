@@ -2,9 +2,11 @@
 
 # LineDashedMaterial
 
-A material for rendering line primitives.
+A material for rendering dashed line primitives.
 
 Materials define the appearance of renderable 3D objects.
+
+The material requires the `lineDistance` attribute, so call [Line#computeLineDistances](Line.html#computeLineDistances) on the line. Otherwise, it renders solid.
 
 ## Code Example
 
@@ -15,6 +17,8 @@ const material = new THREE.LineDashedMaterial( {
 	dashSize: 3,
 	gapSize: 1,
 } );
+const line = new THREE.Line( geometry, material );
+line.computeLineDistances();
 ```
 
 ## Constructor
@@ -31,7 +35,7 @@ An object with one or more properties defining the material's appearance. Any pr
 
 ### .dashSize : number
 
-The size of the dash. This is both the gap with the stroke.
+The length of each dash.
 
 Default is `3`.
 
@@ -49,7 +53,7 @@ Default is `true`.
 
 ### .scale : number
 
-The scale of the dashed part of a line.
+Scales the line distances before dashing. Values greater than `1` make dashes and gaps shorter.
 
 Default is `1`.
 

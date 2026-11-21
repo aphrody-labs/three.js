@@ -20,7 +20,7 @@ audioLoader.load( 'sounds/ambient.ogg', function( buffer ) {
 });
 // create an AudioAnalyser, passing in the sound and desired fftSize
 const analyser = new THREE.AudioAnalyser( sound, 32 );
-// get the average frequency of the sound
+// get the average magnitude of the frequency data
 const data = analyser.getAverageFrequency();
 ```
 
@@ -44,7 +44,7 @@ Default is `2048`.
 
 ### .analyser : AnalyserNode
 
-The global audio listener.
+The native analyser node used to compute the frequency data.
 
 ### .data : Uint8Array
 
@@ -54,15 +54,15 @@ Holds the analyzed data.
 
 ### .getAverageFrequency() : number
 
-Returns the average of the frequencies returned by [AudioAnalyser#getFrequencyData](AudioAnalyser.html#getFrequencyData).
+Returns the average of the frequency data returned by [AudioAnalyser#getFrequencyData](AudioAnalyser.html#getFrequencyData), i.e. the mean magnitude across all frequency bins.
 
-**Returns:** The average frequency.
+**Returns:** The average magnitude in the range `[0, 255]`.
 
 ### .getFrequencyData() : Uint8Array
 
 Returns an array with frequency data of the audio.
 
-Each item in the array represents the decibel value for a specific frequency. The frequencies are spread linearly from 0 to 1/2 of the sample rate. For example, for 48000 sample rate, the last item of the array will represent the decibel value for 24000 Hz.
+Each item in the array is an unsigned byte in the range `[0, 255]`, linearly mapped from `analyser.minDecibels` to `analyser.maxDecibels`. Item `k` represents the frequency `k * sampleRate / fftSize`, so the frequencies are spread linearly from `0` up to just below half the sample rate.
 
 **Returns:** The frequency data.
 

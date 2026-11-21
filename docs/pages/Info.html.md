@@ -12,13 +12,13 @@ Constructs a new info component.
 
 ### .autoReset : boolean
 
-Whether frame related metrics should automatically be resetted or not. This property should be set to `false` by apps which manage their own animation loop. They must then call `renderer.info.reset()` once per frame manually.
+Whether frame related metrics should automatically be reset at the start of each animation frame or not. The renderer runs its internal animation loop once `render()` or `compute()` has been called, even when the app manages its own animation loop. When set to `false`, the app must call `renderer.info.reset()` manually.
 
 Default is `true`.
 
 ### .calls : number (readonly)
 
-The number of render calls since the app has been started.
+The number of render and compute calls since the app has been started.
 
 Default is `0`.
 
@@ -35,11 +35,6 @@ The number of compute calls since the app has been started.
 number
 
 The number of compute calls of the current frame.
-
-**timestamp**  
-number
-
-The timestamp of the frame when using `renderer.computeAsync()`.
 
 ### .frame : number (readonly)
 
@@ -180,11 +175,6 @@ number
 
 The number of rendered line primitives of the current frame.
 
-**timestamp**  
-number
-
-The timestamp of the frame.
-
 ## Methods
 
 ### .createAttribute( attribute : BufferAttribute )
@@ -235,11 +225,15 @@ Tracks a storage attribute memory explicitly.
 
 The storage attribute to track.
 
-### .createTexture( texture : Texture )
+### .createTexture( texture : Texture, options : Object )
 
 Tracks texture memory explicitly, updating counts and byte tracking.
 
 **texture**
+
+**options**
+
+The texture's size and level information.
 
 ### .createUniformBuffer( uniformBuffer : UniformBuffer )
 
@@ -308,6 +302,16 @@ The vertex or index count.
 **instanceCount**
 
 The instance count.
+
+### .updateTexture( texture : Texture, options : Object )
+
+Updates the tracked memory of a texture when its default texture is replaced with the loaded one.
+
+**texture**
+
+**options**
+
+The texture's size and level information.
 
 ## Source
 

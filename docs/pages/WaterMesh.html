@@ -15,7 +15,7 @@
 			<header>
 				<div class="class-description"><p>A basic flat, reflective water effect.</p>
 <p>Note that this class can only be used with <a href="WebGPURenderer.html">WebGPURenderer</a>.
-When using <a href="WebGLRenderer.html">WebGLRenderer</a>, use <a href="Water.html">Water</a>.</p>
+When using WebGLRenderer, use Water.</p>
 <p>References:</p>
 <ul>
 <li><a href="https://github.com/Slayvin" target="_blank" rel="noopener">Flat mirror for three.js</a></li>
@@ -61,6 +61,8 @@ When using <a href="WebGLRenderer.html">WebGLRenderer</a>, use <a href="Water.ht
 					<h3 class="name" id="alpha" translate="no">.<a href="#alpha">alpha</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
 					<div class="description">
 						<p>The alpha value.</p>
+<p>If <code>material.transparent</code> is not set to <code>true</code> (automatically enabled when constructed with <code>alpha &lt; 1</code>),
+the water will remain fully opaque.</p>
 						<p>Default is <code>1</code>.</p>
 					</div>
 				</div>
@@ -221,6 +223,32 @@ When using <a href="WebGLRenderer.html">WebGLRenderer</a>, use <a href="Water.ht
 			<td class="description last">
 				<p>The distortion scale.</p>
 						<p>Default is <code>20</code>.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>side</strong>
+						<br>
+<span class="param-type"><a href="global.html#FrontSide">FrontSide</a></span>
+|
+<span class="param-type"><a href="global.html#BackSide">BackSide</a></span>
+|
+<span class="param-type"><a href="global.html#DoubleSide">DoubleSide</a></span>
+				</td>
+			<td class="description last">
+				<p>The water material's <code>side</code> property.</p>
+						<p>Default is <code>FrontSide</code>.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>fog</strong>
+						<br>
+<span class="param-type">boolean</span>
+				</td>
+			<td class="description last">
+				<p>Whether the water should be affected by fog or not.</p>
+						<p>Default is <code>false</code>.</p>
 			</td>
 		</tr>
 	</tbody>

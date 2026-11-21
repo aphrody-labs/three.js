@@ -2,7 +2,7 @@
 
 # WGSLNodeFunction
 
-This class represents a WSL node function.
+This class represents a WGSL node function.
 
 ## Constructor
 

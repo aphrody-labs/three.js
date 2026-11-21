@@ -126,18 +126,6 @@ Default is `this.reference`.
 
 **Returns:** The value.
 
-### .label( name : string ) : ReferenceNode
-
-Sets the label for the internal uniform.
-
-**name**
-
-The label to set.
-
-**Deprecated:** Yes
-
-**Returns:** A reference to this node.
-
 ### .setGroup( group : UniformGroupNode ) : ReferenceNode
 
 Sets the uniform group for this reference node.

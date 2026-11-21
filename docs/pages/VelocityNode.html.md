@@ -10,7 +10,7 @@ The node keeps track of the model, view and projection matrices of the previous 
 
 ### new VelocityNode()
 
-Constructs a new vertex color node.
+Constructs a new velocity node.
 
 ## Properties
 
@@ -41,14 +41,6 @@ Default is `null`.
 An optional projection matrix that overrides the camera's projection matrix.
 
 Default is `null`.
-
-### .updateAfterType : string
-
-Overwritten since velocity nodes save data after the update.
-
-Default is `'object'`.
-
-**Overrides:** [Node#updateAfterType](Node.html#updateAfterType)
 
 ### .updateType : string
 
@@ -89,16 +81,6 @@ Updates velocity specific uniforms.
 A reference to the current node frame.
 
 **Overrides:** [Node#update](Node.html#update)
-
-### .updateAfter( frame : NodeFrame )
-
-Overwritten to updated velocity specific uniforms.
-
-**frame**
-
-A reference to the current node frame.
-
-**Overrides:** [Node#updateAfter](Node.html#updateAfter)
 
 ## Source
 

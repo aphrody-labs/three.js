@@ -43,7 +43,7 @@ material.envNode = pmremTexture( envMap );
 										<strong translate="no">uvNode</strong>
 									</td>
 									<td class="description last">
-										<p>The uv node.</p>
+										<p>The world space sampling direction.</p>
 										<p>Default is <code>null</code>.</p>
 									</td>
 								</tr>
@@ -52,7 +52,7 @@ material.envNode = pmremTexture( envMap );
 										<strong translate="no">levelNode</strong>
 									</td>
 									<td class="description last">
-										<p>The level node.</p>
+										<p>The roughness in the <code>[0, 1]</code> range, converted to a mip level internally.</p>
 										<p>Default is <code>null</code>.</p>
 									</td>
 								</tr>
@@ -64,7 +64,7 @@ material.envNode = pmremTexture( envMap );
 				<div class="member">
 					<h3 class="name" id="levelNode" translate="no">.<a href="#levelNode">levelNode</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;float></span> </h3>
 					<div class="description">
-						<p>The level node.</p>
+						<p>The roughness in the <code>[0, 1]</code> range, converted to a mip level internally.</p>
 					</div>
 				</div>
 				<div class="member">
@@ -80,7 +80,7 @@ material.envNode = pmremTexture( envMap );
 				<div class="member">
 					<h3 class="name" id="uvNode" translate="no">.<a href="#uvNode">uvNode</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec3></span> </h3>
 					<div class="description">
-						<p>The uv node.</p>
+						<p>The world space sampling direction.</p>
 					</div>
 				</div>
 				<div class="member">

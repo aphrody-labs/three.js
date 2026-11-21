@@ -10,6 +10,10 @@ Works with specsByPath format from USDCParser.
 
 ## Methods
 
+### ._applyDisplayPrimvars()
+
+Apply primvars:displayColor and primvars:displayOpacity to a material (or an array of materials) that has no color or opacity of its own.
+
 ### ._applyMaterialBinding()
 
 Apply material binding from a prim path to a mesh. Used when merging referenced geometry into a prim that has material binding.

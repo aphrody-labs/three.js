@@ -92,7 +92,7 @@ Default is `NearestFilter`.
 
 **Overrides:** [Texture#minFilter](Texture.html#minFilter)
 
-### .unpackAlignment : boolean
+### .unpackAlignment : number
 
 Specifies the alignment requirements for the start of each pixel row in memory.
 

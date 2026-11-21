@@ -22,7 +22,7 @@ scene.add( helper );
 
 ### new CameraHelper( camera : Camera )
 
-Constructs a new arrow helper.
+Constructs a new camera helper.
 
 **camera**
 

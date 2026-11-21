@@ -26,7 +26,7 @@ Enables alpha hashed transparency, an alternative to [Material#transparent](Mate
 
 Default is `false`.
 
-### .alphaTest : number (readonly)
+### .alphaTest : number
 
 Sets the alpha value to be used when running an alpha test. The material will not be rendered if the opacity is lower than this value.
 
@@ -96,23 +96,15 @@ Defines the blending type of the material.
 
 It must be set to `CustomBlending` if custom blending properties like [Material#blendSrc](Material.html#blendSrc), [Material#blendDst](Material.html#blendDst) or [Material#blendEquation](Material.html#blendEquation) should have any effect.
 
+`SubtractiveBlending` and `MultiplyBlending` require [Material#premultipliedAlpha](Material.html#premultipliedAlpha) to be `true`.
+
 Default is `NormalBlending`.
-
-### .clipIntersection : boolean
-
-Changes the behavior of clipping planes so that only their intersection is clipped, rather than their union.
-
-Default is `false`.
-
-### .clipShadows : boolean
-
-Defines whether to clip shadows according to the clipping planes specified on this material.
-
-Default is `false`.
 
 ### .clippingPlanes : Array.<Plane>
 
-User-defined clipping planes specified as THREE.Plane objects in world space. These planes apply to the objects this material is attached to. Points in space whose signed distance to the plane is negative are clipped (not rendered). This requires [WebGLRenderer#localClippingEnabled](WebGLRenderer.html#localClippingEnabled) to be `true`.
+User-defined clipping planes specified as THREE.Plane objects in world space. These planes apply to the objects this material is attached to. Points in space whose signed distance to the plane is negative are clipped (not rendered).
+
+`WebGPURenderer` does not evaluate this property, use [ClippingGroup](ClippingGroup.html) instead.
 
 Default is `null`.
 
@@ -120,7 +112,7 @@ Default is `null`.
 
 Whether to render the material's color.
 
-This can be used in conjunction with Object3D#renderOder to create invisible objects that occlude other objects.
+This can be used in conjunction with [Object3D#renderOrder](Object3D.html#renderOrder) to create invisible objects that occlude other objects.
 
 Default is `true`.
 
@@ -132,7 +124,7 @@ Default is `LessEqualDepth`.
 
 ### .depthTest : boolean
 
-Whether to have depth test enabled when rendering this material. When the depth test is disabled, the depth write will also be implicitly disabled.
+Whether to have depth test enabled when rendering this material. Depth is still written when the depth test is disabled, unless [Material#depthWrite](Material.html#depthWrite) is set to `false`.
 
 Default is `true`.
 
@@ -225,6 +217,8 @@ Defines which side of faces cast shadows. If `null`, the side casting shadows is
 *   When [Material#side](Material.html#side) is set to `FrontSide`, the back side cast shadows.
 *   When [Material#side](Material.html#side) is set to `BackSide`, the front side cast shadows.
 *   When [Material#side](Material.html#side) is set to `DoubleSide`, both sides cast shadows.
+
+With `VSMShadowMap`, the side casting shadows matches [Material#side](Material.html#side) instead.
 
 Default is `null`.
 
@@ -350,9 +344,7 @@ The material to copy.
 
 ### .customProgramCacheKey() : string
 
-In case [Material#onBeforeCompile](Material.html#onBeforeCompile) is used, this callback can be used to identify values of settings used in `onBeforeCompile()`, so three.js can reuse a cached shader or recompile the shader for this material as needed.
-
-This method can only be used when rendering with [WebGLRenderer](WebGLRenderer.html).
+Returns a string that identifies settings which affect the generated shader beyond the material properties tracked by the renderer. Subclasses override this to share or separate pipeline caches.
 
 **Returns:** The custom program cache key.
 
@@ -377,50 +369,6 @@ The JSON holding the serialized material.
 A dictionary holding textures referenced by the material.
 
 **Returns:** A reference to this material.
-
-### .onBeforeCompile( shaderobject : Object, renderer : WebGLRenderer )
-
-An optional callback that is executed immediately before the shader program is compiled. This function is called with the shader source code as a parameter. Useful for the modification of built-in materials.
-
-This method can only be used when rendering with [WebGLRenderer](WebGLRenderer.html). The recommended approach when customizing materials is to use `WebGPURenderer` with the new Node Material system and [TSL](https://github.com/mrdoob/three.js/wiki/Three.js-Shading-Language).
-
-**shaderobject**
-
-The object holds the uniforms and the vertex and fragment shader source.
-
-**renderer**
-
-A reference to the renderer.
-
-### .onBeforeRender( renderer : WebGLRenderer, scene : Scene, camera : Camera, geometry : BufferGeometry, object : Object3D, group : Object )
-
-An optional callback that is executed immediately before the material is used to render a 3D object.
-
-This method can only be used when rendering with [WebGLRenderer](WebGLRenderer.html).
-
-**renderer**
-
-The renderer.
-
-**scene**
-
-The scene.
-
-**camera**
-
-The camera that is used to render the scene.
-
-**geometry**
-
-The 3D object's geometry.
-
-**object**
-
-The 3D object.
-
-**group**
-
-The geometry group data.
 
 ### .setValues( values : Object )
 

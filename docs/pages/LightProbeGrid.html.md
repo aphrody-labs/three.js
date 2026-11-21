@@ -4,7 +4,7 @@
 
 A 3D grid of L2 Spherical Harmonic irradiance probes that provides position-dependent diffuse global illumination.
 
-This is the [WebGPURenderer](WebGPURenderer.html) version of `LightProbeGrid`. The grid is a [Light](Light.html), so adding it to the scene applies its baked irradiance to every lit node material automatically. When using [WebGLRenderer](WebGLRenderer.html), import the grid from `LightProbeGridWebGL.js` instead.
+This is the [WebGPURenderer](WebGPURenderer.html) version of `LightProbeGrid`. The grid is a [Light](Light.html), so adding it to the scene applies its baked irradiance to every lit node material automatically. When using WebGLRenderer, import the grid from `LightProbeGridWebGL.js` instead.
 
 The baked data is stored in a single RGBA `RenderTarget3D` atlas that packs the nine L2 SH coefficients into seven sub-volumes stacked along Z. Baking is fully GPU-resident: cubemap rendering, SH projection, and texture packing all happen on the GPU with zero CPU readback.
 

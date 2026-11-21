@@ -4,7 +4,7 @@
 
 A special type of line segments geometry intended for wireframe rendering.
 
-This is used in [Wireframe](Wireframe.html) to describe the shape.
+This is used in Wireframe to describe the shape.
 
 ## Code Example
 

@@ -4,7 +4,7 @@ A reusable GPU counting sort.
 
 This computes a stable-ish permutation of the integers `[0, count)` that orders them by an arbitrary, user supplied `uint` key ("bin") in the range `[0, binCount)`. It is a good fit for approximate ordering of large element counts (hundreds of thousands to millions) where an exact comparison sort such as a bitonic sort (see [BitonicSort](BitonicSort.html)) would be too slow: a counting sort only requires a fixed number of passes (reset, histogram, prefix sum, scatter) regardless of `count`, at the cost of only being accurate to the resolution of `binCount` - elements that land in the same bin end up in an unspecified relative order.
 
-This class does not compute the sort key itself. Instead, a TSL function is supplied via [CountingSort#setBinNode](CountingSort.html#setBinNode) that maps the current `instanceIndex` to a bin, and an equivalent plain JavaScript function can be supplied to [CountingSort#computeCPU](CountingSort.html#computeCPU) for platforms without compute shader support (e.g. the WebGL backend of [WebGPURenderer](WebGPURenderer.html)).
+This class does not compute the sort key itself. Instead, a TSL function is supplied via [CountingSort#setBinNode](CountingSort.html#setBinNode) that maps the current `instanceIndex` to a bin.
 
 ## Code Example
 
@@ -81,7 +81,7 @@ An atomic storage node used both for the exclusive prefix sum of the histogram a
 
 ### .orderAttribute : StorageBufferAttribute
 
-The buffer attribute holding the sorted order (a permutation of `[0, count)`). This is also the attribute that is kept up to date by [CountingSort#computeCPU](CountingSort.html#computeCPU).
+The buffer attribute holding the sorted order (a permutation of `[0, count)`). This is also the attribute that is kept up to date by CountingSort#computeCPU.
 
 ### .orderRead : StorageBufferNode
 
@@ -105,17 +105,9 @@ Executes a complete counting sort on the GPU, updating [CountingSort#orderRead](
 
 The current scene's renderer.
 
-### .computeCPU( binFn : function )
+### .dispose()
 
-Executes a complete counting sort on the CPU, updating [CountingSort#orderAttribute](CountingSort.html#orderAttribute). Intended as a fallback for backends without compute shader support.
-
-**binFn**
-
-A function taking an element index and returning its bin (a plain number in `[0, binCount)`).
-
-### .enableWebGLBuffers()
-
-Enables the WebGL-specific storage buffer path (PBO + dynamic draw usage) for the order buffer. Only needed when [CountingSort#computeCPU](CountingSort.html#computeCPU) is used with the WebGL backend of [WebGPURenderer](WebGPURenderer.html).
+Frees the GPU-related resources allocated by this instance. Call this method whenever this instance is no longer used in your app.
 
 ### .setBinNode( binNode : function )
 

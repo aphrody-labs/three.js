@@ -2,7 +2,7 @@
 
 # FunctionCallNode
 
-This module represents the call of a [FunctionNode](FunctionNode.html). Developers are usually not confronted with this module since they use the predefined TSL syntax `wgslFn` and `glslFn` which encapsulate this logic.
+This module represents the call of a [FunctionNode](FunctionNode.html). Developers are usually not confronted with this module since they use the predefined TSL syntax `wgslFn` which encapsulates this logic.
 
 ## Constructor
 

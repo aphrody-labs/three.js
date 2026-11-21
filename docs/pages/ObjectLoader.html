@@ -124,7 +124,7 @@ scene.add( object );
 							<dt class="tag-returns"><strong>Returns:</strong> A Promise that resolves with the loaded 3D object.</dt>
 						</dl>
 					</div>
-					<h3 class="name name-method" id="parse" translate="no">.<a href="#parse">parse</a><span class="signature">( json : <span class="param-type">Object</span>, onLoad : <span class="param-type">onLoad</span> )</span><span class="type-signature"> : <a href="Object3D.html">Object3D</a></span> </h3>
+					<h3 class="name name-method" id="parse" translate="no">.<a href="#parse">parse</a><span class="signature">( json : <span class="param-type">Object</span>, onLoad : <span class="param-type">function</span> )</span><span class="type-signature"> : <a href="Object3D.html">Object3D</a></span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>Parses the given JSON. This is used internally by <a href="ObjectLoader.html#load">ObjectLoader#load</a>
@@ -200,7 +200,7 @@ geometry library.</p>
 										<strong translate="no">geometryClass</strong>
 									</td>
 									<td class="description last">
-										<p>The geometry class.</p>
+										<p>The geometry class. It must implement a static <code>fromJSON( data, shapes )</code> method.</p>
 									</td>
 								</tr>
 							</tbody>

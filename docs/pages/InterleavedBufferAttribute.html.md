@@ -54,15 +54,17 @@ The item size, see [BufferAttribute#itemSize](BufferAttribute.html#itemSize).
 
 The name of the buffer attribute.
 
-### .needsUpdate : number
+### .needsUpdate : boolean
 
 Flag to indicate that this attribute has changed and should be re-sent to the GPU. Set this to `true` when you modify the value of the array.
 
 Default is `false`.
 
-### .normalized : InterleavedBuffer
+### .normalized : boolean
 
 Whether the data are normalized or not, see [BufferAttribute#normalized](BufferAttribute.html#normalized)
+
+Default is `false`.
 
 ### .offset : number
 
@@ -300,7 +302,7 @@ The value to set.
 
 Serializes the buffer attribute into JSON.
 
-If no parameter is provided, cloning an interleaved buffer attribute will de-interleave buffer data.
+If no parameter is provided, serializing an interleaved buffer attribute will de-interleave buffer data.
 
 **data**
 

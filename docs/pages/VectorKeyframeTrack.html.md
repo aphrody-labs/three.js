@@ -6,7 +6,7 @@ A track for vector keyframe values.
 
 ## Constructor
 
-### new VectorKeyframeTrack( name : string, times : Array.<number>, values : Array.<number>, interpolation : InterpolateLinear | InterpolateDiscrete | InterpolateSmooth )
+### new VectorKeyframeTrack( name : string, times : Array.<number>, values : Array.<number>, interpolation : InterpolateLinear | InterpolateDiscrete | InterpolateSmooth | InterpolateBezier )
 
 Constructs a new vector keyframe track.
 

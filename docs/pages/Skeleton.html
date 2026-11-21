@@ -110,6 +110,8 @@ Required for computing velocity.</p>
 						<div class="description">
 							<p>Computes the bone inverse matrices. This method resets <a href="Skeleton.html#boneInverses">Skeleton#boneInverses</a>
 and fills it with new matrices.</p>
+<p>The matrices are computed from the current world matrices of the bones. Make sure
+they are up to date before calling this method, e.g. via <a href="Object3D.html#updateMatrixWorld">Object3D#updateMatrixWorld</a>.</p>
 						</div>
 					</div>
 					<h3 class="name name-method" id="clone" translate="no">.<a href="#clone">clone</a><span class="signature">()</span><span class="type-signature"> : <a href="Skeleton.html">Skeleton</a></span> </h3>
@@ -157,7 +159,7 @@ method whenever this instance is no longer used in your app.</p>
 										<strong translate="no">bones</strong>
 									</td>
 									<td class="description last">
-										<p>An array of bones.</p>
+										<p>A dictionary of bones, keyed by their UUID.</p>
 									</td>
 								</tr>
 							</tbody>
@@ -222,7 +224,9 @@ manually.</p>
 					<h3 class="name name-method" id="update" translate="no">.<a href="#update">update</a><span class="signature">()</span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Resets the skeleton to the base pose.</p>
+							<p>Updates the bone matrices from the current world matrices of the bones and
+the bone inverse matrices, and flags the bone texture for upload. This method
+is automatically called by the renderer.</p>
 						</div>
 					</div>
 				<h2 class="subsection-title">Source</h2>

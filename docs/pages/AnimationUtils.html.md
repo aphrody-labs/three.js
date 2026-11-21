@@ -120,7 +120,7 @@ Creates a new clip, containing only the segment of the original clip between the
 
 **sourceClip**
 
-The values to sort.
+The source clip.
 
 **name**
 
@@ -132,7 +132,7 @@ The start frame.
 
 **endFrame**
 
-The end frame.
+The end frame (exclusive).
 
 **fps**
 

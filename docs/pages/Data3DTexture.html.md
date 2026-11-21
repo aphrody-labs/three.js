@@ -8,7 +8,7 @@ Creates a three-dimensional texture from raw data, with parameters to divide it 
 
 ### new Data3DTexture( data : TypedArray, width : number, height : number, depth : number )
 
-Constructs a new data array texture.
+Constructs a new 3D data texture.
 
 **data**
 
@@ -88,7 +88,7 @@ Default is `NearestFilter`.
 
 **Overrides:** [Texture#minFilter](Texture.html#minFilter)
 
-### .unpackAlignment : boolean
+### .unpackAlignment : number
 
 Specifies the alignment requirements for the start of each pixel row in memory.
 

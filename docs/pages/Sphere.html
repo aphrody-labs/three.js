@@ -103,7 +103,7 @@ already inside the sphere will not be affected.</p>
 										<strong translate="no">point</strong>
 									</td>
 									<td class="description last">
-										<p>The plane to clamp.</p>
+										<p>The point to clamp.</p>
 									</td>
 								</tr>
 								<tr>
@@ -240,7 +240,7 @@ be negative.</p>
 					<h3 class="name name-method" id="fromJSON" translate="no">.<a href="#fromJSON">fromJSON</a><span class="signature">( json : <span class="param-type">Object</span> )</span><span class="type-signature"> : <a href="Sphere.html">Sphere</a></span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Returns a serialized structure of the bounding sphere.</p>
+							<p>Sets this bounding sphere from the given serialized structure.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -394,10 +394,12 @@ considered to be empty.</p>
 					<h3 class="name name-method" id="setFromPoints" translate="no">.<a href="#setFromPoints">setFromPoints</a><span class="signature">( points : <span class="param-type">Array.&lt;<a href="Vector3.html">Vector3</a>></span>, optionalCenter : <span class="param-type"><a href="Vector3.html">Vector3</a></span> )</span><span class="type-signature"> : <a href="Sphere.html">Sphere</a></span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Computes the minimum bounding sphere for list of points.
+							<p>Computes a bounding sphere for the given list of points.
 If the optional center point is given, it is used as the sphere's
 center. Otherwise, the center of the axis-aligned bounding box
-encompassing the points is calculated.</p>
+encompassing the points is calculated. The radius is the distance
+to the farthest point, so the result is not necessarily the minimal
+bounding sphere.</p>
 						</div>
 						<table class="params">
 							<tbody>

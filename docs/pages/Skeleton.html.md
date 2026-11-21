@@ -72,6 +72,8 @@ Default is `null`.
 
 Computes the bone inverse matrices. This method resets [Skeleton#boneInverses](Skeleton.html#boneInverses) and fills it with new matrices.
 
+The matrices are computed from the current world matrices of the bones. Make sure they are up to date before calling this method, e.g. via [Object3D#updateMatrixWorld](Object3D.html#updateMatrixWorld).
+
 ### .clone() : Skeleton
 
 Returns a new skeleton with copied values from this instance.
@@ -98,7 +100,7 @@ The skeleton as serialized JSON.
 
 **bones**
 
-An array of bones.
+A dictionary of bones, keyed by their UUID.
 
 **Returns:** A reference of this instance.
 
@@ -132,7 +134,7 @@ See:
 
 ### .update()
 
-Resets the skeleton to the base pose.
+Updates the bone matrices from the current world matrices of the bones and the bone inverse matrices, and flags the bone texture for upload. This method is automatically called by the renderer.
 
 ## Source
 

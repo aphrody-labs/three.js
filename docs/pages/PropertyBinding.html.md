@@ -93,7 +93,7 @@ Parses the given track name (an object path to an animated property) and returns
 *   uuid.objectName\[objectIndex\].propertyName\[propertyIndex\]
 *   parentName/nodeName.property
 *   parentName/parentName/nodeName.property\[index\]
-*   .bone\[Armature.DEF\_cog\].position
+*   .bones\[Armature.DEF\_cog\].position
 *   scene:helium\_balloon\_model:helium\_balloon\_model.position
 
 **trackName**

@@ -26,7 +26,7 @@ renderer.computeAsync( computeNode );
 
 ## Constructor
 
-### new StorageTextureNode( value : StorageTexture, uvNode : Node.<(vec2|vec3)>, storeNode : Node )
+### new StorageTextureNode( value : StorageTexture, uvNode : Node.<(uvec2|uvec3)>, storeNode : Node )
 
 Constructs a new storage texture node.
 
@@ -36,7 +36,7 @@ The storage texture.
 
 **uvNode**
 
-The uv node.
+The integer texel coordinates (not normalized uvs).
 
 **storeNode**
 
@@ -184,13 +184,13 @@ The mip level.
 
 **Returns:** A reference to this node.
 
-### .store( uvNode : Node.<(vec2|vec3)>, storeNode : Node ) : StorageTextureNode
+### .store( uvNode : Node.<(uvec2|uvec3)>, storeNode : Node ) : StorageTextureNode
 
 Stores a value in this storage texture at the given coordinates.
 
 **uvNode**
 
-The storage texture coordinates.
+The integer texel coordinates (not normalized uvs).
 
 **storeNode**
 

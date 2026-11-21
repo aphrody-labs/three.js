@@ -427,7 +427,7 @@ The vector to set.
 
 ### .setHSL( h : number, s : number, l : number, colorSpace : string ) : Color
 
-Sets this color from RGB values.
+Sets this color from HSL values.
 
 **h**
 
@@ -517,7 +517,7 @@ Default is `SRGBColorSpace`.
 
 ### .sub( color : Color ) : Color
 
-Subtracts the RGB values of the given color from the RGB values of this color.
+Subtracts the RGB values of the given color from the RGB values of this color. The resulting components are clamped to a minimum of `0`.
 
 **color**
 

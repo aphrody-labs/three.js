@@ -83,9 +83,9 @@ Default is `-1`.
 
 ### .near : number
 
-The camera's near plane. The valid range is greater than `0` and less than the current value of [OrthographicCamera#far](OrthographicCamera.html#far).
+The camera's near plane. The value must be less than the current value of [OrthographicCamera#far](OrthographicCamera.html#far).
 
-Note that, unlike for the [PerspectiveCamera](PerspectiveCamera.html), `0` is a valid value for an orthographic camera's near plane.
+Note that, unlike for the [PerspectiveCamera](PerspectiveCamera.html), `0` and negative values are valid for an orthographic camera's near plane.
 
 Default is `0.1`.
 
@@ -103,7 +103,7 @@ Default is `1`.
 
 ### .view : Object
 
-Represents the frustum window specification. This property should not be edited directly but via [PerspectiveCamera#setViewOffset](PerspectiveCamera.html#setViewOffset) and [PerspectiveCamera#clearViewOffset](PerspectiveCamera.html#clearViewOffset).
+Represents the frustum window specification. This property should not be edited directly but via [OrthographicCamera#setViewOffset](OrthographicCamera.html#setViewOffset) and [OrthographicCamera#clearViewOffset](OrthographicCamera.html#clearViewOffset).
 
 Default is `null`.
 

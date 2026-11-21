@@ -22,9 +22,9 @@ Default is `null`.
 
 ### .aoNode : Node.<float>
 
-The lighting of node materials might be influenced by ambient occlusion. The default AO is inferred from an ambient occlusion map assigned to `aoMap` and the respective `aoMapIntensity`. This node property allows to overwrite the default and define the ambient occlusion with a custom node instead.
+The lighting of node materials might be influenced by ambient occlusion. The default AO is inferred from an ambient occlusion map assigned to `aoMap` and the respective `aoMapIntensity`. This node property allows to overwrite the default and define the ambient occlusion with a custom node instead. A value of `1` means no occlusion and `0` full occlusion.
 
-If you don't want to overwrite the diffuse color but modify the existing values instead, use [materialAO](TSL.html#materialAO).
+If you don't want to overwrite the ambient occlusion but modify the existing value instead, use [materialAO](TSL.html#materialAO).
 
 Default is `null`.
 
@@ -45,13 +45,13 @@ material.transparent = true;
 material.backdropNode = saturation( viewportSharedTexture().rgb, 0 );
 ```
 
-Backdrop computations are part of the lighting so only lit materials can use this property.
+If the material is lit, the backdrop is composed inside the lighting. Otherwise, it replaces the outgoing light (mixed by `backdropAlphaNode` if set).
 
 Default is `null`.
 
 ### .castShadowNode : Node.<vec4>
 
-This node can be used to influence how an object using this node material casts shadows. To apply a color to shadows, you can simply do:
+This node can be used to influence how an object using this node material casts shadows. To apply a color to shadows, enable `renderer.shadowMap.transmitted` and do:
 
 ```js
 material.castShadowNode = vec4( 1, 0, 0, 1 );
@@ -68,9 +68,9 @@ materialCustomShadow.castShadowNode = Fn( () => {
 
 Default is `null`.
 
-### .castShadowPositionNode : Node.<float>
+### .castShadowPositionNode : Node.<vec3>
 
-Allows to overwrite the geometry position used for shadow map projection which is by default [positionLocal](TSL.html#positionLocal), the vertex position in local space.
+Allows to overwrite the local vertex position used when rendering this object into shadow maps. The default is [NodeMaterial#positionNode](NodeMaterial.html#positionNode) if set, otherwise [positionLocal](TSL.html#positionLocal), the vertex position in local space.
 
 Default is `null`.
 
@@ -138,6 +138,12 @@ This flag can be used for type testing.
 
 Default is `true`.
 
+### .lightMapNode : Node.<vec3>
+
+The lighting of node materials might be influenced by a light map. The default light map is inferred from a light map assigned to `lightMap` and the respective `lightMapIntensity`. This node property allows to overwrite the default and define the light map with a custom node instead, e.g. the output of a denoiser.
+
+Default is `null`.
+
 ### .lights : boolean
 
 Whether this material is affected by lights or not.
@@ -175,7 +181,7 @@ Default is `null`.
 
 ### .normalNode : Node.<vec3>
 
-The normals of node materials are by default inferred from the `normalMap`/`normalScale` or `bumpMap`/`bumpScale` properties. This node property allows to overwrite the default and define the normals with a node instead.
+The normals of node materials are by default inferred from the `normalMap`/`normalScale` or `bumpMap`/`bumpScale` properties. This node property allows to overwrite the default and define the normals with a node instead. The node must return a normal in view space, e.g. `transformNormalToView( normal )` for a normal in local space.
 
 If you don't want to overwrite the normals but modify the existing values instead, use [materialNormal](TSL.html#materialNormal).
 
@@ -224,9 +230,9 @@ material.receivedShadowNode = Fn( ( [ shadow ] ) => {
 
 Default is `null`.
 
-### .receivedShadowPositionNode : Node.<float>
+### .receivedShadowPositionNode : Node.<vec3>
 
-Allows to overwrite the position used for shadow map rendering which is by default [positionWorld](TSL.html#positionWorld), the vertex position in world space.
+Allows to overwrite the position used to look up shadow maps when this material receives shadows. The default is [positionWorld](TSL.html#positionWorld), the vertex position in world space.
 
 Default is `null`.
 
@@ -238,7 +244,7 @@ Represents the type of the node material.
 
 ### .vertexNode : Node.<vec4>
 
-This node property can be used if you need complete freedom in implementing the vertex shader. Assigning a node will replace the built-in material logic used in the vertex stage.
+This node property can be used if you need complete freedom in implementing the vertex shader. Assigning a node will replace the built-in material logic used in the vertex stage. The node must return the vertex position in clip space.
 
 Default is `null`.
 
@@ -386,7 +392,7 @@ The current node builder.
 
 **Returns:** The lighting model.
 
-### .setupMaterialLightings( builder : NodeBuilder ) : LightingNode.<Array>
+### .setupMaterialLightings( builder : NodeBuilder ) : Array.<LightingNode>
 
 Setups the lights node based on the scene, environment and material.
 
@@ -394,7 +400,7 @@ Setups the lights node based on the scene, environment and material.
 
 The current node builder.
 
-**Returns:** The lights node.
+**Returns:** The material lighting nodes.
 
 ### .setupModelViewProjection( builder : NodeBuilder ) : Node.<vec4>
 
@@ -404,7 +410,7 @@ Setups the position in clip space.
 
 The current node builder.
 
-**Returns:** The position in view space.
+**Returns:** The position in clip space.
 
 ### .setupNormal() : Node.<vec3>
 

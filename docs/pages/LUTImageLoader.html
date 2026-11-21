@@ -61,7 +61,7 @@ from a Unity pipeline, then set this property to <code>true</code>.</p>
 					</div>
 				</div>
 				<h2 class="subsection-title">Methods</h2>
-					<h3 class="name name-method" id="load" translate="no">.<a href="#load">load</a><span class="signature">( url : <span class="param-type">string</span>, onLoad : <span class="param-type">function</span>, onProgress : <span class="param-type"><a href="global.html#onProgressCallback">onProgressCallback</a></span>, onError : <span class="param-type"><a href="global.html#onErrorCallback">onErrorCallback</a></span> )</span> </h3>
+					<h3 class="name name-method" id="load" translate="no">.<a href="#load">load</a><span class="signature">( url : <span class="param-type">string</span>, onLoad : <span class="param-type">function</span>, onProgress : <span class="param-type"><a href="global.html#onProgressCallback">onProgressCallback</a></span>, onError : <span class="param-type">function</span> )</span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>Starts loading from the given URL and passes the loaded LUT
@@ -98,7 +98,8 @@ to the <code>onLoad()</code> callback.</p>
 										<strong translate="no">onError</strong>
 									</td>
 									<td class="description last">
-										<p>Executed when errors occur.</p>
+										<p>Executed when errors occur. Receives the image's <code>error</code> event if the
+image fails to load, or an <code>Error</code> if the LUT data cannot be read.</p>
 									</td>
 								</tr>
 							</tbody>

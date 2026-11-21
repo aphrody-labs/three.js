@@ -30,7 +30,7 @@ A node that represents the beauty pass's depth.
 
 **normalNode**
 
-A node that represents the beauty pass's normals.
+A node that represents the beauty pass's unit view-space normals.
 
 **options**
 

@@ -177,7 +177,7 @@ Applies the given Quaternion to this vector.
 
 **q**
 
-The Quaternion.
+The Quaternion (assumed to be normalized).
 
 **Returns:** A reference to this vector.
 
@@ -247,13 +247,13 @@ The vector to copy.
 
 ### .cross( v : Vector3 ) : Vector3
 
-Calculates the cross product of the given vector with this instance.
+Calculates the cross product of this vector and the given one (in that order) and stores the result in this instance.
 
 **v**
 
 The vector to compute the cross product with.
 
-**Returns:** The result of the cross product.
+**Returns:** A reference to this vector.
 
 ### .crossVectors( a : Vector3, b : Vector3 ) : Vector3
 

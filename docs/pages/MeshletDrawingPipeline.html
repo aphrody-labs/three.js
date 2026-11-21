@@ -86,6 +86,24 @@ scene.add( city );
 								</tr>
 								<tr>
 									<td class="name">
+										<strong translate="no">lodTransition</strong>
+									</td>
+									<td class="description last">
+										<p>The fraction of <code>lodThreshold</code> over which adjacent levels of detail crossfade with a screen-door dither mask.</p>
+										<p>Default is <code>0</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">transitionScreenRadius</strong>
+									</td>
+									<td class="description last">
+										<p>The radius in pixels below which the levels of detail of objects switch without a transition, <code>0</code> crossfades all objects.</p>
+										<p>Default is <code>0</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
 										<strong translate="no">shadowLodThreshold</strong>
 									</td>
 									<td class="description last">
@@ -178,7 +196,8 @@ of drawing the clusters twice.</p>
 					<h3 class="name" id="info" translate="no">.<a href="#info">info</a><span class="type-signature"> : Object</span> <span class="type-signature">(readonly) </span></h3>
 					<div class="description">
 						<p>The clusters and triangles drawn by the GPU-driven pipeline in the main view, read from the counters of the
-culling without waiting for the GPU. The values are updated every interval of frames, the triangles include the degenerate triangles which pad the clusters.</p>
+culling without waiting for the GPU. The values are updated every interval of frames, the triangles include the degenerate triangles which pad the clusters.
+<code>transitionClusters</code> are the clusters of the dithered crossfades between levels of detail, included in <code>clusters</code>.</p>
 					</div>
 				</div>
 				<div class="member">
@@ -193,6 +212,14 @@ culling without waiting for the GPU. The values are updated every interval of fr
 					<div class="description">
 						<p>The projected error in pixels below which a simpler level of detail is selected.</p>
 						<p>Default is <code>1</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="lodTransition" translate="no">.<a href="#lodTransition">lodTransition</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>The fraction of <code>lodThreshold</code> over which adjacent levels of detail crossfade with a complementary
+screen-door dither mask (<code>0</code> disables transitions).</p>
+						<p>Default is <code>0</code>.</p>
 					</div>
 				</div>
 				<div class="member">
@@ -228,6 +255,15 @@ against its hierarchical depth. Shadow passes are not occlusion culled.</p>
 shadow casters. The level of detail of shadow passes doesn't depend on the camera, so shadow maps
 which are not updated every frame stay valid when the camera moves.</p>
 						<p>Default is <code>1</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="transitionScreenRadius" translate="no">.<a href="#transitionScreenRadius">transitionScreenRadius</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>The radius of the bounding sphere of objects on the screen in pixels below which their levels of detail
+switch without a transition. The popping of small objects is hardly visible, while their transitions
+draw two levels of detail. <code>0</code> crossfades all objects, see <a href="MeshletDrawingPipeline.html#lodTransition">MeshletDrawingPipeline#lodTransition</a>.</p>
+						<p>Default is <code>0</code>.</p>
 					</div>
 				</div>
 				<h2 class="subsection-title">Methods</h2>
@@ -298,7 +334,7 @@ the vertex data share the batches of a material, their vertices are read from th
 							<dt class="tag-returns"><strong>Returns:</strong> The batch.</dt>
 						</dl>
 					</div>
-					<h3 class="name name-method" id="createView" translate="no">.<a href="#createView">createView</a><span class="signature">( width : <span class="param-type">number</span>, height : <span class="param-type">number</span>, occlusion : <span class="param-type">boolean</span>, shadow : <span class="param-type">boolean</span>, clusterBudget : <span class="param-type">number</span> )</span><span class="type-signature"> : Object</span> </h3>
+					<h3 class="name name-method" id="createView" translate="no">.<a href="#createView">createView</a><span class="signature">( width : <span class="param-type">number</span>, height : <span class="param-type">number</span>, occlusion : <span class="param-type">boolean</span> )</span><span class="type-signature"> : Object</span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>Creates the view of a render list.</p>
@@ -327,23 +363,6 @@ the vertex data share the batches of a material, their vertices are read from th
 									</td>
 									<td class="description last">
 										<p>Whether the clusters are occlusion culled.</p>
-									</td>
-								</tr>
-								<tr>
-									<td class="name">
-										<strong translate="no">shadow</strong>
-									</td>
-									<td class="description last">
-										<p>Whether the culling draws a shadow map.</p>
-									</td>
-								</tr>
-								<tr>
-									<td class="name">
-										<strong translate="no">clusterBudget</strong>
-									</td>
-									<td class="description last">
-										<p>The measured number of clusters of the visible objects.</p>
-										<p>Default is <code>0</code>.</p>
 									</td>
 								</tr>
 							</tbody>

@@ -32,7 +32,7 @@
 				<div class="member">
 					<h3 class="name" id="INFINITY" translate="no">.<a href="#INFINITY">INFINITY</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;float></span> <span class="type-signature">(constant) </span></h3>
 					<div class="description">
-						<p>Represents infinity.</p>
+						<p>A large finite value (<code>1e6</code>) used as a stand-in for infinity.</p>
 					</div>
 				</div>
 				<div class="member">
@@ -40,15 +40,6 @@
 					<div class="description">
 						<p>Represents PI.</p>
 					</div>
-				</div>
-				<div class="member">
-					<h3 class="name" id="PI2" translate="no">.<a href="#PI2">PI2</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;float></span> <span class="type-signature">(constant) </span></h3>
-					<div class="description">
-						<p>Represents PI * 2. Please use the non-deprecated version <code>TWO_PI</code>.</p>
-					</div>
-						<dl class="details">
-							<dt class="important tag-deprecated"><strong>Deprecated:</strong> Yes</dt>
-						</dl>
 				</div>
 				<div class="member">
 					<h3 class="name" id="TBNViewMatrix" translate="no">.<a href="#TBNViewMatrix">TBNViewMatrix</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;mat3></span> <span class="type-signature">(constant) </span></h3>
@@ -60,13 +51,6 @@
 					<h3 class="name" id="TWO_PI" translate="no">.<a href="#TWO_PI">TWO_PI</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;float></span> <span class="type-signature">(constant) </span></h3>
 					<div class="description">
 						<p>Represents PI * 2.</p>
-					</div>
-				</div>
-				<div class="member">
-					<h3 class="name" id="alphaLine" translate="no">.<a href="#alphaLine">alphaLine</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;float></span> <span class="type-signature">(constant) </span></h3>
-					<div class="description">
-						<p>TSL fragment node that computes the shape/coverage (alpha) of the fat line segment.
-Handles dash/gap generation, alpha-to-coverage rendering, and round endcaps.</p>
 					</div>
 				</div>
 				<div class="member">
@@ -145,6 +129,13 @@ neighbourhood pass stays independent of the per-pixel motion factor.</p>
 					</div>
 				</div>
 				<div class="member">
+					<h3 class="name" id="bentNormalView" translate="no">.<a href="#bentNormalView">bentNormalView</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec3></span> <span class="type-signature">(constant) </span></h3>
+					<div class="description">
+						<p>TSL object that represents the bent normal in view space, used for
+anisotropic image-based lighting.</p>
+					</div>
+				</div>
+				<div class="member">
 					<h3 class="name" id="bitangentGeometry" translate="no">.<a href="#bitangentGeometry">bitangentGeometry</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec3></span> <span class="type-signature">(constant) </span></h3>
 					<div class="description">
 						<p>TSL object that represents the bitangent attribute of the current rendered object.</p>
@@ -159,7 +150,9 @@ neighbourhood pass stays independent of the per-pixel motion factor.</p>
 				<div class="member">
 					<h3 class="name" id="bitangentView" translate="no">.<a href="#bitangentView">bitangentView</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec3></span> <span class="type-signature">(constant) </span></h3>
 					<div class="description">
-						<p>TSL object that represents the vertex bitangent in view space of the current rendered object.</p>
+						<p>TSL object that represents the bitangent in view space of the current rendered object.
+In the fragment stage, it is derived from the shading normal <a href="TSL.html#normalView">normalView</a>, so it
+follows normal or bump mapping.</p>
 					</div>
 				</div>
 				<div class="member">
@@ -173,7 +166,9 @@ Complements the tangentViewFrame for constructing the tangent space basis.</p>
 				<div class="member">
 					<h3 class="name" id="bitangentWorld" translate="no">.<a href="#bitangentWorld">bitangentWorld</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec3></span> <span class="type-signature">(constant) </span></h3>
 					<div class="description">
-						<p>TSL object that represents the vertex bitangent in world space of the current rendered object.</p>
+						<p>TSL object that represents the bitangent in world space of the current rendered object.
+In the fragment stage, it is derived from the shading normal <a href="TSL.html#normalWorld">normalWorld</a>, so it
+follows normal or bump mapping.</p>
 					</div>
 				</div>
 				<div class="member">
@@ -245,7 +240,8 @@ Complements the tangentViewFrame for constructing the tangent space basis.</p>
 				<div class="member">
 					<h3 class="name" id="clearcoatNormalView" translate="no">.<a href="#clearcoatNormalView">clearcoatNormalView</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec3></span> <span class="type-signature">(constant) </span></h3>
 					<div class="description">
-						<p>TSL object that represents the clearcoat vertex normal of the current rendered object in view space.</p>
+						<p>TSL object that represents the clearcoat normal of the current rendered object in view space.
+In the fragment stage, the value includes the material's <code>clearcoatNormalMap</code> (or <code>clearcoatNormalNode</code>).</p>
 					</div>
 				</div>
 				<div class="member">
@@ -428,17 +424,17 @@ which is achieved by computing the matrix in JS and not in the shader.</p>
 						<p>TSL object that contextually represents specific index data depending on the shader stage.</p>
 <p>Within the vertex and fragment stages, <code>instanceIndex</code> will represent the index of the current mesh instance being evaluated by the shader.
 In these stages, use <code>instanceIndex</code> to modify a mesh based on its instance or to select per-instance data.</p>
-<pre><code class="language-js">// instanceIndex will equal the current mesh's instance index between 0-500
-const material = new THREE.BasicNodeMaterial();
+<pre><code class="language-js">// instanceIndex will equal the current mesh's instance index between 0-499
+const material = new THREE.MeshBasicNodeMaterial();
 material.positionNode = vec3( instanceIndex.mod( 10 ), instanceIndex.div( 10 ), 0 );
 const mesh = new THREE.InstancedMesh( geometry, material, 500 );
 </code></pre>
 <p>Within the compute stage, <code>instanceIndex</code> will represent the global index of a compute invocation within the 3-dimensional compute workgroup load.
 In this stage, use <code>instanceIndex</code> to modify or select data at a given index within a buffer, or derive values from the index itself.</p>
 <pre><code class="language-js">// instanceIndex will equal value between 0 - 255
-const computeFn = Fn() => {
+const computeFn = Fn( () => {
 	storageBuffer.element( instanceIndex ).assign( instanceIndex );
-} )().compute( 255 )
+} )().compute( 256 )
 </code></pre>
 					</div>
 				</div>
@@ -534,10 +530,18 @@ narrow lobes and is slightly more permissive for wide (diffuse) ones.</p>
 					</div>
 				</div>
 				<div class="member">
+					<h3 class="name" id="matcapUV" translate="no">.<a href="#matcapUV">matcapUV</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec2></span> <span class="type-signature">(constant) </span></h3>
+					<div class="description">
+						<p>TSL object that represents the matcap uv coordinates.</p>
+<p>Can be used to compute texture coordinates for projecting a
+matcap onto a mesh. Used by <a href="MeshMatcapNodeMaterial.html">MeshMatcapNodeMaterial</a>.</p>
+					</div>
+				</div>
+				<div class="member">
 					<h3 class="name" id="materialAO" translate="no">.<a href="#materialAO">materialAO</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;float></span> <span class="type-signature">(constant) </span></h3>
 					<div class="description">
 						<p>TSL object that represents the ambient occlusion map of the current material.
-The value is composed via <code>aoMap.r</code> - 1 * <code>aoMapIntensity</code> + 1.</p>
+The value is composed via ( <code>aoMap.r</code> - 1 ) * <code>aoMapIntensity</code> + 1.</p>
 					</div>
 				</div>
 				<div class="member">
@@ -581,14 +585,15 @@ The value is composed via <code>clearcoat</code> * <code>clearcoatMap.r</code></
 					<h3 class="name" id="materialClearcoatNormal" translate="no">.<a href="#materialClearcoatNormal">materialClearcoatNormal</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec3></span> <span class="type-signature">(constant) </span></h3>
 					<div class="description">
 						<p>TSL object that represents the clearcoat normal of the current material.
-The value will be either <code>clearcoatNormalMap</code> or <code>normalView</code>.</p>
+The value will be either the normal perturbed by <code>clearcoatNormalMap</code> (scaled by
+<code>clearcoatNormalScale</code>) or <code>normalView</code>.</p>
 					</div>
 				</div>
 				<div class="member">
 					<h3 class="name" id="materialClearcoatRoughness" translate="no">.<a href="#materialClearcoatRoughness">materialClearcoatRoughness</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;float></span> <span class="type-signature">(constant) </span></h3>
 					<div class="description">
 						<p>TSL object that represents the clearcoat roughness of the current material.
-The value is composed via <code>clearcoatRoughness</code> * <code>clearcoatRoughnessMap.r</code>.</p>
+The value is composed via <code>clearcoatRoughness</code> * <code>clearcoatRoughnessMap.g</code>.</p>
 					</div>
 				</div>
 				<div class="member">
@@ -704,8 +709,9 @@ The value is composed via <code>metalness</code> * <code>metalnessMap.b</code>.<
 				<div class="member">
 					<h3 class="name" id="materialNormal" translate="no">.<a href="#materialNormal">materialNormal</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec3></span> <span class="type-signature">(constant) </span></h3>
 					<div class="description">
-						<p>TSL object that represents the normal of the current material.
-The value will be either <code>normalMap</code> * <code>normalScale</code>, <code>bumpMap</code> * <code>bumpScale</code> or <code>normalView</code>.</p>
+						<p>TSL object that represents the normal of the current material in view space.
+The value will be either the normal perturbed by <code>normalMap</code> (scaled by <code>normalScale</code>),
+the normal perturbed by <code>bumpMap</code> (scaled by <code>bumpScale</code>) or <code>normalView</code>.</p>
 					</div>
 				</div>
 				<div class="member">
@@ -782,14 +788,14 @@ The value is composed via <code>sheenRoughness</code> * <code>sheenRoughnessMap.
 					<h3 class="name" id="materialSpecularColor" translate="no">.<a href="#materialSpecularColor">materialSpecularColor</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec3></span> <span class="type-signature">(constant) </span></h3>
 					<div class="description">
 						<p>TSL object that represents the specular color of the current material.
-The value is composed via <code>specularColor</code> * <code>specularMap.rgb</code>.</p>
+The value is composed via <code>specularColor</code> * <code>specularColorMap.rgb</code>.</p>
 					</div>
 				</div>
 				<div class="member">
 					<h3 class="name" id="materialSpecularIntensity" translate="no">.<a href="#materialSpecularIntensity">materialSpecularIntensity</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;float></span> <span class="type-signature">(constant) </span></h3>
 					<div class="description">
 						<p>TSL object that represents the specular intensity of the current material.
-The value is composed via <code>specularIntensity</code> * <code>specularMap.a</code>.</p>
+The value is composed via <code>specularIntensity</code> * <code>specularIntensityMap.a</code>.</p>
 					</div>
 				</div>
 				<div class="member">
@@ -849,7 +855,9 @@ Weights the contribution of the strategy that produced <code>pdfA</code> against
 				<div class="member">
 					<h3 class="name" id="modelNormalMatrix" translate="no">.<a href="#modelNormalMatrix">modelNormalMatrix</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;mat3></span> <span class="type-signature">(constant) </span></h3>
 					<div class="description">
-						<p>TSL object that represents the object's normal matrix.</p>
+						<p>TSL object that represents the normal matrix of the object's world matrix. It transforms
+normals from local to world space. Unlike <a href="Object3D.html#normalMatrix">Object3D#normalMatrix</a>, it does not
+include the camera's view matrix.</p>
 					</div>
 				</div>
 				<div class="member">
@@ -901,13 +909,6 @@ Weights the contribution of the strategy that produced <code>pdfA</code> against
 					</div>
 				</div>
 				<div class="member">
-					<h3 class="name" id="mvpLine" translate="no">.<a href="#mvpLine">mvpLine</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec4></span> <span class="type-signature">(constant) </span></h3>
-					<div class="description">
-						<p>TSL node acting as a custom Model-View-Projection (MVP) for fat lines,
-expanding 3D segments into screen/world-facing ribbons of a specified width.</p>
-					</div>
-				</div>
-				<div class="member">
 					<h3 class="name" id="normalFlat" translate="no">.<a href="#normalFlat">normalFlat</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec3></span> <span class="type-signature">(constant) </span></h3>
 					<div class="description">
 						<p>TSL object that represents the flat vertex normal of the current rendered object in view space.</p>
@@ -928,7 +929,11 @@ expanding 3D segments into screen/world-facing ribbons of a specified width.</p>
 				<div class="member">
 					<h3 class="name" id="normalView" translate="no">.<a href="#normalView">normalView</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec3></span> <span class="type-signature">(constant) </span></h3>
 					<div class="description">
-						<p>TSL object that represents the vertex normal of the current rendered object in view space.</p>
+						<p>TSL object that represents the shading normal of the current rendered object in view space.
+In the fragment stage, the value is the material's <code>normalNode</code> if set, otherwise the
+normal with the material's normal or bump mapping applied, flipped on back faces
+(<code>MeshBasicNodeMaterial</code> always uses the vertex normal). Use <a href="TSL.html#normalViewGeometry">normalViewGeometry</a>
+for the unperturbed vertex normal.</p>
 					</div>
 				</div>
 				<div class="member">
@@ -940,7 +945,9 @@ expanding 3D segments into screen/world-facing ribbons of a specified width.</p>
 				<div class="member">
 					<h3 class="name" id="normalWorld" translate="no">.<a href="#normalWorld">normalWorld</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec3></span> <span class="type-signature">(constant) </span></h3>
 					<div class="description">
-						<p>TSL object that represents the vertex normal of the current rendered object in world space.</p>
+						<p>TSL object that represents the shading normal of the current rendered object in world space.
+It is derived from <a href="TSL.html#normalView">normalView</a>, so it includes normal or bump mapping. Use
+<a href="TSL.html#normalWorldGeometry">normalWorldGeometry</a> for the unperturbed vertex normal.</p>
 					</div>
 				</div>
 				<div class="member">
@@ -979,21 +986,16 @@ const computeFn = Fn(() => {
 					</div>
 				</div>
 				<div class="member">
-					<h3 class="name" id="parallaxDirection" translate="no">.<a href="#parallaxDirection">parallaxDirection</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;mat3></span> <span class="type-signature">(constant) </span></h3>
+					<h3 class="name" id="parallaxDirection" translate="no">.<a href="#parallaxDirection">parallaxDirection</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec3></span> <span class="type-signature">(constant) </span></h3>
 					<div class="description">
-						<p>TSL object that represents the parallax direction.</p>
+						<p>TSL object that represents the parallax direction, which is the surface-to-camera
+direction in tangent space.</p>
 					</div>
 				</div>
 				<div class="member">
 					<h3 class="name" id="planeDistance" translate="no">.<a href="#planeDistance">planeDistance</a> <span class="type-signature">(constant) </span></h3>
 					<div class="description">
 						<p>View-space plane distance between two surface points (edge-stopping geometry term).</p>
-					</div>
-				</div>
-				<div class="member">
-					<h3 class="name" id="pointUV" translate="no">.<a href="#pointUV">pointUV</a><span class="type-signature"> : <a href="PointUVNode.html">PointUVNode</a></span> <span class="type-signature">(constant) </span></h3>
-					<div class="description">
-						<p>TSL object that represents the uv coordinates of points.</p>
 					</div>
 				</div>
 				<div class="member">
@@ -1033,7 +1035,8 @@ Used in context of <a href="VelocityNode.html">VelocityNode</a> for rendering mo
 				<div class="member">
 					<h3 class="name" id="positionViewDirection" translate="no">.<a href="#positionViewDirection">positionViewDirection</a><span class="type-signature"> : <a href="VaryingNode.html">VaryingNode</a>.&lt;vec3></span> <span class="type-signature">(constant) </span></h3>
 					<div class="description">
-						<p>TSL object that represents the position view direction of the current rendered object.</p>
+						<p>TSL object that represents the normalized direction from the fragment toward the camera
+in view space. For orthographic cameras, the value is <code>( 0, 0, 1 )</code>.</p>
 					</div>
 				</div>
 				<div class="member">
@@ -1045,7 +1048,9 @@ Used in context of <a href="VelocityNode.html">VelocityNode</a> for rendering mo
 				<div class="member">
 					<h3 class="name" id="positionWorldDirection" translate="no">.<a href="#positionWorldDirection">positionWorldDirection</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec3></span> <span class="type-signature">(constant) </span></h3>
 					<div class="description">
-						<p>TSL object that represents the position world direction of the current rendered object.</p>
+						<p>TSL object that represents the normalized direction from the origin of the current rendered
+object to the vertex in world space. The rotation and scale of the world matrix are applied,
+the translation is ignored.</p>
 					</div>
 				</div>
 				<div class="member">
@@ -1122,21 +1127,10 @@ final history UV, so the same factor applies to both the diffuse and specular pa
 					</div>
 				</div>
 				<div class="member">
-					<h3 class="name" id="sampleBilinearTap" translate="no">.<a href="#sampleBilinearTap">sampleBilinearTap</a> <span class="type-signature">(constant) </span></h3>
+					<h3 class="name" id="screenCoordinate" translate="no">.<a href="#screenCoordinate">screenCoordinate</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec2></span> <span class="type-signature">(constant) </span></h3>
 					<div class="description">
-						<p>Single bilinear history tap with plane-distance and normal confidence.</p>
-					</div>
-				</div>
-				<div class="member">
-					<h3 class="name" id="sampleHistory4Tap" translate="no">.<a href="#sampleHistory4Tap">sampleHistory4Tap</a> <span class="type-signature">(constant) </span></h3>
-					<div class="description">
-						<p>Geometrically-weighted 4-tap bilinear history sample.</p>
-					</div>
-				</div>
-				<div class="member">
-					<h3 class="name" id="screenCoordinate" translate="no">.<a href="#screenCoordinate">screenCoordinate</a><span class="type-signature"> : <a href="ScreenNode.html">ScreenNode</a>.&lt;vec2></span> <span class="type-signature">(constant) </span></h3>
-					<div class="description">
-						<p>TSL object that represents the current <code>x</code>/<code>y</code> pixel position on the screen in physical pixel units.</p>
+						<p>TSL object that represents the current <code>x</code>/<code>y</code> pixel position on the screen in physical pixel units.
+The coordinates are window-relative according to WebGPU standards.</p>
 					</div>
 				</div>
 				<div class="member">
@@ -1146,13 +1140,13 @@ final history UV, so the same factor applies to both the diffuse and specular pa
 					</div>
 				</div>
 				<div class="member">
-					<h3 class="name" id="screenSize" translate="no">.<a href="#screenSize">screenSize</a><span class="type-signature"> : <a href="ScreenNode.html">ScreenNode</a>.&lt;vec2></span> <span class="type-signature">(constant) </span></h3>
+					<h3 class="name" id="screenSize" translate="no">.<a href="#screenSize">screenSize</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;vec2></span> <span class="type-signature">(constant) </span></h3>
 					<div class="description">
 						<p>TSL object that represents the screen resolution in physical pixel units.</p>
 					</div>
 				</div>
 				<div class="member">
-					<h3 class="name" id="screenUV" translate="no">.<a href="#screenUV">screenUV</a><span class="type-signature"> : <a href="ScreenNode.html">ScreenNode</a>.&lt;vec2></span> <span class="type-signature">(constant) </span></h3>
+					<h3 class="name" id="screenUV" translate="no">.<a href="#screenUV">screenUV</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec2></span> <span class="type-signature">(constant) </span></h3>
 					<div class="description">
 						<p>TSL object that represents normalized screen coordinates, unitless in <code>[0, 1]</code>.</p>
 					</div>
@@ -1160,7 +1154,9 @@ final history UV, so the same factor applies to both the diffuse and specular pa
 				<div class="member">
 					<h3 class="name" id="shadowPositionWorld" translate="no">.<a href="#shadowPositionWorld">shadowPositionWorld</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec3></span> <span class="type-signature">(constant) </span></h3>
 					<div class="description">
-						<p>TSL object that represents the vertex position in world space during the shadow pass.</p>
+						<p>TSL object that represents the world space position used to look up the shadow map when receiving
+shadows. Defaults to <code>positionWorld</code>. It is replaced by <code>material.receivedShadowPositionNode</code>
+if set, or by the ray sample position when rendering volumetric lighting.</p>
 					</div>
 				</div>
 				<div class="member">
@@ -1273,7 +1269,7 @@ Useful for normal mapping without precomputed tangents.</p>
 					</div>
 				</div>
 				<div class="member">
-					<h3 class="name" id="toneMappingExposure" translate="no">.<a href="#toneMappingExposure">toneMappingExposure</a><span class="type-signature"> : <a href="RendererReferenceNode.html">RendererReferenceNode</a>.&lt;vec3></span> <span class="type-signature">(constant) </span></h3>
+					<h3 class="name" id="toneMappingExposure" translate="no">.<a href="#toneMappingExposure">toneMappingExposure</a><span class="type-signature"> : <a href="RendererReferenceNode.html">RendererReferenceNode</a>.&lt;float></span> <span class="type-signature">(constant) </span></h3>
 					<div class="description">
 						<p>TSL object that represents the global tone mapping exposure of the renderer.</p>
 					</div>
@@ -1287,13 +1283,8 @@ Useful for normal mapping without precomputed tangents.</p>
 				<div class="member">
 					<h3 class="name" id="velocity" translate="no">.<a href="#velocity">velocity</a><span class="type-signature"> : <a href="VelocityNode.html">VelocityNode</a></span> <span class="type-signature">(constant) </span></h3>
 					<div class="description">
-						<p>TSL object that represents the velocity of a render pass.</p>
-					</div>
-				</div>
-				<div class="member">
-					<h3 class="name" id="velocityToUVOffset" translate="no">.<a href="#velocityToUVOffset">velocityToUVOffset</a> <span class="type-signature">(constant) </span></h3>
-					<div class="description">
-						<p>Converts screen-space velocity (NDC derivative) to a UV reprojection offset.</p>
+						<p>TSL object that represents the velocity of a render pass. The value is the difference
+between the current and previous position in NDC space (<code>xy</code>, Y up), not a uv offset.</p>
 					</div>
 				</div>
 				<div class="member">
@@ -1303,13 +1294,13 @@ Useful for normal mapping without precomputed tangents.</p>
 					</div>
 				</div>
 				<div class="member">
-					<h3 class="name" id="viewport" translate="no">.<a href="#viewport">viewport</a><span class="type-signature"> : <a href="ScreenNode.html">ScreenNode</a>.&lt;vec4></span> <span class="type-signature">(constant) </span></h3>
+					<h3 class="name" id="viewport" translate="no">.<a href="#viewport">viewport</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;vec4></span> <span class="type-signature">(constant) </span></h3>
 					<div class="description">
 						<p>TSL object that represents the viewport rectangle as <code>x</code>, <code>y</code>, <code>width</code> and <code>height</code> in physical pixel units.</p>
 					</div>
 				</div>
 				<div class="member">
-					<h3 class="name" id="viewportCoordinate" translate="no">.<a href="#viewportCoordinate">viewportCoordinate</a><span class="type-signature"> : <a href="ScreenNode.html">ScreenNode</a>.&lt;vec2></span> <span class="type-signature">(constant) </span></h3>
+					<h3 class="name" id="viewportCoordinate" translate="no">.<a href="#viewportCoordinate">viewportCoordinate</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec2></span> <span class="type-signature">(constant) </span></h3>
 					<div class="description">
 						<p>TSL object that represents the current <code>x</code>/<code>y</code> pixel position on the viewport in physical pixel units.</p>
 					</div>
@@ -1317,17 +1308,19 @@ Useful for normal mapping without precomputed tangents.</p>
 				<div class="member">
 					<h3 class="name" id="viewportLinearDepth" translate="no">.<a href="#viewportLinearDepth">viewportLinearDepth</a><span class="type-signature"> : <a href="ViewportDepthNode.html">ViewportDepthNode</a></span> <span class="type-signature">(constant) </span></h3>
 					<div class="description">
-						<p>TSL object that represents the linear (orthographic) depth value of the current fragment</p>
+						<p>TSL object that represents the linear (orthographic) depth stored in the viewport depth texture
+at the current fragment's screen position, i.e. the depth of the geometry behind the fragment.
+Use <code>linearDepth()</code> for the depth of the current fragment itself.</p>
 					</div>
 				</div>
 				<div class="member">
-					<h3 class="name" id="viewportSize" translate="no">.<a href="#viewportSize">viewportSize</a><span class="type-signature"> : <a href="ScreenNode.html">ScreenNode</a>.&lt;vec2></span> <span class="type-signature">(constant) </span></h3>
+					<h3 class="name" id="viewportSize" translate="no">.<a href="#viewportSize">viewportSize</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec2></span> <span class="type-signature">(constant) </span></h3>
 					<div class="description">
 						<p>TSL object that represents the viewport resolution in physical pixel units.</p>
 					</div>
 				</div>
 				<div class="member">
-					<h3 class="name" id="viewportUV" translate="no">.<a href="#viewportUV">viewportUV</a><span class="type-signature"> : <a href="ScreenNode.html">ScreenNode</a>.&lt;vec2></span> <span class="type-signature">(constant) </span></h3>
+					<h3 class="name" id="viewportUV" translate="no">.<a href="#viewportUV">viewportUV</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec2></span> <span class="type-signature">(constant) </span></h3>
 					<div class="description">
 						<p>TSL object that represents normalized viewport coordinates, unitless in <code>[0, 1]</code>.</p>
 					</div>
@@ -1391,6 +1384,7 @@ of a function with layout.</p>
 									</td>
 									<td class="description last">
 										<p>The name of the constant in the shader.</p>
+										<p>Default is <code>null</code>.</p>
 									</td>
 								</tr>
 							</tbody>
@@ -1522,6 +1516,7 @@ of a function with layout.</p>
 									</td>
 									<td class="description last">
 										<p>The name of the variable in the shader.</p>
+										<p>Default is <code>null</code>.</p>
 									</td>
 								</tr>
 							</tbody>
@@ -1908,7 +1903,7 @@ or an array containing the default values (e.g., [ vec3() ]).</p>
 					<div class="method">
 						<div class="description">
 							<p>Returns the arc-tangent of the parameter.
-If two parameters are provided, the result is <code>atan2(y/x)</code>.</p>
+If two parameters are provided, the result is <code>atan2( y, x )</code>.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -1949,10 +1944,11 @@ If two parameters are provided, the result is <code>atan2(y/x)</code>.</p>
 							</tbody>
 						</table>
 					</div>
-					<h3 class="name name-method" id="atomicAdd" translate="no">.<a href="#atomicAdd">atomicAdd</a><span class="signature">( pointerNode : <span class="param-type"><a href="Node.html">Node</a></span>, valueNode : <span class="param-type"><a href="Node.html">Node</a></span> )</span><span class="type-signature"> : <a href="AtomicFunctionNode.html">AtomicFunctionNode</a></span> </h3>
+					<h3 class="name name-method" id="atomicAdd" translate="no">.<a href="#atomicAdd">atomicAdd</a><span class="signature">( pointerNode : <span class="param-type"><a href="Node.html">Node</a></span>, valueNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;(uint|int)></span> )</span><span class="type-signature"> : <a href="AtomicFunctionNode.html">AtomicFunctionNode</a></span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Increments the value stored in the atomic variable.</p>
+							<p>Increments the value stored in the atomic variable
+and returns the value stored in the atomic variable before the operation.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -1975,10 +1971,11 @@ If two parameters are provided, the result is <code>atan2(y/x)</code>.</p>
 							</tbody>
 						</table>
 					</div>
-					<h3 class="name name-method" id="atomicAnd" translate="no">.<a href="#atomicAnd">atomicAnd</a><span class="signature">( pointerNode : <span class="param-type"><a href="Node.html">Node</a></span>, valueNode : <span class="param-type"><a href="Node.html">Node</a></span> )</span><span class="type-signature"> : <a href="AtomicFunctionNode.html">AtomicFunctionNode</a></span> </h3>
+					<h3 class="name name-method" id="atomicAnd" translate="no">.<a href="#atomicAnd">atomicAnd</a><span class="signature">( pointerNode : <span class="param-type"><a href="Node.html">Node</a></span>, valueNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;(uint|int)></span> )</span><span class="type-signature"> : <a href="AtomicFunctionNode.html">AtomicFunctionNode</a></span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Stores in an atomic variable the bitwise AND of its value with a parameter.</p>
+							<p>Stores, in an atomic variable, the bitwise AND of its value with a parameter
+and returns the value stored in the atomic variable before the operation.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -2001,7 +1998,34 @@ If two parameters are provided, the result is <code>atan2(y/x)</code>.</p>
 							</tbody>
 						</table>
 					</div>
-					<h3 class="name name-method" id="atomicFunc" translate="no">.<a href="#atomicFunc">atomicFunc</a><span class="signature">( method : <span class="param-type">string</span>, pointerNode : <span class="param-type"><a href="Node.html">Node</a></span>, valueNode : <span class="param-type"><a href="Node.html">Node</a></span> )</span><span class="type-signature"> : <a href="AtomicFunctionNode.html">AtomicFunctionNode</a></span> </h3>
+					<h3 class="name name-method" id="atomicExchange" translate="no">.<a href="#atomicExchange">atomicExchange</a><span class="signature">( pointerNode : <span class="param-type"><a href="Node.html">Node</a></span>, valueNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;(uint|int)></span> )</span><span class="type-signature"> : <a href="AtomicFunctionNode.html">AtomicFunctionNode</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>Stores a value in the atomic variable and returns the original
+value stored in the atomic variable before the operation.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">pointerNode</strong>
+									</td>
+									<td class="description last">
+										<p>An atomic variable or element of an atomic buffer.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">valueNode</strong>
+									</td>
+									<td class="description last">
+										<p>The value that mutates the atomic variable.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="atomicFunc" translate="no">.<a href="#atomicFunc">atomicFunc</a><span class="signature">( method : <span class="param-type">string</span>, pointerNode : <span class="param-type"><a href="Node.html">Node</a></span>, valueNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;(uint|int)></span> )</span><span class="type-signature"> : <a href="AtomicFunctionNode.html">AtomicFunctionNode</a></span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>TSL function for appending an atomic function call into the programmatic flow of a compute shader.</p>
@@ -2053,10 +2077,11 @@ If two parameters are provided, the result is <code>atan2(y/x)</code>.</p>
 							</tbody>
 						</table>
 					</div>
-					<h3 class="name name-method" id="atomicMax" translate="no">.<a href="#atomicMax">atomicMax</a><span class="signature">( pointerNode : <span class="param-type"><a href="Node.html">Node</a></span>, valueNode : <span class="param-type"><a href="Node.html">Node</a></span> )</span><span class="type-signature"> : <a href="AtomicFunctionNode.html">AtomicFunctionNode</a></span> </h3>
+					<h3 class="name name-method" id="atomicMax" translate="no">.<a href="#atomicMax">atomicMax</a><span class="signature">( pointerNode : <span class="param-type"><a href="Node.html">Node</a></span>, valueNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;(uint|int)></span> )</span><span class="type-signature"> : <a href="AtomicFunctionNode.html">AtomicFunctionNode</a></span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Stores in an atomic variable the maximum between its current value and a parameter.</p>
+							<p>Stores, in an atomic variable, the maximum between its current value and a parameter
+and returns the value stored in the atomic variable before the operation.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -2079,10 +2104,11 @@ If two parameters are provided, the result is <code>atan2(y/x)</code>.</p>
 							</tbody>
 						</table>
 					</div>
-					<h3 class="name name-method" id="atomicMin" translate="no">.<a href="#atomicMin">atomicMin</a><span class="signature">( pointerNode : <span class="param-type"><a href="Node.html">Node</a></span>, valueNode : <span class="param-type"><a href="Node.html">Node</a></span> )</span><span class="type-signature"> : <a href="AtomicFunctionNode.html">AtomicFunctionNode</a></span> </h3>
+					<h3 class="name name-method" id="atomicMin" translate="no">.<a href="#atomicMin">atomicMin</a><span class="signature">( pointerNode : <span class="param-type"><a href="Node.html">Node</a></span>, valueNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;(uint|int)></span> )</span><span class="type-signature"> : <a href="AtomicFunctionNode.html">AtomicFunctionNode</a></span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Stores in an atomic variable the minimum between its current value and a parameter.</p>
+							<p>Stores, in an atomic variable, the minimum between its current value and a parameter
+and returns the value stored in the atomic variable before the operation.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -2105,7 +2131,7 @@ If two parameters are provided, the result is <code>atan2(y/x)</code>.</p>
 							</tbody>
 						</table>
 					</div>
-					<h3 class="name name-method" id="atomicNode" translate="no">.<a href="#atomicNode">atomicNode</a><span class="signature">( method : <span class="param-type">string</span>, pointerNode : <span class="param-type"><a href="Node.html">Node</a></span>, valueNode : <span class="param-type"><a href="Node.html">Node</a></span> )</span><span class="type-signature"> : <a href="AtomicFunctionNode.html">AtomicFunctionNode</a></span> </h3>
+					<h3 class="name name-method" id="atomicNode" translate="no">.<a href="#atomicNode">atomicNode</a><span class="signature">( method : <span class="param-type">string</span>, pointerNode : <span class="param-type"><a href="Node.html">Node</a></span>, valueNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;(uint|int)></span> )</span><span class="type-signature"> : <a href="AtomicFunctionNode.html">AtomicFunctionNode</a></span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>TSL function for creating an atomic function node.</p>
@@ -2139,10 +2165,11 @@ If two parameters are provided, the result is <code>atan2(y/x)</code>.</p>
 							</tbody>
 						</table>
 					</div>
-					<h3 class="name name-method" id="atomicOr" translate="no">.<a href="#atomicOr">atomicOr</a><span class="signature">( pointerNode : <span class="param-type"><a href="Node.html">Node</a></span>, valueNode : <span class="param-type"><a href="Node.html">Node</a></span> )</span><span class="type-signature"> : <a href="AtomicFunctionNode.html">AtomicFunctionNode</a></span> </h3>
+					<h3 class="name name-method" id="atomicOr" translate="no">.<a href="#atomicOr">atomicOr</a><span class="signature">( pointerNode : <span class="param-type"><a href="Node.html">Node</a></span>, valueNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;(uint|int)></span> )</span><span class="type-signature"> : <a href="AtomicFunctionNode.html">AtomicFunctionNode</a></span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Stores in an atomic variable the bitwise OR of its value with a parameter.</p>
+							<p>Stores, in an atomic variable, the bitwise OR of its value with a parameter
+and returns the value stored in the atomic variable before the operation.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -2165,7 +2192,7 @@ If two parameters are provided, the result is <code>atan2(y/x)</code>.</p>
 							</tbody>
 						</table>
 					</div>
-					<h3 class="name name-method" id="atomicStore" translate="no">.<a href="#atomicStore">atomicStore</a><span class="signature">( pointerNode : <span class="param-type"><a href="Node.html">Node</a></span>, valueNode : <span class="param-type"><a href="Node.html">Node</a></span> )</span><span class="type-signature"> : <a href="AtomicFunctionNode.html">AtomicFunctionNode</a></span> </h3>
+					<h3 class="name name-method" id="atomicStore" translate="no">.<a href="#atomicStore">atomicStore</a><span class="signature">( pointerNode : <span class="param-type"><a href="Node.html">Node</a></span>, valueNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;(uint|int)></span> )</span><span class="type-signature"> : <a href="AtomicFunctionNode.html">AtomicFunctionNode</a></span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>Stores a value in the atomic variable.</p>
@@ -2191,10 +2218,11 @@ If two parameters are provided, the result is <code>atan2(y/x)</code>.</p>
 							</tbody>
 						</table>
 					</div>
-					<h3 class="name name-method" id="atomicSub" translate="no">.<a href="#atomicSub">atomicSub</a><span class="signature">( pointerNode : <span class="param-type"><a href="Node.html">Node</a></span>, valueNode : <span class="param-type"><a href="Node.html">Node</a></span> )</span><span class="type-signature"> : <a href="AtomicFunctionNode.html">AtomicFunctionNode</a></span> </h3>
+					<h3 class="name name-method" id="atomicSub" translate="no">.<a href="#atomicSub">atomicSub</a><span class="signature">( pointerNode : <span class="param-type"><a href="Node.html">Node</a></span>, valueNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;(uint|int)></span> )</span><span class="type-signature"> : <a href="AtomicFunctionNode.html">AtomicFunctionNode</a></span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Decrements the value stored in the atomic variable.</p>
+							<p>Decrements the value stored in the atomic variable
+and returns the value stored in the atomic variable before the operation.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -2217,10 +2245,11 @@ If two parameters are provided, the result is <code>atan2(y/x)</code>.</p>
 							</tbody>
 						</table>
 					</div>
-					<h3 class="name name-method" id="atomicXor" translate="no">.<a href="#atomicXor">atomicXor</a><span class="signature">( pointerNode : <span class="param-type"><a href="Node.html">Node</a></span>, valueNode : <span class="param-type"><a href="Node.html">Node</a></span> )</span><span class="type-signature"> : <a href="AtomicFunctionNode.html">AtomicFunctionNode</a></span> </h3>
+					<h3 class="name name-method" id="atomicXor" translate="no">.<a href="#atomicXor">atomicXor</a><span class="signature">( pointerNode : <span class="param-type"><a href="Node.html">Node</a></span>, valueNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;(uint|int)></span> )</span><span class="type-signature"> : <a href="AtomicFunctionNode.html">AtomicFunctionNode</a></span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Stores in an atomic variable the bitwise XOR of its value with a parameter.</p>
+							<p>Stores, in an atomic variable, the bitwise XOR of its value with a parameter
+and returns the value stored in the atomic variable before the operation.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -2389,15 +2418,6 @@ Also assigns the batch color if a color texture is present.</p>
 							</tbody>
 						</table>
 					</div>
-					<h3 class="name name-method" id="bentNormalView" translate="no">.<a href="#bentNormalView">bentNormalView</a><span class="signature">()</span><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec3></span> </h3>
-					<div class="method">
-						<div class="description">
-							<p>TSL function for computing bent normals.</p>
-						</div>
-						<dl class="details">
-							<dt class="tag-returns"><strong>Returns:</strong> Bent normals.</dt>
-						</dl>
-					</div>
 					<h3 class="name name-method" id="bilateralBlur" translate="no">.<a href="#bilateralBlur">bilateralBlur</a><span class="signature">( node : <span class="param-type"><a href="Node.html">Node</a>.&lt;vec4></span>, directionNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;(vec2|float)></span>, sigma : <span class="param-type">number</span>, sigmaColor : <span class="param-type">number</span> )</span><span class="type-signature"> : <a href="BilateralBlurNode.html">BilateralBlurNode</a></span> </h3>
 					<div class="method">
 						<div class="description">
@@ -2442,7 +2462,7 @@ both spatial distance and color/intensity differences between pixels.</p>
 							</tbody>
 						</table>
 					</div>
-					<h3 class="name name-method" id="billboarding" translate="no">.<a href="#billboarding">billboarding</a><span class="signature">( config : <span class="param-type">Object</span> )</span><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec3></span> </h3>
+					<h3 class="name name-method" id="billboarding" translate="no">.<a href="#billboarding">billboarding</a><span class="signature">( config : <span class="param-type">Object</span> )</span><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec4></span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>This can be used to achieve a billboarding behavior for flat meshes. That means they are
@@ -2533,7 +2553,7 @@ When null, the center is derived automatically from <code>positionWorld</code>.<
 							</tbody>
 						</table>
 					</div>
-					<h3 class="name name-method" id="bitNot" translate="no">.<a href="#bitNot">bitNot</a><span class="signature">( a : <span class="param-type"><a href="Node.html">Node</a></span>, b : <span class="param-type"><a href="Node.html">Node</a></span> )</span><span class="type-signature"> : <a href="OperatorNode.html">OperatorNode</a></span> </h3>
+					<h3 class="name name-method" id="bitNot" translate="no">.<a href="#bitNot">bitNot</a><span class="signature">( a : <span class="param-type"><a href="Node.html">Node</a></span> )</span><span class="type-signature"> : <a href="OperatorNode.html">OperatorNode</a></span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>Performs bitwise NOT on a node.</p>
@@ -2545,15 +2565,7 @@ When null, the center is derived automatically from <code>positionWorld</code>.<
 										<strong translate="no">a</strong>
 									</td>
 									<td class="description last">
-										<p>The first input.</p>
-									</td>
-								</tr>
-								<tr>
-									<td class="name">
-										<strong translate="no">b</strong>
-									</td>
-									<td class="description last">
-										<p>The second input.</p>
+										<p>The input value.</p>
 									</td>
 								</tr>
 							</tbody>
@@ -3196,36 +3208,6 @@ without being modulated by the AO since it already accounts for occlusion.</p>
 							</tbody>
 						</table>
 					</div>
-					<h3 class="name name-method" id="cache" translate="no">.<a href="#cache">cache</a><span class="signature">( node : <span class="param-type"><a href="Node.html">Node</a></span>, parent : <span class="param-type">boolean</span> )</span><span class="type-signature"> : <a href="IsolateNode.html">IsolateNode</a></span> </h3>
-					<div class="method">
-						<div class="description">
-							<p>TSL function for creating a cache node.</p>
-						</div>
-						<table class="params">
-							<tbody>
-								<tr>
-									<td class="name">
-										<strong translate="no">node</strong>
-									</td>
-									<td class="description last">
-										<p>The node that should be cached.</p>
-									</td>
-								</tr>
-								<tr>
-									<td class="name">
-										<strong translate="no">parent</strong>
-									</td>
-									<td class="description last">
-										<p>Whether this node refers to a shared parent cache or not.</p>
-										<p>Default is <code>true</code>.</p>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-						<dl class="details">
-							<dt class="important tag-deprecated"><strong>Deprecated:</strong> Yes</dt>
-						</dl>
-					</div>
 					<h3 class="name name-method" id="cbrt" translate="no">.<a href="#cbrt">cbrt</a><span class="signature">( a : <span class="param-type"><a href="Node.html">Node</a> | number</span> )</span><span class="type-signature"> : <a href="Node.html">Node</a></span> </h3>
 					<div class="method">
 						<div class="description">
@@ -3310,7 +3292,7 @@ or AgX Log), and will return output in the same space. Output may require clampi
 <ul>
 <li>ASC CDL v1.2</li>
 <li><a href="https://blender.stackexchange.com/a/55239/43930" target="_blank" rel="noopener">https://blender.stackexchange.com/a/55239/43930</a></li>
-<li><a href="https://docs.acescentral.com/specifications/acescc/" target="_blank" rel="noopener">https://docs.acescentral.com/specifications/acescc/</a></li>
+<li><a href="https://docs.acescentral.com/encodings/acescc/" target="_blank" rel="noopener">https://docs.acescentral.com/encodings/acescc/</a></li>
 </ul></dt>
 						</dl>
 					</div>
@@ -3345,6 +3327,7 @@ or AgX Log), and will return output in the same space. Output may require clampi
 									</td>
 									<td class="description last">
 										<p>The uv coordinates.</p>
+										<p>Default is <code>uv()</code>.</p>
 									</td>
 								</tr>
 							</tbody>
@@ -3566,7 +3549,7 @@ Useful for masking effects based on distance from center.</p>
 							<dt class="tag-returns"><strong>Returns:</strong> The clustered lights node.</dt>
 						</dl>
 					</div>
-					<h3 class="name name-method" id="code" translate="no">.<a href="#code">code</a><span class="signature">( code : <span class="param-type">string</span>, includes : <span class="param-type">Array.&lt;<a href="Node.html">Node</a>></span>, language : <span class="param-type">'js' | 'wgsl' | 'glsl'</span> )</span><span class="type-signature"> : <a href="CodeNode.html">CodeNode</a></span> </h3>
+					<h3 class="name name-method" id="code" translate="no">.<a href="#code">code</a><span class="signature">( code : <span class="param-type">string</span>, includes : <span class="param-type">Array.&lt;<a href="Node.html">Node</a>></span>, language : <span class="param-type">'js' | 'wgsl'</span> )</span><span class="type-signature"> : <a href="CodeNode.html">CodeNode</a></span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>TSL function for creating a code node.</p>
@@ -3660,25 +3643,7 @@ Simulates the analog signal bleeding in CRT displays where colors
 							</tbody>
 						</table>
 					</div>
-					<h3 class="name name-method" id="colorToDirection" translate="no">.<a href="#colorToDirection">colorToDirection</a><span class="signature">( node : <span class="param-type"><a href="Node.html">Node</a>.&lt;vec3></span> )</span><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec3></span> </h3>
-					<div class="method">
-						<table class="params">
-							<tbody>
-								<tr>
-									<td class="name">
-										<strong translate="no">node</strong>
-									</td>
-									<td class="description last">
-										<p>The color to unpack.</p>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-						<dl class="details">
-							<dt class="important tag-deprecated"><strong>Deprecated:</strong> since r185. Use <a href="TSL.html#unpackRGBToNormal">unpackRGBToNormal</a> instead.</dt>
-						</dl>
-					</div>
-					<h3 class="name name-method" id="compute" translate="no">.<a href="#compute">compute</a><span class="signature">( node : <span class="param-type"><a href="Node.html">Node</a></span>, count : <span class="param-type">number | Array.&lt;number></span>, workgroupSize : <span class="param-type">Array.&lt;number></span> )</span><span class="type-signature"> : <a href="ComputeNode.html">ComputeNode</a></span> </h3>
+					<h3 class="name name-method" id="compute" translate="no">.<a href="#compute">compute</a><span class="signature">( node : <span class="param-type"><a href="Node.html">Node</a></span>, count : <span class="param-type">number | Array.&lt;number> | <a href="IndirectStorageBufferAttribute.html">IndirectStorageBufferAttribute</a></span>, workgroupSize : <span class="param-type">Array.&lt;number></span> )</span><span class="type-signature"> : <a href="ComputeNode.html">ComputeNode</a></span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>TSL function for creating a compute node.</p>
@@ -3698,7 +3663,10 @@ Simulates the analog signal bleeding in CRT displays where colors
 										<strong translate="no">count</strong>
 									</td>
 									<td class="description last">
-										<p>The compute count or dispatch size.</p>
+										<p>The compute count or dispatch size.
+A number defines the total number of invocations. An array [x, y, z] defines the number of
+workgroups per dimension, each executing <code>workgroupSize</code> invocations. An <code>IndirectStorageBufferAttribute</code>
+defines the workgroup grid via its first three values. Arrays and indirect dispatches require the WebGPU backend.</p>
 									</td>
 								</tr>
 								<tr>
@@ -3712,9 +3680,6 @@ Simulates the analog signal bleeding in CRT displays where colors
 								</tr>
 							</tbody>
 						</table>
-						<dl class="details">
-							<dt class="tag-returns"><strong>Returns:</strong> ,</dt>
-						</dl>
 					</div>
 					<h3 class="name name-method" id="computeBuiltin" translate="no">.<a href="#computeBuiltin">computeBuiltin</a><span class="signature">( name : <span class="param-type">string</span>, nodeType : <span class="param-type">string</span> )</span><span class="type-signature"> : <a href="ComputeBuiltinNode.html">ComputeBuiltinNode</a></span> </h3>
 					<div class="method">
@@ -3977,7 +3942,6 @@ Simulates the analog signal bleeding in CRT displays where colors
 					<div class="method">
 						<div class="description">
 							<p>Finds the number of consecutive 0 bits starting from the most significant bit of the input value.</p>
-<p>Can only be used with <a href="WebGPURenderer.html">WebGPURenderer</a> and a WebGPU backend.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -3992,19 +3956,29 @@ Simulates the analog signal bleeding in CRT displays where colors
 							</tbody>
 						</table>
 					</div>
-					<h3 class="name name-method" id="countOneBits" translate="no">.<a href="#countOneBits">countOneBits</a><span class="signature">()</span><span class="type-signature"> : <a href="Node.html">Node</a></span> </h3>
+					<h3 class="name name-method" id="countOneBits" translate="no">.<a href="#countOneBits">countOneBits</a><span class="signature">( x : <span class="param-type"><a href="Node.html">Node</a> | number</span> )</span><span class="type-signature"> : <a href="Node.html">Node</a></span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>Finds the number of '1' bits set in the input value</p>
-<p>Can only be used with <a href="WebGPURenderer.html">WebGPURenderer</a> and a WebGPU backend.</p>
 						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">x</strong>
+									</td>
+									<td class="description last">
+										<p>The input value.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
 					<h3 class="name name-method" id="countTrailingZeros" translate="no">.<a href="#countTrailingZeros">countTrailingZeros</a><span class="signature">( x : <span class="param-type"><a href="Node.html">Node</a> | number</span> )</span><span class="type-signature"> : <a href="Node.html">Node</a></span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>Finds the number of consecutive 0 bits from the least significant bit of the input value,
 which is also the index of the least significant bit of the input value.</p>
-<p>Can only be used with <a href="WebGPURenderer.html">WebGPURenderer</a> and a WebGPU backend.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -4018,6 +3992,18 @@ which is also the index of the least significant bit of the input value.</p>
 								</tr>
 							</tbody>
 						</table>
+					</div>
+					<h3 class="name name-method" id="createSampleBilinearTap" translate="no">.<a href="#createSampleBilinearTap">createSampleBilinearTap</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>Single bilinear history tap with plane-distance and normal confidence.</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="createSampleHistory4Tap" translate="no">.<a href="#createSampleHistory4Tap">createSampleHistory4Tap</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>Geometrically-weighted 4-tap bilinear history sample.</p>
+						</div>
 					</div>
 					<h3 class="name name-method" id="createVar" translate="no">.<a href="#createVar">createVar</a><span class="signature">( node : <span class="param-type"><a href="Node.html">Node</a></span>, name : <span class="param-type">string</span> )</span><span class="type-signature"> : <a href="VarNode.html">VarNode</a></span> </h3>
 					<div class="method">
@@ -4045,7 +4031,7 @@ which is also the index of the least significant bit of the input value.</p>
 							</tbody>
 						</table>
 					</div>
-					<h3 class="name name-method" id="cross" translate="no">.<a href="#cross">cross</a><span class="signature">( x : <span class="param-type"><a href="Node.html">Node</a>.&lt;(vec2|vec3)></span>, y : <span class="param-type"><a href="Node.html">Node</a>.&lt;(vec2|vec3)></span> )</span><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;(float|vec3)></span> </h3>
+					<h3 class="name name-method" id="cross" translate="no">.<a href="#cross">cross</a><span class="signature">( x : <span class="param-type"><a href="Node.html">Node</a>.&lt;vec3></span>, y : <span class="param-type"><a href="Node.html">Node</a>.&lt;vec3></span> )</span><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec3></span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>Calculates the cross product of two vectors.</p>
@@ -4204,7 +4190,8 @@ which is also the index of the least significant bit of the input value.</p>
 					<h3 class="name name-method" id="dFdx" translate="no">.<a href="#dFdx">dFdx</a><span class="signature">( x : <span class="param-type"><a href="Node.html">Node</a> | number</span> )</span><span class="type-signature"> : <a href="Node.html">Node</a></span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Returns the partial derivative of the parameter with respect to x.</p>
+							<p>Returns the partial derivative of the parameter with respect to x.
+Only available in the fragment stage.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -4222,7 +4209,8 @@ which is also the index of the least significant bit of the input value.</p>
 					<h3 class="name name-method" id="dFdy" translate="no">.<a href="#dFdy">dFdy</a><span class="signature">( x : <span class="param-type"><a href="Node.html">Node</a> | number</span> )</span><span class="type-signature"> : <a href="Node.html">Node</a></span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Returns the partial derivative of the parameter with respect to y.</p>
+							<p>Returns the partial derivative of the parameter with respect to y.
+Only available in the fragment stage.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -4318,10 +4306,10 @@ which is also the index of the least significant bit of the input value.</p>
 							</tbody>
 						</table>
 					</div>
-					<h3 class="name name-method" id="denoise" translate="no">.<a href="#denoise">denoise</a><span class="signature">( node : <span class="param-type"><a href="Node.html">Node</a></span>, depthNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;float></span>, normalNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;vec3></span>, camera : <span class="param-type"><a href="Camera.html">Camera</a></span> )</span><span class="type-signature"> : <a href="DenoiseNode.html">DenoiseNode</a></span> </h3>
+					<h3 class="name name-method" id="denoise" translate="no">.<a href="#denoise">denoise</a><span class="signature">( node : <span class="param-type"><a href="Node.html">Node</a></span>, options : <span class="param-type">Object</span> )</span><span class="type-signature"> : <a href="DenoiseNode.html">DenoiseNode</a></span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>TSL function for creating a denoise effect.</p>
+							<p>TSL function for creating a denoise node that filters a single noisy frame or texture, see <a href="DenoiseNode.html">DenoiseNode</a>.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -4330,31 +4318,16 @@ which is also the index of the least significant bit of the input value.</p>
 										<strong translate="no">node</strong>
 									</td>
 									<td class="description last">
-										<p>The node that represents the input of the effect (e.g. AO).</p>
+										<p>The noisy input.</p>
 									</td>
 								</tr>
 								<tr>
 									<td class="name">
-										<strong translate="no">depthNode</strong>
+										<strong translate="no">options</strong>
 									</td>
 									<td class="description last">
-										<p>A node that represents the scene's depth.</p>
-									</td>
-								</tr>
-								<tr>
-									<td class="name">
-										<strong translate="no">normalNode</strong>
-									</td>
-									<td class="description last">
-										<p>A node that represents the scene's normals.</p>
-									</td>
-								</tr>
-								<tr>
-									<td class="name">
-										<strong translate="no">camera</strong>
-									</td>
-									<td class="description last">
-										<p>The camera the scene is rendered with.</p>
+										<p>The guides and options, see <a href="DenoiseNode.html">DenoiseNode</a>.</p>
+										<p>Default is <code>{}</code>.</p>
 									</td>
 								</tr>
 							</tbody>
@@ -4500,6 +4473,49 @@ blur. Handy for denoising a half-resolution effect such as ambient occlusion.</p
 							</tbody>
 						</table>
 					</div>
+					<h3 class="name name-method" id="depthToViewZ" translate="no">.<a href="#depthToViewZ">depthToViewZ</a><span class="signature">( depth : <span class="param-type"><a href="Node.html">Node</a>.&lt;float></span>, near : <span class="param-type"><a href="Node.html">Node</a>.&lt;float></span>, far : <span class="param-type"><a href="Node.html">Node</a>.&lt;float></span>, camera : <span class="param-type"><a href="Camera.html">Camera</a></span> )</span><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;float></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>TSL function for converting a depth value to a viewZ value.</p>
+<p>It supports perspective and orthographic cameras and any depth buffer type.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">depth</strong>
+									</td>
+									<td class="description last">
+										<p>The depth value.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">near</strong>
+									</td>
+									<td class="description last">
+										<p>The camera's near value.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">far</strong>
+									</td>
+									<td class="description last">
+										<p>The camera's far value.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">camera</strong>
+									</td>
+									<td class="description last">
+										<p>The camera that produced the depth value.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 					<h3 class="name name-method" id="determinant" translate="no">.<a href="#determinant">determinant</a><span class="signature">( x : <span class="param-type"><a href="Node.html">Node</a>.&lt;(mat2|mat3|mat4)></span> )</span><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;float></span> </h3>
 					<div class="method">
 						<div class="description">
@@ -4543,55 +4559,6 @@ blur. Handy for denoising a half-resolution effect such as ambient occlusion.</p
 								</tr>
 							</tbody>
 						</table>
-					</div>
-					<h3 class="name name-method" id="directionToColor" translate="no">.<a href="#directionToColor">directionToColor</a><span class="signature">( node : <span class="param-type"><a href="Node.html">Node</a>.&lt;vec3></span> )</span><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec3></span> </h3>
-					<div class="method">
-						<table class="params">
-							<tbody>
-								<tr>
-									<td class="name">
-										<strong translate="no">node</strong>
-									</td>
-									<td class="description last">
-										<p>The direction to pack.</p>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-						<dl class="details">
-							<dt class="important tag-deprecated"><strong>Deprecated:</strong> since r185. Use <a href="TSL.html#packNormalToRGB">packNormalToRGB</a> instead.</dt>
-						</dl>
-					</div>
-					<h3 class="name name-method" id="directionToFaceDirection" translate="no">.<a href="#directionToFaceDirection">directionToFaceDirection</a><span class="signature">( vector : <span class="param-type"><a href="Node.html">Node</a>.&lt;vec3></span> )</span><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec3></span> </h3>
-					<div class="method">
-						<div class="description">
-							<p>Negates a vector if the rendering occurs on the back side of a face,
-based on the material's side configuration.</p>
-<ul>
-<li>If the material's side is <code>BackSide</code>, the vector is inverted (negated).</li>
-<li>If the material's side is <code>DoubleSide</code>, the vector is multiplied by <code>faceDirection</code>
-(negated only for back-facing fragments).</li>
-<li>If the material's side is <code>FrontSide</code> (default), the vector remains unchanged.</li>
-</ul>
-						</div>
-						<table class="params">
-							<tbody>
-								<tr>
-									<td class="name">
-										<strong translate="no">vector</strong>
-									</td>
-									<td class="description last">
-										<p>The vector to convert.</p>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-						<dl class="details">
-							<dt class="important tag-deprecated"><strong>Deprecated:</strong> since r185. Use <a href="TSL.html#negateOnBackSide">negateOnBackSide</a> instead.</dt>
-						</dl>
-						<dl class="details">
-							<dt class="tag-returns"><strong>Returns:</strong> The converted vector.</dt>
-						</dl>
 					</div>
 					<h3 class="name name-method" id="distance" translate="no">.<a href="#distance">distance</a><span class="signature">( x : <span class="param-type"><a href="Node.html">Node</a>.&lt;(vec2|vec3|vec4)></span>, y : <span class="param-type"><a href="Node.html">Node</a>.&lt;(vec2|vec3|vec4)></span> )</span><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;float></span> </h3>
 					<div class="method">
@@ -4682,6 +4649,7 @@ based on the material's side configuration.</p>
 									</td>
 									<td class="description last">
 										<p>Defines the effect's focus which is the distance along the camera's look direction in world units.</p>
+										<p>Default is <code>1</code>.</p>
 									</td>
 								</tr>
 								<tr>
@@ -4690,6 +4658,7 @@ based on the material's side configuration.</p>
 									</td>
 									<td class="description last">
 										<p>How far an object can be from the focal plane before it goes completely out-of-focus in world units.</p>
+										<p>Default is <code>1</code>.</p>
 									</td>
 								</tr>
 								<tr>
@@ -4698,6 +4667,7 @@ based on the material's side configuration.</p>
 									</td>
 									<td class="description last">
 										<p>A unitless value for artistic purposes to adjust the size of the bokeh.</p>
+										<p>Default is <code>1</code>.</p>
 									</td>
 								</tr>
 							</tbody>
@@ -5059,7 +5029,8 @@ background.</p>
 					<h3 class="name name-method" id="faceForward" translate="no">.<a href="#faceForward">faceForward</a><span class="signature">( N : <span class="param-type"><a href="Node.html">Node</a>.&lt;(vec2|vec3|vec4)></span>, I : <span class="param-type"><a href="Node.html">Node</a>.&lt;(vec2|vec3|vec4)></span>, Nref : <span class="param-type"><a href="Node.html">Node</a>.&lt;(vec2|vec3|vec4)></span> )</span><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;(vec2|vec3|vec4)></span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Returns a vector pointing in the same direction as another.</p>
+							<p>Returns <code>N</code> if <code>dot( Nref, I ) &lt; 0</code>, otherwise <code>-N</code>. With <code>Nref = N</code>, the result faces
+against the incident vector.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -5264,7 +5235,8 @@ Nodes of this type are assigned to <code>Scene.fogNode</code>.</p>
 					<h3 class="name name-method" id="fwidth" translate="no">.<a href="#fwidth">fwidth</a><span class="signature">( x : <span class="param-type"><a href="Node.html">Node</a> | number</span> )</span><span class="type-signature"> : <a href="Node.html">Node</a></span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Returns the sum of the absolute derivatives in x and y.</p>
+							<p>Returns the sum of the absolute derivatives in x and y.
+Only available in the fragment stage.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -5428,7 +5400,7 @@ target is available or if flat surface normals are required.</p>
 							</tbody>
 						</table>
 						<dl class="details">
-							<dt class="tag-returns"><strong>Returns:</strong> The computed normal vector.</dt>
+							<dt class="tag-returns"><strong>Returns:</strong> The computed normal vector in view space.</dt>
 						</dl>
 					</div>
 					<h3 class="name name-method" id="getParallaxCorrectNormal" translate="no">.<a href="#getParallaxCorrectNormal">getParallaxCorrectNormal</a><span class="signature">( normal : <span class="param-type"><a href="Node.html">Node</a>.&lt;vec3></span>, cubeSize : <span class="param-type"><a href="Node.html">Node</a>.&lt;vec3></span>, cubePos : <span class="param-type"><a href="Node.html">Node</a>.&lt;vec3></span> )</span><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec3></span> </h3>
@@ -5536,7 +5508,7 @@ depth value and the camera's inverse projection matrix.</p>
 										<strong translate="no">screenPosition</strong>
 									</td>
 									<td class="description last">
-										<p>The fragment's screen position expressed as uv coordinates.</p>
+										<p>The fragment's screen position expressed as uv coordinates (origin at the top-left, like <a href="TSL.html#screenUV">screenUV</a>).</p>
 									</td>
 								</tr>
 								<tr>
@@ -5544,7 +5516,7 @@ depth value and the camera's inverse projection matrix.</p>
 										<strong translate="no">depth</strong>
 									</td>
 									<td class="description last">
-										<p>The fragment's depth value.</p>
+										<p>The fragment's raw depth buffer value (not linearized).</p>
 									</td>
 								</tr>
 								<tr>
@@ -5560,32 +5532,6 @@ depth value and the camera's inverse projection matrix.</p>
 						<dl class="details">
 							<dt class="tag-returns"><strong>Returns:</strong> The fragments position in view space.</dt>
 						</dl>
-					</div>
-					<h3 class="name name-method" id="glsl" translate="no">.<a href="#glsl">glsl</a><span class="signature">( src : <span class="param-type">string</span>, includes : <span class="param-type">Array.&lt;<a href="Node.html">Node</a>></span> )</span><span class="type-signature"> : <a href="CodeNode.html">CodeNode</a></span> </h3>
-					<div class="method">
-						<div class="description">
-							<p>TSL function for creating a GLSL code node.</p>
-						</div>
-						<table class="params">
-							<tbody>
-								<tr>
-									<td class="name">
-										<strong translate="no">src</strong>
-									</td>
-									<td class="description last">
-										<p>The native code.</p>
-									</td>
-								</tr>
-								<tr>
-									<td class="name">
-										<strong translate="no">includes</strong>
-									</td>
-									<td class="description last">
-										<p>An array of includes.</p>
-									</td>
-								</tr>
-							</tbody>
-						</table>
 					</div>
 					<h3 class="name name-method" id="godrays" translate="no">.<a href="#godrays">godrays</a><span class="signature">( depthNode : <span class="param-type"><a href="TextureNode.html">TextureNode</a></span>, camera : <span class="param-type"><a href="Camera.html">Camera</a></span>, light : <span class="param-type"><a href="DirectionalLight.html">DirectionalLight</a> | <a href="PointLight.html">PointLight</a></span> )</span><span class="type-signature"> : <a href="GodraysNode.html">GodraysNode</a></span> </h3>
 					<div class="method">
@@ -5708,10 +5654,11 @@ depth value and the camera's inverse projection matrix.</p>
 							<p>TSL function for setting up hardware-based clipping.</p>
 						</div>
 					</div>
-					<h3 class="name name-method" id="hash" translate="no">.<a href="#hash">hash</a><span class="signature">( seed : <span class="param-type"><a href="Node.html">Node</a>.&lt;float></span> )</span><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;float></span> </h3>
+					<h3 class="name name-method" id="hash" translate="no">.<a href="#hash">hash</a><span class="signature">( seed : <span class="param-type"><a href="Node.html">Node</a>.&lt;uint></span> )</span><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;float></span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Generates a hash value in the range <code>[0, 1]</code> from the given seed.</p>
+							<p>Generates a hash value in the range <code>[0, 1]</code> from the given seed. The seed is
+converted to <code>uint</code>, so the fractional part of a float seed is discarded.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -5800,7 +5747,8 @@ Compared to Gaussian blur, hash blur requires just a single pass.</p>
 					<h3 class="name name-method" id="hue" translate="no">.<a href="#hue">hue</a><span class="signature">( color : <span class="param-type"><a href="Node.html">Node</a>.&lt;vec3></span>, adjustment : <span class="param-type"><a href="Node.html">Node</a>.&lt;float></span> )</span><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec3></span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Updates the hue component of the given RGB color while preserving its luminance and saturation.</p>
+							<p>Rotates the hue of the given RGB color around the gray axis. The perceived luminance
+is not preserved.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -6174,7 +6122,8 @@ far plane. Takes the renderer's reversed depth buffer into account.</p>
 					<h3 class="name name-method" id="isolate" translate="no">.<a href="#isolate">isolate</a><span class="signature">( node : <span class="param-type"><a href="Node.html">Node</a></span> )</span><span class="type-signature"> : <a href="IsolateNode.html">IsolateNode</a></span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>TSL function for creating a cache node.</p>
+							<p>TSL function for building a node in isolation. Nodes built inside it are not
+reused by the rest of the shader, while nodes already built outside it are still shared.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -6183,7 +6132,7 @@ far plane. Takes the renderer's reversed depth buffer into account.</p>
 										<strong translate="no">node</strong>
 									</td>
 									<td class="description last">
-										<p>The node that should be cached.</p>
+										<p>The node to build in isolation.</p>
 									</td>
 								</tr>
 							</tbody>
@@ -6214,35 +6163,6 @@ far plane. Takes the renderer's reversed depth buffer into account.</p>
 								</tr>
 							</tbody>
 						</table>
-					</div>
-					<h3 class="name name-method" id="label" translate="no">.<a href="#label">label</a><span class="signature">( node : <span class="param-type"><a href="Node.html">Node</a></span>, name : <span class="param-type">string</span> )</span><span class="type-signature"> : <a href="ContextNode.html">ContextNode</a></span> </h3>
-					<div class="method">
-						<div class="description">
-							<p>TSL function for defining a label context value for a given node.</p>
-						</div>
-						<table class="params">
-							<tbody>
-								<tr>
-									<td class="name">
-										<strong translate="no">node</strong>
-									</td>
-									<td class="description last">
-										<p>The node whose context should be modified.</p>
-									</td>
-								</tr>
-								<tr>
-									<td class="name">
-										<strong translate="no">name</strong>
-									</td>
-									<td class="description last">
-										<p>The name/label to set.</p>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-						<dl class="details">
-							<dt class="important tag-deprecated"><strong>Deprecated:</strong> Yes</dt>
-						</dl>
 					</div>
 					<h3 class="name name-method" id="length" translate="no">.<a href="#length">length</a><span class="signature">( x : <span class="param-type"><a href="Node.html">Node</a></span> )</span><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;float></span> </h3>
 					<div class="method">
@@ -6533,7 +6453,8 @@ Relevant when using maps with spot lights.</p>
 					<h3 class="name name-method" id="lightTargetDirection" translate="no">.<a href="#lightTargetDirection">lightTargetDirection</a><span class="signature">( light : <span class="param-type"><a href="Light.html">Light</a></span> )</span><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec3></span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>TSL function for getting the light target direction for the given light.</p>
+							<p>TSL function for getting the normalized direction from the light's target toward
+the given light, in view space.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -6548,7 +6469,7 @@ Relevant when using maps with spot lights.</p>
 							</tbody>
 						</table>
 						<dl class="details">
-							<dt class="tag-returns"><strong>Returns:</strong> The light's target direction.</dt>
+							<dt class="tag-returns"><strong>Returns:</strong> The light's target direction in view space.</dt>
 						</dl>
 					</div>
 					<h3 class="name name-method" id="lightTargetPosition" translate="no">.<a href="#lightTargetPosition">lightTargetPosition</a><span class="signature">( light : <span class="param-type"><a href="Light.html">Light</a></span> )</span><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;vec3></span> </h3>
@@ -6618,7 +6539,8 @@ it with the given array of lights.</p>
 					<h3 class="name name-method" id="linearDepth" translate="no">.<a href="#linearDepth">linearDepth</a><span class="signature">( value : <span class="param-type"><a href="Node.html">Node</a>.&lt;float></span> )</span><span class="type-signature"> : <a href="ViewportDepthNode.html">ViewportDepthNode</a>.&lt;float></span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>TSL function for converting a perspective depth value to linear depth.</p>
+							<p>TSL function for converting a depth buffer value to linear depth in the <code>[0, 1]</code> range (near to far).
+Perspective, orthographic and logarithmic depth are handled according to the camera and renderer.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -6627,7 +6549,7 @@ it with the given array of lights.</p>
 										<strong translate="no">value</strong>
 									</td>
 									<td class="description last">
-										<p>The perspective depth. If <code>null</code> is provided, the current fragment's depth is used.</p>
+										<p>The depth buffer value. If <code>null</code> is provided, the current fragment's depth is used.</p>
 										<p>Default is <code>null</code>.</p>
 									</td>
 								</tr>
@@ -6804,17 +6726,6 @@ it with the given array of lights.</p>
 							</tbody>
 						</table>
 					</div>
-					<h3 class="name name-method" id="matcapUV" translate="no">.<a href="#matcapUV">matcapUV</a><span class="signature">()</span><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec2></span> </h3>
-					<div class="method">
-						<div class="description">
-							<p>TSL function for creating a matcap uv node.</p>
-<p>Can be used to compute texture coordinates for projecting a
-matcap onto a mesh. Used by <a href="MeshMatcapNodeMaterial.html">MeshMatcapNodeMaterial</a>.</p>
-						</div>
-						<dl class="details">
-							<dt class="tag-returns"><strong>Returns:</strong> The matcap UV coordinates.</dt>
-						</dl>
-					</div>
 					<h3 class="name name-method" id="materialReference" translate="no">.<a href="#materialReference">materialReference</a><span class="signature">( name : <span class="param-type">string</span>, type : <span class="param-type">string</span>, material : <span class="param-type"><a href="Material.html">Material</a></span> )</span><span class="type-signature"> : <a href="MaterialReferenceNode.html">MaterialReferenceNode</a></span> </h3>
 					<div class="method">
 						<div class="description">
@@ -6908,7 +6819,8 @@ When no material is set, the node refers to the material of the current rendered
 					<h3 class="name name-method" id="mix" translate="no">.<a href="#mix">mix</a><span class="signature">( a : <span class="param-type"><a href="Node.html">Node</a> | number</span>, b : <span class="param-type"><a href="Node.html">Node</a> | number</span>, t : <span class="param-type"><a href="Node.html">Node</a> | number</span> )</span><span class="type-signature"> : <a href="Node.html">Node</a></span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Linearly interpolates between two values.</p>
+							<p>Linearly interpolates between two values: <code>a * ( 1 - t ) + b * t</code>.
+When method chained, the receiver is the interpolation value: <code>t.mix( a, b )</code>.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -6976,7 +6888,9 @@ When no material is set, the node refers to the material of the current rendered
 					<h3 class="name name-method" id="mod" translate="no">.<a href="#mod">mod</a><span class="signature">( a : <span class="param-type"><a href="Node.html">Node</a></span>, b : <span class="param-type"><a href="Node.html">Node</a></span> )</span><span class="type-signature"> : <a href="OperatorNode.html">OperatorNode</a></span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Computes the remainder of dividing the first node by the second one.</p>
+							<p>Computes the remainder of dividing the first node by the second one. Float operands
+use floored modulo (<code>a - b * floor( a / b )</code>, the result has the sign of <code>b</code>), integer
+operands use the <code>%</code> operator (truncated remainder).</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -7226,7 +7140,7 @@ based on the material's side configuration.</p>
 										<strong translate="no">scaleNode</strong>
 									</td>
 									<td class="description last">
-										<p>Controls the intensity of the effect.</p>
+										<p>Controls the intensity of the effect. Only affects tangent space normal maps.</p>
 										<p>Default is <code>null</code>.</p>
 									</td>
 								</tr>
@@ -7521,6 +7435,7 @@ based on the material's side configuration.</p>
 									</td>
 									<td class="description last">
 										<p>The timer to generate the oscillation with.</p>
+										<p>Default is <code>time</code>.</p>
 									</td>
 								</tr>
 							</tbody>
@@ -7542,6 +7457,7 @@ based on the material's side configuration.</p>
 									</td>
 									<td class="description last">
 										<p>The timer to generate the oscillation with.</p>
+										<p>Default is <code>time</code>.</p>
 									</td>
 								</tr>
 							</tbody>
@@ -7563,6 +7479,7 @@ based on the material's side configuration.</p>
 									</td>
 									<td class="description last">
 										<p>The timer to generate the oscillation with.</p>
+										<p>Default is <code>time</code>.</p>
 									</td>
 								</tr>
 							</tbody>
@@ -7584,6 +7501,7 @@ based on the material's side configuration.</p>
 									</td>
 									<td class="description last">
 										<p>The timer to generate the oscillation with.</p>
+										<p>Default is <code>time</code>.</p>
 									</td>
 								</tr>
 							</tbody>
@@ -7890,6 +7808,29 @@ into a <code>uint</code>.</p>
 								</tr>
 							</tbody>
 						</table>
+					</div>
+					<h3 class="name name-method" id="packNormalToOctahedral" translate="no">.<a href="#packNormalToOctahedral">packNormalToOctahedral</a><span class="signature">( normal : <span class="param-type"><a href="Node.html">Node</a>.&lt;vec3></span> )</span><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec2></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>Encodes a nonzero direction as signed octahedral coordinates in <code>[-1, 1]</code>
+(Cigolle et al., <a href="https://jcgt.org/published/0003/02/01/" target="_blank" rel="noopener">A Survey of Efficient Representations for Independent Unit Vectors</a>, 2014).
+Store the result in a signed two-channel format such as RG16F or RG16 snorm. The input does not need to be normalized.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">normal</strong>
+									</td>
+									<td class="description last">
+										<p>The nonzero direction to encode.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>Returns:</strong> The signed octahedral coordinates.</dt>
+						</dl>
 					</div>
 					<h3 class="name name-method" id="packNormalToRGB" translate="no">.<a href="#packNormalToRGB">packNormalToRGB</a><span class="signature">( node : <span class="param-type"><a href="Node.html">Node</a>.&lt;vec3></span> )</span><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec3></span> </h3>
 					<div class="method">
@@ -8325,7 +8266,7 @@ Reference: <a href="https://iquilezles.org/articles/functions/" target="_blank" 
 										<strong translate="no">uvNode</strong>
 									</td>
 									<td class="description last">
-										<p>The uv node.</p>
+										<p>The world space sampling direction.</p>
 										<p>Default is <code>null</code>.</p>
 									</td>
 								</tr>
@@ -8334,7 +8275,7 @@ Reference: <a href="https://iquilezles.org/articles/functions/" target="_blank" 
 										<strong translate="no">levelNode</strong>
 									</td>
 									<td class="description last">
-										<p>The level node.</p>
+										<p>The roughness in the <code>[0, 1]</code> range, converted to a mip level internally.</p>
 										<p>Default is <code>null</code>.</p>
 									</td>
 								</tr>
@@ -8824,10 +8765,11 @@ If you increase the sample count, you have to increase this option as well to av
 							</tbody>
 						</table>
 					</div>
-					<h3 class="name name-method" id="range" translate="no">.<a href="#range">range</a><span class="signature">( minNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;<a href="global.html#any">any</a>></span>, maxNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;<a href="global.html#any">any</a>></span> )</span><span class="type-signature"> : <a href="RangeNode.html">RangeNode</a></span> </h3>
+					<h3 class="name name-method" id="range" translate="no">.<a href="#range">range</a><span class="signature">( minNode : <span class="param-type">number | <a href="Color.html">Color</a> | <a href="Vector2.html">Vector2</a> | <a href="Vector3.html">Vector3</a> | <a href="Vector4.html">Vector4</a></span>, maxNode : <span class="param-type">number | <a href="Color.html">Color</a> | <a href="Vector2.html">Vector2</a> | <a href="Vector3.html">Vector3</a> | <a href="Vector4.html">Vector4</a></span> )</span><span class="type-signature"> : <a href="RangeNode.html">RangeNode</a></span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>TSL function for creating a range node.</p>
+							<p>TSL function for creating a range node. The bounds must be constant values,
+uniforms or other dynamic nodes are not supported.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -8836,8 +8778,7 @@ If you increase the sample count, you have to increase this option as well to av
 										<strong translate="no">minNode</strong>
 									</td>
 									<td class="description last">
-										<p>A node defining the lower bound of the range.</p>
-										<p>Default is <code>float()</code>.</p>
+										<p>The lower bound of the range.</p>
 									</td>
 								</tr>
 								<tr>
@@ -8845,8 +8786,7 @@ If you increase the sample count, you have to increase this option as well to av
 										<strong translate="no">maxNode</strong>
 									</td>
 									<td class="description last">
-										<p>A node defining the upper bound of the range.</p>
-										<p>Default is <code>float()</code>.</p>
+										<p>The upper bound of the range.</p>
 									</td>
 								</tr>
 							</tbody>
@@ -8896,10 +8836,10 @@ If you increase the sample count, you have to increase this option as well to av
 							</tbody>
 						</table>
 					</div>
-					<h3 class="name name-method" id="reference" translate="no">.<a href="#reference">reference</a><span class="signature">( name : <span class="param-type">string</span>, type : <span class="param-type">string</span>, object : <span class="param-type">Object</span> )</span><span class="type-signature"> : <a href="ReferenceBaseNode.html">ReferenceBaseNode</a></span> </h3>
+					<h3 class="name name-method" id="reference" translate="no">.<a href="#reference">reference</a><span class="signature">( name : <span class="param-type">string</span>, type : <span class="param-type">string</span>, object : <span class="param-type">Object</span> )</span><span class="type-signature"> : <a href="ReferenceNode.html">ReferenceNode</a></span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>TSL function for creating a reference base node.</p>
+							<p>TSL function for creating a reference node.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -8930,10 +8870,10 @@ If you increase the sample count, you have to increase this option as well to av
 							</tbody>
 						</table>
 					</div>
-					<h3 class="name name-method" id="reference" translate="no">.<a href="#reference">reference</a><span class="signature">( name : <span class="param-type">string</span>, type : <span class="param-type">string</span>, object : <span class="param-type">Object</span> )</span><span class="type-signature"> : <a href="ReferenceNode.html">ReferenceNode</a></span> </h3>
+					<h3 class="name name-method" id="reference" translate="no">.<a href="#reference">reference</a><span class="signature">( name : <span class="param-type">string</span>, type : <span class="param-type">string</span>, object : <span class="param-type">Object</span> )</span><span class="type-signature"> : <a href="ReferenceBaseNode.html">ReferenceBaseNode</a></span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>TSL function for creating a reference node.</p>
+							<p>TSL function for creating a reference base node.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -9000,10 +8940,10 @@ If you increase the sample count, you have to increase this option as well to av
 							</tbody>
 						</table>
 					</div>
-					<h3 class="name name-method" id="referenceBuffer" translate="no">.<a href="#referenceBuffer">referenceBuffer</a><span class="signature">( name : <span class="param-type">string</span>, type : <span class="param-type">string</span>, count : <span class="param-type">number</span>, object : <span class="param-type">Object</span> )</span><span class="type-signature"> : <a href="ReferenceBaseNode.html">ReferenceBaseNode</a></span> </h3>
+					<h3 class="name name-method" id="referenceBuffer" translate="no">.<a href="#referenceBuffer">referenceBuffer</a><span class="signature">( name : <span class="param-type">string</span>, type : <span class="param-type">string</span>, count : <span class="param-type">number</span>, object : <span class="param-type">Object</span> )</span><span class="type-signature"> : <a href="ReferenceNode.html">ReferenceNode</a></span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>TSL function for creating a reference base node. Use this function if you want need a reference
+							<p>TSL function for creating a reference node. Use this function if you want need a reference
 to an array-like property that should be represented as a uniform buffer.</p>
 						</div>
 						<table class="params">
@@ -9043,10 +8983,10 @@ to an array-like property that should be represented as a uniform buffer.</p>
 							</tbody>
 						</table>
 					</div>
-					<h3 class="name name-method" id="referenceBuffer" translate="no">.<a href="#referenceBuffer">referenceBuffer</a><span class="signature">( name : <span class="param-type">string</span>, type : <span class="param-type">string</span>, count : <span class="param-type">number</span>, object : <span class="param-type">Object</span> )</span><span class="type-signature"> : <a href="ReferenceNode.html">ReferenceNode</a></span> </h3>
+					<h3 class="name name-method" id="referenceBuffer" translate="no">.<a href="#referenceBuffer">referenceBuffer</a><span class="signature">( name : <span class="param-type">string</span>, type : <span class="param-type">string</span>, count : <span class="param-type">number</span>, object : <span class="param-type">Object</span> )</span><span class="type-signature"> : <a href="ReferenceBaseNode.html">ReferenceBaseNode</a></span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>TSL function for creating a reference node. Use this function if you want need a reference
+							<p>TSL function for creating a reference base node. Use this function if you want need a reference
 to an array-like property that should be represented as a uniform buffer.</p>
 						</div>
 						<table class="params">
@@ -9139,7 +9079,7 @@ to an array-like property that should be represented as a uniform buffer.</p>
 								</tr>
 								<tr>
 									<td class="name">
-										<strong translate="no">resolution</strong>
+										<strong translate="no">resolutionScale</strong>
 									</td>
 									<td class="description last">
 										<p>The resolution scale.</p>
@@ -9186,7 +9126,7 @@ to an array-like property that should be represented as a uniform buffer.</p>
 										<strong translate="no">defaultTexture</strong>
 									</td>
 									<td class="description last">
-										<p>The default texture node.</p>
+										<p>The default texture.</p>
 									</td>
 								</tr>
 								<tr>
@@ -9645,6 +9585,7 @@ on whether the position data are 2D or 3D, the rotation is expressed a single fl
 									</td>
 									<td class="description last">
 										<p>The center of rotation</p>
+										<p>Default is <code>vec2(0.5)</code>.</p>
 									</td>
 								</tr>
 							</tbody>
@@ -10100,6 +10041,7 @@ Uses the inverse of <code>PMREMGenerator.lodToRoughness()</code>.</p>
 									</td>
 									<td class="description last">
 										<p>The uv to generate the circle.</p>
+										<p>Default is <code>uv()</code>.</p>
 									</td>
 								</tr>
 							</tbody>
@@ -10108,7 +10050,7 @@ Uses the inverse of <code>PMREMGenerator.lodToRoughness()</code>.</p>
 							<dt class="tag-returns"><strong>Returns:</strong> The circle shape.</dt>
 						</dl>
 					</div>
-					<h3 class="name name-method" id="sharedUniformGroup" translate="no">.<a href="#sharedUniformGroup">sharedUniformGroup</a><span class="signature">( name : <span class="param-type">string</span>, order : <span class="param-type">number</span> )</span><span class="type-signature"> : <a href="UniformGroupNode.html">UniformGroupNode</a></span> </h3>
+					<h3 class="name name-method" id="sharedUniformGroup" translate="no">.<a href="#sharedUniformGroup">sharedUniformGroup</a><span class="signature">( name : <span class="param-type">string</span>, order : <span class="param-type">number</span>, updateType : <span class="param-type">string | null</span> )</span><span class="type-signature"> : <a href="UniformGroupNode.html">UniformGroupNode</a></span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>TSL function for creating a shared uniform group node with the given name and order.</p>
@@ -10130,6 +10072,15 @@ Uses the inverse of <code>PMREMGenerator.lodToRoughness()</code>.</p>
 									<td class="description last">
 										<p>Influences the internal sorting.</p>
 										<p>Default is <code>0</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">updateType</strong>
+									</td>
+									<td class="description last">
+										<p>The update type of the uniform group node.</p>
+										<p>Default is <code>null</code>.</p>
 									</td>
 								</tr>
 							</tbody>
@@ -10501,6 +10452,7 @@ Transforms positionLocal, normalLocal, and tangentLocal in-place.</p>
 									</td>
 									<td class="description last">
 										<p>The center point</p>
+										<p>Default is <code>vec2(0.5)</code>.</p>
 									</td>
 								</tr>
 							</tbody>
@@ -10696,7 +10648,7 @@ material.colorNode = texture( spriteSheet, uvNode );
 										<strong translate="no">normalNode</strong>
 									</td>
 									<td class="description last">
-										<p>A node that represents the beauty pass's normals.</p>
+										<p>A node that represents the beauty pass's unit view-space normals.</p>
 									</td>
 								</tr>
 								<tr>
@@ -10763,27 +10715,28 @@ material.colorNode = texture( spriteSheet, uvNode );
 							</tbody>
 						</table>
 					</div>
-					<h3 class="name name-method" id="step" translate="no">.<a href="#step">step</a><span class="signature">( x : <span class="param-type"><a href="Node.html">Node</a> | number</span>, y : <span class="param-type"><a href="Node.html">Node</a> | number</span> )</span><span class="type-signature"> : <a href="Node.html">Node</a></span> </h3>
+					<h3 class="name name-method" id="step" translate="no">.<a href="#step">step</a><span class="signature">( edge : <span class="param-type"><a href="Node.html">Node</a> | number</span>, x : <span class="param-type"><a href="Node.html">Node</a> | number</span> )</span><span class="type-signature"> : <a href="Node.html">Node</a></span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Generate a step function by comparing two values.</p>
+							<p>Generate a step function by comparing two values. Returns <code>0</code> if <code>x &lt; edge</code>,
+otherwise <code>1</code>. When method chained, the receiver is <code>x</code>: <code>x.step( edge )</code>.</p>
 						</div>
 						<table class="params">
 							<tbody>
 								<tr>
 									<td class="name">
-										<strong translate="no">x</strong>
+										<strong translate="no">edge</strong>
 									</td>
 									<td class="description last">
-										<p>The y parameter.</p>
+										<p>The edge value.</p>
 									</td>
 								</tr>
 								<tr>
 									<td class="name">
-										<strong translate="no">y</strong>
+										<strong translate="no">x</strong>
 									</td>
 									<td class="description last">
-										<p>The x parameter.</p>
+										<p>The value to compare.</p>
 									</td>
 								</tr>
 							</tbody>
@@ -10841,7 +10794,7 @@ material.colorNode = texture( spriteSheet, uvNode );
 							</tbody>
 						</table>
 					</div>
-					<h3 class="name name-method" id="storage" translate="no">.<a href="#storage">storage</a><span class="signature">( value : <span class="param-type"><a href="StorageBufferAttribute.html">StorageBufferAttribute</a> | <a href="StorageInstancedBufferAttribute.html">StorageInstancedBufferAttribute</a> | <a href="BufferAttribute.html">BufferAttribute</a></span>, type : <span class="param-type">string | Struct</span>, count : <span class="param-type">number</span> )</span><span class="type-signature"> : <a href="StorageBufferNode.html">StorageBufferNode</a></span> </h3>
+					<h3 class="name name-method" id="storage" translate="no">.<a href="#storage">storage</a><span class="signature">( value : <span class="param-type"><a href="StorageBufferAttribute.html">StorageBufferAttribute</a> | <a href="StorageInstancedBufferAttribute.html">StorageInstancedBufferAttribute</a> | <a href="BufferAttribute.html">BufferAttribute</a></span>, type : <span class="param-type">string | Struct</span> )</span><span class="type-signature"> : <a href="StorageBufferNode.html">StorageBufferNode</a></span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>TSL function for creating a storage buffer node.</p>
@@ -10863,15 +10816,6 @@ material.colorNode = texture( spriteSheet, uvNode );
 									<td class="description last">
 										<p>The buffer type (e.g. <code>'vec3'</code>).</p>
 										<p>Default is <code>null</code>.</p>
-									</td>
-								</tr>
-								<tr>
-									<td class="name">
-										<strong translate="no">count</strong>
-									</td>
-									<td class="description last">
-										<p>The buffer count.</p>
-										<p>Default is <code>0</code>.</p>
 									</td>
 								</tr>
 							</tbody>
@@ -10911,7 +10855,33 @@ to complete before the barrier can be passed.</p>
 							</tbody>
 						</table>
 					</div>
-					<h3 class="name name-method" id="storageTexture" translate="no">.<a href="#storageTexture">storageTexture</a><span class="signature">( value : <span class="param-type"><a href="StorageTexture.html">StorageTexture</a></span>, uvNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;(vec2|vec3)></span>, storeNode : <span class="param-type"><a href="Node.html">Node</a></span> )</span><span class="type-signature"> : <a href="StorageTextureNode.html">StorageTextureNode</a></span> </h3>
+					<h3 class="name name-method" id="storageStruct" translate="no">.<a href="#storageStruct">storageStruct</a><span class="signature">( value : <span class="param-type"><a href="StorageBufferAttribute.html">StorageBufferAttribute</a></span>, structType : <span class="param-type">Struct</span> )</span><span class="type-signature"> : <a href="StorageStructNode.html">StorageStructNode</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>TSL function for creating a storage struct node.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">value</strong>
+									</td>
+									<td class="description last">
+										<p>The buffer data.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">structType</strong>
+									</td>
+									<td class="description last">
+										<p>The struct type of the buffer.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="storageTexture" translate="no">.<a href="#storageTexture">storageTexture</a><span class="signature">( value : <span class="param-type"><a href="StorageTexture.html">StorageTexture</a></span>, uvNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;(uvec2|uvec3)></span>, storeNode : <span class="param-type"><a href="Node.html">Node</a></span> )</span><span class="type-signature"> : <a href="StorageTextureNode.html">StorageTextureNode</a></span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>TSL function for creating a storage texture node.</p>
@@ -10931,7 +10901,8 @@ to complete before the barrier can be passed.</p>
 										<strong translate="no">uvNode</strong>
 									</td>
 									<td class="description last">
-										<p>The uv node.</p>
+										<p>The integer texel coordinates (not normalized uvs).</p>
+										<p>Default is <code>null</code>.</p>
 									</td>
 								</tr>
 								<tr>
@@ -10946,7 +10917,7 @@ to complete before the barrier can be passed.</p>
 							</tbody>
 						</table>
 					</div>
-					<h3 class="name name-method" id="storageTexture3D" translate="no">.<a href="#storageTexture3D">storageTexture3D</a><span class="signature">( value : <span class="param-type"><a href="Storage3DTexture.html">Storage3DTexture</a></span>, uvNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;vec3></span>, storeNode : <span class="param-type"><a href="Node.html">Node</a></span> )</span><span class="type-signature"> : <a href="StorageTexture3DNode.html">StorageTexture3DNode</a></span> </h3>
+					<h3 class="name name-method" id="storageTexture3D" translate="no">.<a href="#storageTexture3D">storageTexture3D</a><span class="signature">( value : <span class="param-type"><a href="Storage3DTexture.html">Storage3DTexture</a></span>, uvNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;uvec3></span>, storeNode : <span class="param-type"><a href="Node.html">Node</a></span> )</span><span class="type-signature"> : <a href="StorageTexture3DNode.html">StorageTexture3DNode</a></span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>TSL function for creating a 3D storage texture node.</p>
@@ -10966,7 +10937,7 @@ to complete before the barrier can be passed.</p>
 										<strong translate="no">uvNode</strong>
 									</td>
 									<td class="description last">
-										<p>The uv node.</p>
+										<p>The integer texel coordinates (not normalized uvs).</p>
 										<p>Default is <code>null</code>.</p>
 									</td>
 								</tr>
@@ -11432,7 +11403,7 @@ among active invocations in the subgroup.</p>
 										<strong translate="no">v</strong>
 									</td>
 									<td class="description last">
-										<p>The value to return from subgroup invocation id^mask.</p>
+										<p>The value to return from subgroup invocation id.</p>
 									</td>
 								</tr>
 								<tr>
@@ -11461,7 +11432,7 @@ among active invocations in the subgroup.</p>
 										<strong translate="no">v</strong>
 									</td>
 									<td class="description last">
-										<p>The value to return from subgroup invocation id^mask.</p>
+										<p>The value to return from subgroup invocation subgroup_invocation_id + delta.</p>
 									</td>
 								</tr>
 								<tr>
@@ -11490,7 +11461,7 @@ among active invocations in the subgroup.</p>
 										<strong translate="no">v</strong>
 									</td>
 									<td class="description last">
-										<p>The value to return from subgroup invocation id^mask.</p>
+										<p>The value to return from subgroup invocation subgroup_invocation_id - delta.</p>
 									</td>
 								</tr>
 								<tr>
@@ -11498,7 +11469,7 @@ among active invocations in the subgroup.</p>
 										<strong translate="no">delta</strong>
 									</td>
 									<td class="description last">
-										<p>A value that offsets the current in.</p>
+										<p>A value that offsets the current subgroup invocation.</p>
 									</td>
 								</tr>
 							</tbody>
@@ -11665,6 +11636,34 @@ among active invocations in the subgroup.</p>
 							</tbody>
 						</table>
 					</div>
+					<h3 class="name name-method" id="temporalDenoise" translate="no">.<a href="#temporalDenoise">temporalDenoise</a><span class="signature">( node : <span class="param-type"><a href="Node.html">Node</a></span>, options : <span class="param-type">Object</span> )</span><span class="type-signature"> : <a href="DenoiseNode.html">DenoiseNode</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>TSL function for creating a denoise node that accumulates a noisy screen-space effect in time before filtering it,
+see <a href="DenoiseNode.html">DenoiseNode</a>. It needs <code>velocity</code>.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">node</strong>
+									</td>
+									<td class="description last">
+										<p>The noisy input.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">options</strong>
+									</td>
+									<td class="description last">
+										<p>The guides and options, see <a href="DenoiseNode.html">DenoiseNode</a>.</p>
+										<p>Default is <code>{}</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 					<h3 class="name name-method" id="texture" translate="no">.<a href="#texture">texture</a><span class="signature">( value : <span class="param-type"><a href="Texture.html">Texture</a> | <a href="TextureNode.html">TextureNode</a></span>, uvNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;(vec2|vec3)></span>, levelNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;int></span>, biasNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;float></span> )</span><span class="type-signature"> : <a href="TextureNode.html">TextureNode</a></span> </h3>
 					<div class="method">
 						<div class="description">
@@ -11747,10 +11746,10 @@ among active invocations in the subgroup.</p>
 							</tbody>
 						</table>
 					</div>
-					<h3 class="name name-method" id="texture3DLevel" translate="no">.<a href="#texture3DLevel">texture3DLevel</a><span class="signature">( value : <span class="param-type"><a href="Texture.html">Texture</a> | <a href="TextureNode.html">TextureNode</a></span>, uvNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;vec3></span>, levelNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;int></span> )</span><span class="type-signature"> : <a href="TextureNode.html">TextureNode</a></span> </h3>
+					<h3 class="name name-method" id="texture3DLevel" translate="no">.<a href="#texture3DLevel">texture3DLevel</a><span class="signature">( value : <span class="param-type"><a href="Data3DTexture.html">Data3DTexture</a></span>, uvNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;vec3></span>, levelNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;int></span> )</span><span class="type-signature"> : <a href="Texture3DNode.html">Texture3DNode</a></span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>TSL function for creating a texture node that fetches/loads texels without interpolation.</p>
+							<p>TSL function for creating a 3D texture node that samples a specific mip level.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -11759,8 +11758,7 @@ among active invocations in the subgroup.</p>
 										<strong translate="no">value</strong>
 									</td>
 									<td class="description last">
-										<p>The texture.</p>
-										<p>Default is <code>EmptyTexture</code>.</p>
+										<p>The 3D texture.</p>
 									</td>
 								</tr>
 								<tr>
@@ -11769,7 +11767,6 @@ among active invocations in the subgroup.</p>
 									</td>
 									<td class="description last">
 										<p>The uv node.</p>
-										<p>Default is <code>null</code>.</p>
 									</td>
 								</tr>
 								<tr>
@@ -11778,13 +11775,12 @@ among active invocations in the subgroup.</p>
 									</td>
 									<td class="description last">
 										<p>The level node.</p>
-										<p>Default is <code>null</code>.</p>
 									</td>
 								</tr>
 							</tbody>
 						</table>
 					</div>
-					<h3 class="name name-method" id="texture3DLoad" translate="no">.<a href="#texture3DLoad">texture3DLoad</a><span class="signature">( value : <span class="param-type"><a href="Texture.html">Texture</a> | <a href="TextureNode.html">TextureNode</a></span>, uvNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;vec3></span>, levelNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;int></span>, biasNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;float></span> )</span><span class="type-signature"> : <a href="TextureNode.html">TextureNode</a></span> </h3>
+					<h3 class="name name-method" id="texture3DLoad" translate="no">.<a href="#texture3DLoad">texture3DLoad</a><span class="signature">( value : <span class="param-type"><a href="Data3DTexture.html">Data3DTexture</a></span>, uvNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;(ivec3|uvec3)></span>, levelNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;int></span> )</span><span class="type-signature"> : <a href="Texture3DNode.html">Texture3DNode</a></span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>TSL function for creating a texture node that fetches/loads texels without interpolation.</p>
@@ -11796,8 +11792,7 @@ among active invocations in the subgroup.</p>
 										<strong translate="no">value</strong>
 									</td>
 									<td class="description last">
-										<p>The texture.</p>
-										<p>Default is <code>EmptyTexture</code>.</p>
+										<p>The 3D texture.</p>
 									</td>
 								</tr>
 								<tr>
@@ -11805,7 +11800,7 @@ among active invocations in the subgroup.</p>
 										<strong translate="no">uvNode</strong>
 									</td>
 									<td class="description last">
-										<p>The uv node.</p>
+										<p>The integer texel coordinates (not normalized uvs).</p>
 										<p>Default is <code>null</code>.</p>
 									</td>
 								</tr>
@@ -11815,15 +11810,6 @@ among active invocations in the subgroup.</p>
 									</td>
 									<td class="description last">
 										<p>The level node.</p>
-										<p>Default is <code>null</code>.</p>
-									</td>
-								</tr>
-								<tr>
-									<td class="name">
-										<strong translate="no">biasNode</strong>
-									</td>
-									<td class="description last">
-										<p>The bias node.</p>
 										<p>Default is <code>null</code>.</p>
 									</td>
 								</tr>
@@ -11895,7 +11881,8 @@ to complete before the barrier can be passed.</p>
 										<strong translate="no">textureNode</strong>
 									</td>
 									<td class="description last">
-										<p>The texture node that should be filtered.</p>
+										<p>The texture node that should be filtered. It must define
+an explicit uv node, e.g. <code>texture( map, uv() )</code>.</p>
 									</td>
 								</tr>
 								<tr>
@@ -11903,7 +11890,8 @@ to complete before the barrier can be passed.</p>
 										<strong translate="no">strength</strong>
 									</td>
 									<td class="description last">
-										<p>Defines the strength of the bicubic filtering.</p>
+										<p>The LOD to sample from, as a fraction in the range <code>[0, 1]</code> of the
+texture's max mip level (<code>0</code> samples the base level).</p>
 									</td>
 								</tr>
 							</tbody>
@@ -11924,7 +11912,8 @@ to complete before the barrier can be passed.</p>
 										<strong translate="no">textureNode</strong>
 									</td>
 									<td class="description last">
-										<p>The texture node that should be filtered.</p>
+										<p>The texture node that should be filtered. It must define
+an explicit uv node, e.g. <code>texture( map, uv() )</code>.</p>
 									</td>
 								</tr>
 								<tr>
@@ -11941,7 +11930,7 @@ to complete before the barrier can be passed.</p>
 							<dt class="tag-returns"><strong>Returns:</strong> The filtered texture sample.</dt>
 						</dl>
 					</div>
-					<h3 class="name name-method" id="textureLoad" translate="no">.<a href="#textureLoad">textureLoad</a><span class="signature">( value : <span class="param-type"><a href="Texture.html">Texture</a> | <a href="TextureNode.html">TextureNode</a></span>, uvNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;(vec2|vec3)></span>, levelNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;int></span>, biasNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;float></span> )</span><span class="type-signature"> : <a href="TextureNode.html">TextureNode</a></span> </h3>
+					<h3 class="name name-method" id="textureLoad" translate="no">.<a href="#textureLoad">textureLoad</a><span class="signature">( value : <span class="param-type"><a href="Texture.html">Texture</a> | <a href="TextureNode.html">TextureNode</a></span>, uvNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;(ivec2|uvec2)></span>, levelNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;int></span> )</span><span class="type-signature"> : <a href="TextureNode.html">TextureNode</a></span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>TSL function for creating a texture node that fetches/loads texels without interpolation.</p>
@@ -11962,7 +11951,7 @@ to complete before the barrier can be passed.</p>
 										<strong translate="no">uvNode</strong>
 									</td>
 									<td class="description last">
-										<p>The uv node.</p>
+										<p>The integer texel coordinates (not normalized uvs).</p>
 										<p>Default is <code>null</code>.</p>
 									</td>
 								</tr>
@@ -11972,15 +11961,6 @@ to complete before the barrier can be passed.</p>
 									</td>
 									<td class="description last">
 										<p>The level node.</p>
-										<p>Default is <code>null</code>.</p>
-									</td>
-								</tr>
-								<tr>
-									<td class="name">
-										<strong translate="no">biasNode</strong>
-									</td>
-									<td class="description last">
-										<p>The bias node.</p>
 										<p>Default is <code>null</code>.</p>
 									</td>
 								</tr>
@@ -12014,7 +11994,7 @@ to complete before the barrier can be passed.</p>
 							</tbody>
 						</table>
 					</div>
-					<h3 class="name name-method" id="textureStore" translate="no">.<a href="#textureStore">textureStore</a><span class="signature">( value : <span class="param-type"><a href="StorageTexture.html">StorageTexture</a> | <a href="StorageTextureNode.html">StorageTextureNode</a></span>, uvNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;(vec2|vec3)></span>, storeNode : <span class="param-type"><a href="Node.html">Node</a></span> )</span><span class="type-signature"> : <a href="StorageTextureNode.html">StorageTextureNode</a></span> </h3>
+					<h3 class="name name-method" id="textureStore" translate="no">.<a href="#textureStore">textureStore</a><span class="signature">( value : <span class="param-type"><a href="StorageTexture.html">StorageTexture</a> | <a href="StorageTextureNode.html">StorageTextureNode</a></span>, uvNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;(uvec2|uvec3)></span>, storeNode : <span class="param-type"><a href="Node.html">Node</a></span> )</span><span class="type-signature"> : <a href="StorageTextureNode.html">StorageTextureNode</a></span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>TSL function for storing a value in a storage texture.</p>
@@ -12036,7 +12016,7 @@ texture node and is intended for performing the store operation itself.</p>
 										<strong translate="no">uvNode</strong>
 									</td>
 									<td class="description last">
-										<p>The uv node.</p>
+										<p>The integer texel coordinates (not normalized uvs).</p>
 									</td>
 								</tr>
 								<tr>
@@ -12072,6 +12052,7 @@ texture node and is intended for performing the store operation itself.</p>
 									</td>
 									<td class="description last">
 										<p>The tone mapping exposure.</p>
+										<p>Default is <code>toneMappingExposure</code>.</p>
 									</td>
 								</tr>
 								<tr>
@@ -12079,7 +12060,7 @@ texture node and is intended for performing the store operation itself.</p>
 										<strong translate="no">color</strong>
 									</td>
 									<td class="description last">
-										<p>The color node to process.</p>
+										<p>The color node to process. Defaults to the current context color.</p>
 									</td>
 								</tr>
 							</tbody>
@@ -12114,6 +12095,7 @@ texture node and is intended for performing the store operation itself.</p>
 									</td>
 									<td class="description last">
 										<p>Defines the outline's color.</p>
+										<p>Default is <code>new Color( 0, 0, 0 )</code>.</p>
 									</td>
 								</tr>
 								<tr>
@@ -12297,7 +12279,7 @@ normal can be transformed directly without involving the normal matrix.</p>
 							<dt class="tag-returns"><strong>Returns:</strong> The normal vector in view space.</dt>
 						</dl>
 					</div>
-					<h3 class="name name-method" id="transformNormalToView" translate="no">.<a href="#transformNormalToView">transformNormalToView</a><span class="signature">( normal : <span class="param-type"><a href="Node.html">Node</a>.&lt;vec3></span>, builder : <span class="param-type"><a href="NodeBuilder.html">NodeBuilder</a></span> )</span><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec3></span> </h3>
+					<h3 class="name name-method" id="transformNormalToView" translate="no">.<a href="#transformNormalToView">transformNormalToView</a><span class="signature">( normal : <span class="param-type"><a href="Node.html">Node</a>.&lt;vec3></span> )</span><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec3></span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>Transforms the given normal from local to view space.</p>
@@ -12310,14 +12292,6 @@ normal can be transformed directly without involving the normal matrix.</p>
 									</td>
 									<td class="description last">
 										<p>The normal.</p>
-									</td>
-								</tr>
-								<tr>
-									<td class="name">
-										<strong translate="no">builder</strong>
-									</td>
-									<td class="description last">
-										<p>The current node builder.</p>
 									</td>
 								</tr>
 							</tbody>
@@ -12693,7 +12667,7 @@ normal can be transformed directly without involving the normal matrix.</p>
 							</tbody>
 						</table>
 					</div>
-					<h3 class="name name-method" id="uniformGroup" translate="no">.<a href="#uniformGroup">uniformGroup</a><span class="signature">( name : <span class="param-type">string</span> )</span><span class="type-signature"> : <a href="UniformGroupNode.html">UniformGroupNode</a></span> </h3>
+					<h3 class="name name-method" id="uniformGroup" translate="no">.<a href="#uniformGroup">uniformGroup</a><span class="signature">( name : <span class="param-type">string</span>, order : <span class="param-type">number</span>, updateType : <span class="param-type">string | null</span> )</span><span class="type-signature"> : <a href="UniformGroupNode.html">UniformGroupNode</a></span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>TSL function for creating a uniform group node with the given name.</p>
@@ -12706,6 +12680,24 @@ normal can be transformed directly without involving the normal matrix.</p>
 									</td>
 									<td class="description last">
 										<p>The name of the uniform group node.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">order</strong>
+									</td>
+									<td class="description last">
+										<p>Influences the internal sorting.</p>
+										<p>Default is <code>1</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">updateType</strong>
+									</td>
+									<td class="description last">
+										<p>The update type of the uniform group node.</p>
+										<p>Default is <code>null</code>.</p>
 									</td>
 								</tr>
 							</tbody>
@@ -12724,6 +12716,7 @@ normal can be transformed directly without involving the normal matrix.</p>
 									</td>
 									<td class="description last">
 										<p>The texture.</p>
+										<p>Default is <code>EmptyTexture</code>.</p>
 									</td>
 								</tr>
 							</tbody>
@@ -12809,6 +12802,27 @@ The X,Y coordinates are expected to be in the [-1, 1] range.</p>
 						</table>
 						<dl class="details">
 							<dt class="tag-returns"><strong>Returns:</strong> The resulting normal.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="unpackOctahedralToNormal" translate="no">.<a href="#unpackOctahedralToNormal">unpackOctahedralToNormal</a><span class="signature">( encoded : <span class="param-type"><a href="Node.html">Node</a>.&lt;vec2></span> )</span><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec3></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>Decodes signed octahedral coordinates into a unit direction.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">encoded</strong>
+									</td>
+									<td class="description last">
+										<p>The signed octahedral coordinates in <code>[-1, 1]</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>Returns:</strong> The normalized direction.</dt>
 						</dl>
 					</div>
 					<h3 class="name name-method" id="unpackRGBToNormal" translate="no">.<a href="#unpackRGBToNormal">unpackRGBToNormal</a><span class="signature">( node : <span class="param-type"><a href="Node.html">Node</a>.&lt;vec3></span> )</span><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec3></span> </h3>
@@ -13006,6 +13020,7 @@ rendering for certain operations, such as compositing and image processing.</p>
 									</td>
 									<td class="description last">
 										<p>The name of the varying in the shader.</p>
+										<p>Default is <code>null</code>.</p>
 									</td>
 								</tr>
 							</tbody>
@@ -13050,7 +13065,8 @@ rendering for certain operations, such as compositing and image processing.</p>
 					<h3 class="name name-method" id="vertexColor" translate="no">.<a href="#vertexColor">vertexColor</a><span class="signature">( index : <span class="param-type">number</span> )</span><span class="type-signature"> : <a href="VertexColorNode.html">VertexColorNode</a></span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>TSL function for creating a reference node.</p>
+							<p>TSL function for creating a vertex color node. If the geometry has no matching
+color attribute, the node returns white.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -13089,7 +13105,7 @@ rendering for certain operations, such as compositing and image processing.</p>
 						<div class="description">
 							<p>Selectively enhance the intensity of less saturated RGB colors. Can result
 in a more natural and visually appealing image with enhanced color depth
-compared to ColorAdjustment#saturation.</p>
+compared to <a href="TSL.html#saturation">saturation</a>.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -13844,7 +13860,7 @@ complete before the barrier can be surpassed.</p>
 	<tbody>
 		<tr>
 				<td class="name">
-					<strong>MIDDLE</strong>
+					<strong>LEFT</strong>
 						<br>
 <span class="param-type">number</span>
 				</td>
@@ -13854,7 +13870,7 @@ complete before the barrier can be surpassed.</p>
 		</tr>
 		<tr>
 				<td class="name">
-					<strong>LEFT</strong>
+					<strong>MIDDLE</strong>
 						<br>
 <span class="param-type">number</span>
 				</td>
@@ -14079,16 +14095,6 @@ complete before the barrier can be surpassed.</p>
 		</tr>
 		<tr>
 				<td class="name">
-					<strong>onShaderError</strong>
-						<br>
-<span class="param-type">function</span>
-				</td>
-			<td class="description last">
-				<p>A callback function that is executed when a shader error happens. Only supported with WebGL 2 right now.</p>
-			</td>
-		</tr>
-		<tr>
-				<td class="name">
 					<strong>getShaderAsync</strong>
 						<br>
 <span class="param-type">function</span>
@@ -14128,7 +14134,7 @@ complete before the barrier can be surpassed.</p>
 <span class="param-type"><a href="Node.html">Node</a>.&lt;vec3></span>
 				</td>
 			<td class="description last">
-				<p>View-space normals for geometric edge stopping.</p>
+				<p>A sampleable node that returns unit view-space normals for geometric edge stopping.</p>
 						<p>Default is <code>null</code>.</p>
 			</td>
 		</tr>
@@ -14397,6 +14403,16 @@ complete before the barrier can be surpassed.</p>
 				<p>When <code>true</code>, history is stored in this pass (classic temporal resolve). When <code>false</code>,
 use <a href="TemporalReprojectNode.html#setHistoryTexture">TemporalReprojectNode#setHistoryTexture</a> to read history from another pass (e.g. denoise output).</p>
 						<p>Default is <code>false</code>.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>normalDecode</strong>
+						<br>
+<span class="param-type">function</span>
+				</td>
+			<td class="description last">
+				<p>Decodes a sample of the normal texture into a unit view-space normal. Defaults to <a href="TSL.html#unpackRGBToNormal">unpackRGBToNormal</a>.</p>
 			</td>
 		</tr>
 	</tbody>

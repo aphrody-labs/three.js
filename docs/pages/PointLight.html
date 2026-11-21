@@ -65,7 +65,7 @@ scene.add( light );
 										<strong translate="no">decay</strong>
 									</td>
 									<td class="description last">
-										<p>The amount the light dims along the distance of the light.</p>
+										<p>The exponent of the light's distance falloff.</p>
 										<p>Default is <code>2</code>.</p>
 									</td>
 								</tr>
@@ -77,8 +77,9 @@ scene.add( light );
 				<div class="member">
 					<h3 class="name" id="decay" translate="no">.<a href="#decay">decay</a><span class="type-signature"> : number</span> </h3>
 					<div class="description">
-						<p>The amount the light dims along the distance of the light. In context of
-physically-correct rendering the default value should not be changed.</p>
+						<p>The exponent of the light's distance falloff (<code>1 / distance^decay</code>). The
+default <code>2</code> gives physically correct inverse-square falloff and should not
+be changed in context of physically-correct rendering.</p>
 						<p>Default is <code>2</code>.</p>
 					</div>
 				</div>

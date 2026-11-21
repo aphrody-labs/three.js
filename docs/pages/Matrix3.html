@@ -18,7 +18,7 @@
 <a href="https://en.wikipedia.org/wiki/Row-_and_column-major_order#Column-major_order" target="_blank" rel="noopener">row-major</a>
 order, while internally they are stored in the <a href="Matrix3.html#elements">Matrix3#elements</a> array in column-major order.
 This means that calling:</p>
-<pre><code class="language-js">const m = new THREE.Matrix();
+<pre><code class="language-js">const m = new THREE.Matrix3();
 m.set( 11, 12, 13,
        21, 22, 23,
        31, 32, 33 );
@@ -472,62 +472,6 @@ in this matrix.</p>
 							<dt class="tag-returns"><strong>Returns:</strong> A reference to this matrix.</dt>
 						</dl>
 					</div>
-					<h3 class="name name-method" id="rotate" translate="no">.<a href="#rotate">rotate</a><span class="signature">( theta : <span class="param-type">number</span> )</span><span class="type-signature"> : <a href="Matrix3.html">Matrix3</a></span> </h3>
-					<div class="method">
-						<div class="description">
-							<p>Rotates this matrix by the given angle.</p>
-						</div>
-						<table class="params">
-							<tbody>
-								<tr>
-									<td class="name">
-										<strong translate="no">theta</strong>
-									</td>
-									<td class="description last">
-										<p>The rotation in radians.</p>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-						<dl class="details">
-							<dt class="important tag-deprecated"><strong>Deprecated:</strong> Yes</dt>
-						</dl>
-						<dl class="details">
-							<dt class="tag-returns"><strong>Returns:</strong> A reference to this matrix.</dt>
-						</dl>
-					</div>
-					<h3 class="name name-method" id="scale" translate="no">.<a href="#scale">scale</a><span class="signature">( sx : <span class="param-type">number</span>, sy : <span class="param-type">number</span> )</span><span class="type-signature"> : <a href="Matrix3.html">Matrix3</a></span> </h3>
-					<div class="method">
-						<div class="description">
-							<p>Scales this matrix with the given scalar values.</p>
-						</div>
-						<table class="params">
-							<tbody>
-								<tr>
-									<td class="name">
-										<strong translate="no">sx</strong>
-									</td>
-									<td class="description last">
-										<p>The amount to scale in the X axis.</p>
-									</td>
-								</tr>
-								<tr>
-									<td class="name">
-										<strong translate="no">sy</strong>
-									</td>
-									<td class="description last">
-										<p>The amount to scale in the Y axis.</p>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-						<dl class="details">
-							<dt class="important tag-deprecated"><strong>Deprecated:</strong> Yes</dt>
-						</dl>
-						<dl class="details">
-							<dt class="tag-returns"><strong>Returns:</strong> A reference to this matrix.</dt>
-						</dl>
-					</div>
 					<h3 class="name name-method" id="set" translate="no">.<a href="#set">set</a><span class="signature">( n11 : <span class="param-type">number</span>, n12 : <span class="param-type">number</span>, n13 : <span class="param-type">number</span>, n21 : <span class="param-type">number</span>, n22 : <span class="param-type">number</span>, n23 : <span class="param-type">number</span>, n31 : <span class="param-type">number</span>, n32 : <span class="param-type">number</span>, n33 : <span class="param-type">number</span> )</span><span class="type-signature"> : <a href="Matrix3.html">Matrix3</a></span> </h3>
 					<div class="method">
 						<div class="description">
@@ -734,38 +678,6 @@ the method returns a new instance.</p>
 						</table>
 						<dl class="details">
 							<dt class="tag-returns"><strong>Returns:</strong> The matrix elements in column-major order.</dt>
-						</dl>
-					</div>
-					<h3 class="name name-method" id="translate" translate="no">.<a href="#translate">translate</a><span class="signature">( tx : <span class="param-type">number</span>, ty : <span class="param-type">number</span> )</span><span class="type-signature"> : <a href="Matrix3.html">Matrix3</a></span> </h3>
-					<div class="method">
-						<div class="description">
-							<p>Translates this matrix by the given scalar values.</p>
-						</div>
-						<table class="params">
-							<tbody>
-								<tr>
-									<td class="name">
-										<strong translate="no">tx</strong>
-									</td>
-									<td class="description last">
-										<p>The amount to translate in the X axis.</p>
-									</td>
-								</tr>
-								<tr>
-									<td class="name">
-										<strong translate="no">ty</strong>
-									</td>
-									<td class="description last">
-										<p>The amount to translate in the Y axis.</p>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-						<dl class="details">
-							<dt class="important tag-deprecated"><strong>Deprecated:</strong> Yes</dt>
-						</dl>
-						<dl class="details">
-							<dt class="tag-returns"><strong>Returns:</strong> A reference to this matrix.</dt>
 						</dl>
 					</div>
 					<h3 class="name name-method" id="transpose" translate="no">.<a href="#transpose">transpose</a><span class="signature">()</span><span class="type-signature"> : <a href="Matrix3.html">Matrix3</a></span> </h3>

@@ -6,8 +6,6 @@ A specialized group which enables applications access to the Render Bundle API o
 
 Only renderable 3D objects are allowed in a bundle group. Other types like lights are not supported and must be added to the scene outside of the group.
 
-This module is only fully supported by `WebGPURenderer` with a WebGPU backend. With a WebGL backend, the group can technically be rendered but without any performance improvements.
-
 ## Constructor
 
 ### new BundleGroup()
@@ -30,9 +28,9 @@ Default is `false`.
 
 ### .static : boolean
 
-Whether the bundle is static or not. When set to `true`, the structure is assumed to be static and does not change. E.g. no new objects are added to the group.
+Whether the bundle is static or not. When set to `true`, the renderer may skip updating the transformation and material properties of the objects in the bundle until the `needsUpdate` flag is set to `true`. Set it to `false` for bundles with animated objects.
 
-If a change is required, an update can still be forced by setting the `needsUpdate` flag to `true`.
+Adding or removing objects always requires setting the `needsUpdate` flag to `true`.
 
 Default is `true`.
 

@@ -80,8 +80,9 @@ instead use <code>setDrawRange()</code>.</p>
 						<p>Split the geometry into groups, each of which will be rendered in a
 separate draw call. This allows an array of materials to be used with the geometry.</p>
 <p>Use <code>addGroup()</code> and <code>clearGroups()</code> to edit groups, rather than modifying this array directly.</p>
-<p>Every vertex and index must belong to exactly one group — groups must not share vertices or
-indices, and must not leave vertices or indices unused.</p>
+<p>Groups are only used when the 3D object has an array of materials. Groups should not overlap,
+since overlapping ranges are rendered (and raycast) more than once. Vertices or indices that are
+not part of any group are not rendered.</p>
 					</div>
 				</div>
 				<div class="member">
@@ -175,7 +176,7 @@ It should not hold references to functions as these will not be cloned.</p>
 									</td>
 									<td class="description last">
 										<p>The first element in this draw call. That is the first
-vertex for non-indexed geometry, otherwise the first triangle index.</p>
+vertex for non-indexed geometry, otherwise the offset (in indices) into the index buffer.</p>
 									</td>
 								</tr>
 								<tr>
@@ -286,7 +287,7 @@ You may need to recompute the bounding sphere if the geometry vertices are modif
 							<p>Calculates and adds a tangent attribute to this geometry.</p>
 <p>The computation is only supported for indexed geometries and if position, normal, and uv attributes
 are defined. When using a tangent space normal map, prefer the MikkTSpace algorithm provided by
-BufferGeometryUtils#computeMikkTSpaceTangents instead.</p>
+<a href="module-BufferGeometryUtils.html#~computeMikkTSpaceTangents">BufferGeometryUtils.computeMikkTSpaceTangents()</a> instead.</p>
 						</div>
 					</div>
 					<h3 class="name name-method" id="computeVertexNormals" translate="no">.<a href="#computeVertexNormals">computeVertexNormals</a><span class="signature">()</span> </h3>
@@ -370,7 +371,7 @@ method whenever this instance is no longer used in your app.</p>
 						</table>
 						<dl class="details">
 							<dt class="tag-returns"><strong>Returns:</strong> The buffer attribute.
-Returns <code>undefined</code> if not attribute has been found.</dt>
+Returns <code>undefined</code> if no attribute has been found.</dt>
 						</dl>
 					</div>
 					<h3 class="name name-method" id="getIndex" translate="no">.<a href="#getIndex">getIndex</a><span class="signature">()</span><span class="type-signature"> : <a href="BufferAttribute.html">BufferAttribute</a></span> </h3>
@@ -516,7 +517,7 @@ real-time mesh rotation.</p>
 						<div class="description">
 							<p>Scales the geometry. This is typically done as a one time
 operation, and not during a loop. Use <a href="Object3D.html#scale">Object3D#scale</a> for typical
-real-time mesh rotation.</p>
+real-time mesh scaling.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -591,7 +592,7 @@ real-time mesh rotation.</p>
 										<strong translate="no">start</strong>
 									</td>
 									<td class="description last">
-										<p>The first vertex for non-indexed geometry, otherwise the first triangle index.</p>
+										<p>The first vertex for non-indexed geometry, otherwise the offset (in indices) into the index buffer.</p>
 									</td>
 								</tr>
 								<tr>
@@ -695,7 +696,7 @@ data from the array. The length of the array must match the vertex count.</p>
 					<div class="method">
 						<div class="description">
 							<p>Return a new non-index version of this indexed geometry. If the geometry
-is already non-indexed, the method is a NOOP.</p>
+is already non-indexed, the method is a NOOP and returns this instance.</p>
 						</div>
 						<dl class="details">
 							<dt class="tag-returns"><strong>Returns:</strong> The non-indexed version of this indexed geometry.</dt>
@@ -706,7 +707,7 @@ is already non-indexed, the method is a NOOP.</p>
 						<div class="description">
 							<p>Translates the geometry. This is typically done as a one time
 operation, and not during a loop. Use <a href="Object3D.html#position">Object3D#position</a> for typical
-real-time mesh rotation.</p>
+real-time mesh translation.</p>
 						</div>
 						<table class="params">
 							<tbody>

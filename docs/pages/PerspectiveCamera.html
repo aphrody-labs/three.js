@@ -36,7 +36,7 @@ scene.add( camera );
 										<strong translate="no">fov</strong>
 									</td>
 									<td class="description last">
-										<p>The vertical field of view.</p>
+										<p>The vertical field of view, in degrees.</p>
 										<p>Default is <code>50</code>.</p>
 									</td>
 								</tr>
@@ -171,11 +171,11 @@ directly but via <a href="PerspectiveCamera.html#setViewOffset">PerspectiveCamer
 					<h3 class="name name-method" id="getFilmHeight" translate="no">.<a href="#getFilmHeight">getFilmHeight</a><span class="signature">()</span><span class="type-signature"> : number</span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Returns the height of the image on the film. If <a href="PerspectiveCamera.html#aspect">PerspectiveCamera#aspect</a> is greater than or
-equal to one (landscape format), the result equals <a href="PerspectiveCamera.html#filmGauge">PerspectiveCamera#filmGauge</a>.</p>
+							<p>Returns the height of the image on the film. If <a href="PerspectiveCamera.html#aspect">PerspectiveCamera#aspect</a> is less than or
+equal to one (portrait format), the result equals <a href="PerspectiveCamera.html#filmGauge">PerspectiveCamera#filmGauge</a>.</p>
 						</div>
 						<dl class="details">
-							<dt class="tag-returns"><strong>Returns:</strong> The film width.</dt>
+							<dt class="tag-returns"><strong>Returns:</strong> The film height.</dt>
 						</dl>
 					</div>
 					<h3 class="name name-method" id="getFilmWidth" translate="no">.<a href="#getFilmWidth">getFilmWidth</a><span class="signature">()</span><span class="type-signature"> : number</span> </h3>

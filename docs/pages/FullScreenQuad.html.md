@@ -6,7 +6,7 @@ This module is a helper for passes which need to render a full screen effect whi
 
 The intended usage is to reuse a single full screen quad for rendering subsequent passes by just reassigning the `material` reference.
 
-This module can only be used with [WebGLRenderer](WebGLRenderer.html).
+This module can only be used with WebGLRenderer.
 
 ## Import
 

@@ -96,18 +96,6 @@ The current node builder.
 
 **Returns:** The input type.
 
-### .label( name : string ) : WorkgroupInfoNode
-
-Sets the name/label of this node.
-
-**name**
-
-The name to set.
-
-**Deprecated:** Yes
-
-**Returns:** A reference to this node.
-
 ### .setAtomic( value : boolean ) : WorkgroupInfoNode
 
 Defines whether the node is atomic or not.

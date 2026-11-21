@@ -60,6 +60,12 @@ Default is `true`.
 
 The mesh being sculpted.
 
+### .mirrorAxis : 'none' | 'x' | 'y' | 'z'
+
+The mesh-local axis the mirror plane is perpendicular to. Every stamp is repeated across the plane through the mesh's local origin. Use `'none'` to disable mirroring. Drag and Scale follow the pointer and are not mirrored.
+
+Default is `'none'`.
+
 ## Methods
 
 ### .beginStroke() : Sculptor

@@ -26,22 +26,6 @@ Default is `false`.
 
 An array holding the child 3D objects of this instance.
 
-### .customDepthMaterial : Material | undefined
-
-Custom depth material to be used when rendering to the depth map. Can only be used in context of meshes. When shadow-casting with a [DirectionalLight](DirectionalLight.html) or [SpotLight](SpotLight.html), if you are modifying vertex positions in the vertex shader you must specify a custom depth material for proper shadows.
-
-Only relevant in context of [WebGLRenderer](WebGLRenderer.html).
-
-Default is `undefined`.
-
-### .customDistanceMaterial : Material | undefined
-
-Same as [Object3D#customDepthMaterial](Object3D.html#customDepthMaterial), but used with [PointLight](PointLight.html).
-
-Only relevant in context of [WebGLRenderer](WebGLRenderer.html).
-
-Default is `undefined`.
-
 ### .frustumCulled : boolean
 
 When set to `true`, the 3D object is honored by view frustum culling.
@@ -134,7 +118,7 @@ Default is `false`.
 
 ### .renderOrder : number
 
-This value allows the default rendering order of scene graph objects to be overridden although opaque and transparent objects remain sorted independently. When this property is set for an instance of [Group](Group.html),all descendants objects will be sorted and rendered together. Sorting is from lowest to highest render order.
+This value allows the default rendering order of scene graph objects to be overridden although opaque and transparent objects remain sorted independently. When this property is set for an instance of [Group](Group.html), all descendants objects will be sorted and rendered together. Sorting is from lowest to highest render order.
 
 Default is `0`.
 
@@ -351,6 +335,8 @@ The value.
 
 The method stores the result in this array.
 
+Default is `[]`.
+
 **Returns:** The found 3D objects.
 
 ### .getWorldDirection( target : Vector3 ) : Vector3
@@ -375,7 +361,7 @@ The target vector the result is stored to.
 
 ### .getWorldQuaternion( target : Quaternion ) : Quaternion
 
-Returns a Quaternion representing the position of the 3D object in world space.
+Returns a Quaternion representing the rotation of the 3D object in world space.
 
 **target**
 
@@ -405,7 +391,7 @@ The frustum to test.
 
 ### .localToWorld( vector : Vector3 ) : Vector3
 
-Converts the given vector from this 3D object's local space to world space.
+Converts the given vector from this 3D object's local space to world space. The vector is interpreted as a position, so the translation is applied as well.
 
 **vector**
 
@@ -431,9 +417,9 @@ The y coordinate in world space.
 
 The z coordinate in world space.
 
-### .onAfterRender( renderer : Renderer | WebGLRenderer, scene : Object3D, camera : Camera, geometry : BufferGeometry, material : Material, group : Object )
+### .onAfterRender( renderer : Renderer, scene : Object3D, camera : Camera, geometry : BufferGeometry, material : Material, group : Object )
 
-A callback that is executed immediately after a 3D object is rendered.
+A callback that is executed immediately after a 3D object is rendered. Only invoked for renderable 3D objects like meshes, lines, points or sprites, and for the scene passed to `render()` (with different arguments).
 
 **renderer**
 
@@ -459,7 +445,7 @@ The 3D object's material.
 
 The geometry group data.
 
-### .onAfterShadow( renderer : Renderer | WebGLRenderer, object : Object3D, camera : Camera, shadowCamera : Camera, geometry : BufferGeometry, depthMaterial : Material, group : Object )
+### .onAfterShadow( renderer : Renderer, object : Object3D, camera : Camera, shadowCamera : Camera, geometry : BufferGeometry, depthMaterial : Material, group : Object )
 
 A callback that is executed immediately after a 3D object is rendered to a shadow map.
 
@@ -491,9 +477,9 @@ The depth material.
 
 The geometry group data.
 
-### .onBeforeRender( renderer : Renderer | WebGLRenderer, scene : Object3D, camera : Camera, geometry : BufferGeometry, material : Material, group : Object )
+### .onBeforeRender( renderer : Renderer, scene : Object3D, camera : Camera, geometry : BufferGeometry, material : Material, group : Object )
 
-A callback that is executed immediately before a 3D object is rendered.
+A callback that is executed immediately before a 3D object is rendered. Only invoked for renderable 3D objects like meshes, lines, points or sprites, and for the scene passed to `render()` (with different arguments).
 
 **renderer**
 
@@ -519,7 +505,7 @@ The 3D object's material.
 
 The geometry group data.
 
-### .onBeforeShadow( renderer : Renderer | WebGLRenderer, object : Object3D, camera : Camera, shadowCamera : Camera, geometry : BufferGeometry, depthMaterial : Material, group : Object )
+### .onBeforeShadow( renderer : Renderer, object : Object3D, camera : Camera, shadowCamera : Camera, geometry : BufferGeometry, depthMaterial : Material, group : Object )
 
 A callback that is executed immediately before a 3D object is rendered to a shadow map.
 
@@ -605,7 +591,7 @@ The angle in radians.
 
 ### .rotateOnWorldAxis( axis : Vector3, angle : number ) : Object3D
 
-Rotates the 3D object along an axis in world space.
+Rotates the 3D object along an axis in world space. The method assumes the 3D object has no rotated parent; otherwise the axis is interpreted in the parent's space.
 
 **axis**
 
@@ -787,7 +773,7 @@ When set to `true`, a recomputation of world matrices is forced even when [Objec
 
 Default is `false`.
 
-### .updateWorldMatrix( updateParents : boolean, updateChildren : boolean, force : boolean )
+### .updateWorldMatrix( updateParents : boolean, updateChildren : boolean, force : boolean ) : boolean
 
 An alternative version of [Object3D#updateMatrixWorld](Object3D.html#updateMatrixWorld) with more control over the update of ancestor and descendant nodes.
 
@@ -809,9 +795,11 @@ When set to `true`, a recomputation of world matrices is forced even when [Objec
 
 Default is `false`.
 
+**Returns:** Whether the world matrix has changed or not.
+
 ### .worldToLocal( vector : Vector3 ) : Vector3
 
-Converts the given vector from this 3D object's world space to local space.
+Converts the given vector from world space to this 3D object's local space. The vector is interpreted as a position, so the translation is applied as well.
 
 **vector**
 
@@ -825,6 +813,8 @@ The vector to convert.
 
 Fires when the object has been added to its parent object.
 
+Adding 3D objects inside a listener of this event is not supported.
+
 ##### Type:
 
 *   Object
@@ -833,6 +823,8 @@ Fires when the object has been added to its parent object.
 
 Fires when a new child object has been added.
 
+Adding 3D objects inside a listener of this event is not supported.
+
 ##### Type:
 
 *   Object
@@ -840,6 +832,8 @@ Fires when a new child object has been added.
 ### .childremoved
 
 Fires when a child object has been removed.
+
+Removing 3D objects inside a listener of this event is not supported.
 
 ##### Type:
 
@@ -856,6 +850,8 @@ Fires when the 3D object has been disposed of.
 ### .removed
 
 Fires when the object has been removed from its parent object.
+
+Removing 3D objects inside a listener of this event is not supported.
 
 ##### Type:
 

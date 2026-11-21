@@ -116,8 +116,10 @@ the further away the distance, the lower the detail on the mesh.</p>
 					<h3 class="name name-method" id="getObjectForDistance" translate="no">.<a href="#getObjectForDistance">getObjectForDistance</a><span class="signature">( distance : <span class="param-type">number</span> )</span><span class="type-signature"> : <a href="Object3D.html">Object3D</a></span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Returns a reference to the first 3D object that is greater than
-the given distance.</p>
+							<p>Returns a reference to the 3D object of the level that is active at the
+given distance, i.e. the last level whose distance (reduced by <code>distance * hysteresis</code>
+if its object is visible) is less than or equal to the given distance, or the
+first level if there is none.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -132,7 +134,7 @@ the given distance.</p>
 							</tbody>
 						</table>
 						<dl class="details">
-							<dt class="tag-returns"><strong>Returns:</strong> The found 3D object. <code>null</code> if no 3D object has been found.</dt>
+							<dt class="tag-returns"><strong>Returns:</strong> The found 3D object. <code>null</code> if no levels are defined.</dt>
 						</dl>
 					</div>
 					<h3 class="name name-method" id="raycast" translate="no">.<a href="#raycast">raycast</a><span class="signature">( raycaster : <span class="param-type"><a href="Raycaster.html">Raycaster</a></span>, intersects : <span class="param-type">Array.&lt;Object></span> )</span> </h3>
@@ -167,7 +169,7 @@ the given distance.</p>
 					<h3 class="name name-method" id="removeLevel" translate="no">.<a href="#removeLevel">removeLevel</a><span class="signature">( distance : <span class="param-type">number</span> )</span><span class="type-signature"> : boolean</span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Removes an existing level, based on the distance from the camera.
+							<p>Removes the level whose distance value equals the given distance.
 Returns <code>true</code> when the level has been removed. Otherwise <code>false</code>.</p>
 						</div>
 						<table class="params">

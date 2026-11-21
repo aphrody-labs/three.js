@@ -4,7 +4,7 @@
 
 A chain of vertices, forming a polyline.
 
-This is used in [Line2](Line2.html) to describe the shape.
+This is used in Line2 to describe the shape.
 
 ## Code Example
 

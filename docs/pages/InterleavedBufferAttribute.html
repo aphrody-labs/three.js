@@ -102,7 +102,7 @@ different offsets into the buffer.</p></div>
 					</div>
 				</div>
 				<div class="member">
-					<h3 class="name" id="needsUpdate" translate="no">.<a href="#needsUpdate">needsUpdate</a><span class="type-signature"> : number</span> </h3>
+					<h3 class="name" id="needsUpdate" translate="no">.<a href="#needsUpdate">needsUpdate</a><span class="type-signature"> : boolean</span> </h3>
 					<div class="description">
 						<p>Flag to indicate that this attribute has changed and should be re-sent to
 the GPU. Set this to <code>true</code> when you modify the value of the array.</p>
@@ -110,9 +110,10 @@ the GPU. Set this to <code>true</code> when you modify the value of the array.</
 					</div>
 				</div>
 				<div class="member">
-					<h3 class="name" id="normalized" translate="no">.<a href="#normalized">normalized</a><span class="type-signature"> : <a href="InterleavedBuffer.html">InterleavedBuffer</a></span> </h3>
+					<h3 class="name" id="normalized" translate="no">.<a href="#normalized">normalized</a><span class="type-signature"> : boolean</span> </h3>
 					<div class="description">
 						<p>Whether the data are normalized or not, see <a href="BufferAttribute.html#normalized">BufferAttribute#normalized</a></p>
+						<p>Default is <code>false</code>.</p>
 					</div>
 				</div>
 				<div class="member">
@@ -593,7 +594,7 @@ item size <code>3</code>.</p>
 					<div class="method">
 						<div class="description">
 							<p>Serializes the buffer attribute into JSON.</p>
-<p>If no parameter is provided, cloning an interleaved buffer attribute will de-interleave buffer data.</p>
+<p>If no parameter is provided, serializing an interleaved buffer attribute will de-interleave buffer data.</p>
 						</div>
 						<table class="params">
 							<tbody>

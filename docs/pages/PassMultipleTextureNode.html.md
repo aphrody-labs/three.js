@@ -8,7 +8,7 @@ An extension of `PassTextureNode` which allows to manage more than one internal 
 
 ### new PassMultipleTextureNode( passNode : PassNode, textureName : string, previousTexture : boolean )
 
-Constructs a new pass texture node.
+Constructs a new pass multiple texture node.
 
 **passNode**
 

@@ -35,7 +35,7 @@ renderer.computeAsync( computeInit );
 			<article>
 				<div class="container-overview">
 					<h2>Constructor</h2>
-					<h3 class="name name-method" id="StorageBufferNode" translate="no">new <a href="#StorageBufferNode">StorageBufferNode</a><span class="signature">( value : <span class="param-type"><a href="StorageBufferAttribute.html">StorageBufferAttribute</a> | <a href="StorageInstancedBufferAttribute.html">StorageInstancedBufferAttribute</a> | <a href="BufferAttribute.html">BufferAttribute</a></span>, bufferType : <span class="param-type">string | Struct</span>, bufferCount : <span class="param-type">number</span> )</span> </h3>
+					<h3 class="name name-method" id="StorageBufferNode" translate="no">new <a href="#StorageBufferNode">StorageBufferNode</a><span class="signature">( value : <span class="param-type"><a href="StorageBufferAttribute.html">StorageBufferAttribute</a> | <a href="StorageInstancedBufferAttribute.html">StorageInstancedBufferAttribute</a> | <a href="BufferAttribute.html">BufferAttribute</a></span>, bufferType : <span class="param-type">string | Struct</span> )</span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>Constructs a new storage buffer node.</p>
@@ -57,15 +57,6 @@ renderer.computeAsync( computeInit );
 									<td class="description last">
 										<p>The buffer type (e.g. <code>'vec3'</code>).</p>
 										<p>Default is <code>null</code>.</p>
-									</td>
-								</tr>
-								<tr>
-									<td class="name">
-										<strong translate="no">bufferCount</strong>
-									</td>
-									<td class="description last">
-										<p>The buffer count.</p>
-										<p>Default is <code>0</code>.</p>
 									</td>
 								</tr>
 							</tbody>
@@ -94,14 +85,6 @@ renderer.computeAsync( computeInit );
 					<h3 class="name" id="isAtomic" translate="no">.<a href="#isAtomic">isAtomic</a><span class="type-signature"> : boolean</span> </h3>
 					<div class="description">
 						<p>Whether the node is atomic or not.</p>
-						<p>Default is <code>false</code>.</p>
-					</div>
-				</div>
-				<div class="member">
-					<h3 class="name" id="isPBO" translate="no">.<a href="#isPBO">isPBO</a><span class="type-signature"> : boolean</span> </h3>
-					<div class="description">
-						<p>Whether the node represents a PBO or not.
-Only relevant for WebGL.</p>
 						<p>Default is <code>false</code>.</p>
 					</div>
 				</div>
@@ -189,40 +172,6 @@ Only relevant for WebGL.</p>
 							<dt class="tag-returns"><strong>Returns:</strong> The node type.</dt>
 						</dl>
 					</div>
-					<h3 class="name name-method" id="getAttributeData" translate="no">.<a href="#getAttributeData">getAttributeData</a><span class="signature">()</span><span class="type-signature"> : Object</span> </h3>
-					<div class="method">
-						<div class="description">
-							<p>Returns attribute data for this storage buffer node.</p>
-						</div>
-						<dl class="details">
-							<dt class="tag-returns"><strong>Returns:</strong> The attribute data.</dt>
-						</dl>
-					</div>
-					<h3 class="name name-method" id="getHash" translate="no">.<a href="#getHash">getHash</a><span class="signature">( builder : <span class="param-type"><a href="NodeBuilder.html">NodeBuilder</a></span> )</span><span class="type-signature"> : string</span> </h3>
-					<div class="method">
-						<div class="description">
-							<p>This method is overwritten since the buffer data might be shared
-and thus the hash should be shared as well.</p>
-						</div>
-						<table class="params">
-							<tbody>
-								<tr>
-									<td class="name">
-										<strong translate="no">builder</strong>
-									</td>
-									<td class="description last">
-										<p>The current node builder.</p>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-						<dl class="details">
-							<dt class="tag-overrides"><strong>Overrides:</strong> <a href="BufferNode.html#getHash">BufferNode#getHash</a></dt>
-						</dl>
-						<dl class="details">
-							<dt class="tag-returns"><strong>Returns:</strong> The hash.</dt>
-						</dl>
-					</div>
 					<h3 class="name name-method" id="getInputType" translate="no">.<a href="#getInputType">getInputType</a><span class="signature">( builder : <span class="param-type"><a href="NodeBuilder.html">NodeBuilder</a></span> )</span><span class="type-signature"> : string</span> </h3>
 					<div class="method">
 						<div class="description">
@@ -279,15 +228,6 @@ and thus the hash should be shared as well.</p>
 							<dt class="tag-returns"><strong>Returns:</strong> The type of the member.</dt>
 						</dl>
 					</div>
-					<h3 class="name name-method" id="getPBO" translate="no">.<a href="#getPBO">getPBO</a><span class="signature">()</span><span class="type-signature"> : boolean</span> </h3>
-					<div class="method">
-						<div class="description">
-							<p>Returns the <code>isPBO</code> value.</p>
-						</div>
-						<dl class="details">
-							<dt class="tag-returns"><strong>Returns:</strong> Whether the node represents a PBO or not.</dt>
-						</dl>
-					</div>
 					<h3 class="name name-method" id="setAccess" translate="no">.<a href="#setAccess">setAccess</a><span class="signature">( value : <span class="param-type">string</span> )</span><span class="type-signature"> : <a href="StorageBufferNode.html">StorageBufferNode</a></span> </h3>
 					<div class="method">
 						<div class="description">
@@ -322,27 +262,6 @@ and thus the hash should be shared as well.</p>
 									</td>
 									<td class="description last">
 										<p>The atomic flag.</p>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-						<dl class="details">
-							<dt class="tag-returns"><strong>Returns:</strong> A reference to this node.</dt>
-						</dl>
-					</div>
-					<h3 class="name name-method" id="setPBO" translate="no">.<a href="#setPBO">setPBO</a><span class="signature">( value : <span class="param-type">boolean</span> )</span><span class="type-signature"> : <a href="StorageBufferNode.html">StorageBufferNode</a></span> </h3>
-					<div class="method">
-						<div class="description">
-							<p>Defines whether this node is a PBO or not. Only relevant for WebGL.</p>
-						</div>
-						<table class="params">
-							<tbody>
-								<tr>
-									<td class="name">
-										<strong translate="no">value</strong>
-									</td>
-									<td class="description last">
-										<p>The value so set.</p>
 									</td>
 								</tr>
 							</tbody>

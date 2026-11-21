@@ -166,7 +166,7 @@ The vector that should expand the bounding box.
 
 ### .fromJSON( json : Object ) : Box3
 
-Returns a serialized structure of the bounding box.
+Sets this bounding box from the given serialized structure.
 
 **json**
 

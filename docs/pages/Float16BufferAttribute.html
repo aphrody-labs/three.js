@@ -15,13 +15,13 @@
 			<header>
 				<div class="class-description"><p>Convenient class that can be used when creating a <code>Float16</code> buffer attribute with
 a plain <code>Array</code> instance.</p>
-<p>This class automatically converts to and from FP16 via <code>Uint16Array</code> since <code>Float16Array</code>
-browser support is still problematic.</p></div>
+<p>The attribute data are stored in a <code>Float16Array</code>. If <code>Float16Array</code> is not supported,
+the class falls back to <code>Float32Array</code>.</p></div>
 			</header>
 			<article>
 				<div class="container-overview">
 					<h2>Constructor</h2>
-					<h3 class="name name-method" id="Float16BufferAttribute" translate="no">new <a href="#Float16BufferAttribute">Float16BufferAttribute</a><span class="signature">( array : <span class="param-type">Array.&lt;number> | Uint16Array</span>, itemSize : <span class="param-type">number</span>, normalized : <span class="param-type">boolean</span> )</span> </h3>
+					<h3 class="name name-method" id="Float16BufferAttribute" translate="no">new <a href="#Float16BufferAttribute">Float16BufferAttribute</a><span class="signature">( array : <span class="param-type">Array.&lt;number> | Float16Array</span>, itemSize : <span class="param-type">number</span>, normalized : <span class="param-type">boolean</span> )</span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>Constructs a new buffer attribute.</p>

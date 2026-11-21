@@ -25,7 +25,9 @@
 		<script type="importmap">
 			{
 				"imports": {
-					"three": "../../build/three.module.js",
+					"three": "../../build/three.webgpu.js",
+					"three/webgpu": "../../build/three.webgpu.js",
+					"three/tsl": "../../build/three.tsl.js",
 					"three/addons/": "../../examples/jsm/"
 				}
 			}
@@ -52,7 +54,7 @@
 				SkeletonHelper,
 				Vector3,
 				Uint16BufferAttribute,
-				WebGLRenderer
+				WebGPURenderer
 			} from 'three';
 			import { CCDIKSolver, CCDIKHelper } from 'three/addons/animation/CCDIKSolver.js';
 
@@ -65,7 +67,7 @@
 				ikSolverAutoUpdate: true
 			};
 
-			function initScene() {
+			async function initScene() {
 
 				gui = new GUI();
 
@@ -76,10 +78,12 @@
 				camera.position.z = 30;
 				camera.position.y = 30;
 
-				renderer = new WebGLRenderer( { antialias: true } );
+				renderer = new WebGPURenderer( { antialias: true } );
 				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				document.body.appendChild( renderer.domElement );
+
+				await renderer.init();
 
 				orbit = new OrbitControls( camera, renderer.domElement );
 				orbit.enableZoom = false;
@@ -265,8 +269,6 @@
 
 			function render() {
 
-				requestAnimationFrame( render );
-
 				if ( state.ikSolverAutoUpdate ) {
 
 					ikSolver?.update();
@@ -277,8 +279,8 @@
 
 			}
 
-			initScene();
-			render();
+			await initScene();
+			renderer.setAnimationLoop( render );
 
 		</script>
 	</body>

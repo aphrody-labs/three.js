@@ -48,7 +48,9 @@ scene.add( mesh );
 										<strong translate="no">curveSegments</strong>
 									</td>
 									<td class="description last">
-										<p>Number of segments per shape.</p>
+										<p>Number of segments per curve of the shape. Line curves are never
+subdivided, ellipse curves use twice this value and spline curves this value times their point count,
+see <a href="CurvePath.html#getPoints">CurvePath#getPoints</a>.</p>
 										<p>Default is <code>12</code>.</p>
 									</td>
 								</tr>

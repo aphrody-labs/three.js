@@ -12,7 +12,9 @@
 	<h1 translate="no">TimestampQueryPool</h1>
 		<section>
 			<header>
-				<div class="class-description"><p>Abstract base class of a timestamp query pool.</p></div>
+				<div class="class-description"><p>Abstract base class of a timestamp query pool. While GPU timers are active, the backend
+allocates queries for its render and compute calls. Each query keeps the timers that were
+active when it was allocated and adds its timestamps to them once it is read back.</p></div>
 			</header>
 			<article>
 				<div class="container-overview">
@@ -39,30 +41,10 @@
 				</div>
 				<h2 class="subsection-title">Properties</h2>
 				<div class="member">
-					<h3 class="name" id="currentQueryIndex" translate="no">.<a href="#currentQueryIndex">currentQueryIndex</a><span class="type-signature"> : number</span> </h3>
-					<div class="description">
-						<p>How many queries allocated so far.</p>
-						<p>Default is <code>0</code>.</p>
-					</div>
-				</div>
-				<div class="member">
-					<h3 class="name" id="frames" translate="no">.<a href="#frames">frames</a><span class="type-signature"> : Array.&lt;number></span> </h3>
-					<div class="description">
-						<p>Stores all timestamp frames.</p>
-					</div>
-				</div>
-				<div class="member">
 					<h3 class="name" id="isDisposed" translate="no">.<a href="#isDisposed">isDisposed</a><span class="type-signature"> : boolean</span> </h3>
 					<div class="description">
 						<p>Whether the pool has been disposed or not.</p>
 						<p>Default is <code>false</code>.</p>
-					</div>
-				</div>
-				<div class="member">
-					<h3 class="name" id="lastValue" translate="no">.<a href="#lastValue">lastValue</a><span class="type-signature"> : number</span> </h3>
-					<div class="description">
-						<p>The total frame duration until the next update.</p>
-						<p>Default is <code>0</code>.</p>
 					</div>
 				</div>
 				<div class="member">
@@ -73,59 +55,56 @@
 					</div>
 				</div>
 				<div class="member">
-					<h3 class="name" id="pendingResolve" translate="no">.<a href="#pendingResolve">pendingResolve</a><span class="type-signature"> : boolean | Promise.&lt;number></span> </h3>
+					<h3 class="name" id="timers" translate="no">.<a href="#timers">timers</a><span class="type-signature"> : Set.&lt;Object></span> </h3>
 					<div class="description">
-						<p>This property is used to avoid multiple concurrent resolve operations.
-The WebGL backend uses it as a boolean flag. In context of WebGPU, it holds
-the promise of the current resolve operation.</p>
-						<p>Default is <code>false</code>.</p>
-					</div>
-				</div>
-				<div class="member">
-					<h3 class="name" id="queryOffsets" translate="no">.<a href="#queryOffsets">queryOffsets</a><span class="type-signature"> : Map.&lt;string, number></span> </h3>
-					<div class="description">
-						<p>Tracks offsets for different contexts.</p>
-					</div>
-				</div>
-				<div class="member">
-					<h3 class="name" id="timestamps" translate="no">.<a href="#timestamps">timestamps</a><span class="type-signature"> : Map.&lt;string, number></span> </h3>
-					<div class="description">
-						<p>Stores the latest timestamp for each render context.</p>
-					</div>
-				</div>
-				<div class="member">
-					<h3 class="name" id="trackTimestamp" translate="no">.<a href="#trackTimestamp">trackTimestamp</a><span class="type-signature"> : boolean</span> </h3>
-					<div class="description">
-						<p>Whether to track timestamps or not.</p>
-						<p>Default is <code>true</code>.</p>
+						<p>The active GPU timers.</p>
 					</div>
 				</div>
 				<h2 class="subsection-title">Methods</h2>
-					<h3 class="name name-method" id="allocateQueriesForContext" translate="no">.<a href="#allocateQueriesForContext">allocateQueriesForContext</a><span class="signature">( uid : <span class="param-type">string</span>, frameId : <span class="param-type">number</span> )</span><span class="type-signature"> : number</span> <span class="type-signature">(abstract) </span></h3>
+					<h3 class="name name-method" id="_releaseTimers" translate="no">.<a href="#_releaseTimers">_releaseTimers</a><span class="signature">( timers : <span class="param-type">Array.&lt;Object></span>, lost : <span class="param-type">boolean</span> )</span> <span class="type-signature">(protected) </span></h3>
 					<div class="method">
 						<div class="description">
-							<p>Allocate queries for a specific uid.</p>
+							<p>Releases the timers of a query once it is read back, and resolves the ended timers
+without pending queries.</p>
 						</div>
 						<table class="params">
 							<tbody>
 								<tr>
 									<td class="name">
-										<strong translate="no">uid</strong>
+										<strong translate="no">timers</strong>
 									</td>
 									<td class="description last">
-										<p>A unique identifier for the render context.</p>
+										<p>The timers returned by <a href="TimestampQueryPool.html#_retainTimers">TimestampQueryPool#_retainTimers</a>.</p>
 									</td>
 								</tr>
 								<tr>
 									<td class="name">
-										<strong translate="no">frameId</strong>
+										<strong translate="no">lost</strong>
 									</td>
 									<td class="description last">
-										<p>The current frame identifier.</p>
+										<p>Whether the query couldn't be read back.</p>
 									</td>
 								</tr>
 							</tbody>
 						</table>
+					</div>
+					<h3 class="name name-method" id="_retainTimers" translate="no">.<a href="#_retainTimers">_retainTimers</a><span class="signature">()</span><span class="type-signature"> : Array.&lt;Object></span> <span class="type-signature">(protected) </span></h3>
+					<div class="method">
+						<div class="description">
+							<p>Returns the active timers for a new query, <code>null</code> without active timers.</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>Returns:</strong> The timers.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="beginTimer" translate="no">.<a href="#beginTimer">beginTimer</a><span class="signature">()</span><span class="type-signature"> : Object</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>Starts a GPU timer. It measures the queries allocated until <a href="TimestampQueryPool.html#endTimer">TimestampQueryPool#endTimer</a>.</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>Returns:</strong> The timer.</dt>
+						</dl>
 					</div>
 					<h3 class="name name-method" id="dispose" translate="no">.<a href="#dispose">dispose</a><span class="signature">()</span> <span class="type-signature">(abstract) </span></h3>
 					<div class="method">
@@ -133,65 +112,53 @@ the promise of the current resolve operation.</p>
 							<p>Dispose of the query pool.</p>
 						</div>
 					</div>
-					<h3 class="name name-method" id="getTimestamp" translate="no">.<a href="#getTimestamp">getTimestamp</a><span class="signature">( uid : <span class="param-type">string</span> )</span><span class="type-signature"> : number</span> </h3>
+					<h3 class="name name-method" id="endTimer" translate="no">.<a href="#endTimer">endTimer</a><span class="signature">( timer : <span class="param-type">Object</span> )</span><span class="type-signature"> : Promise.&lt;Object></span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Returns the timestamp for a given render context.</p>
+							<p>Ends the given GPU timer.</p>
 						</div>
 						<table class="params">
 							<tbody>
 								<tr>
 									<td class="name">
-										<strong translate="no">uid</strong>
+										<strong translate="no">timer</strong>
 									</td>
 									<td class="description last">
-										<p>A unique identifier for the render context.</p>
+										<p>The timer returned by <a href="TimestampQueryPool.html#beginTimer">TimestampQueryPool#beginTimer</a>.</p>
 									</td>
 								</tr>
 							</tbody>
 						</table>
 						<dl class="details">
-							<dt class="tag-returns"><strong>Returns:</strong> The timestamp, or undefined if not available.</dt>
+							<dt class="tag-returns"><strong>Returns:</strong> A Promise that resolves with the timer once all its queries are read back.</dt>
 						</dl>
 					</div>
-					<h3 class="name name-method" id="getTimestampFrames" translate="no">.<a href="#getTimestampFrames">getTimestampFrames</a><span class="signature">()</span><span class="type-signature"> : Array.&lt;number></span> </h3>
+					<h3 class="name name-method" id="getDuration" translate="no">.<a href="#getDuration">getDuration</a><span class="signature">( timer : <span class="param-type">Object</span> )</span><span class="type-signature"> : number</span> <span class="type-signature">(abstract) </span></h3>
 					<div class="method">
 						<div class="description">
-							<p>Returns all timestamp frames.</p>
-						</div>
-						<dl class="details">
-							<dt class="tag-returns"><strong>Returns:</strong> The timestamp frames.</dt>
-						</dl>
-					</div>
-					<h3 class="name name-method" id="hasTimestampQuery" translate="no">.<a href="#hasTimestampQuery">hasTimestampQuery</a><span class="signature">( uid : <span class="param-type">string</span> )</span><span class="type-signature"> : boolean</span> </h3>
-					<div class="method">
-						<div class="description">
-							<p>Returns whether a timestamp is available for a given render context.</p>
+							<p>Returns the GPU time of the given timer in milliseconds.</p>
 						</div>
 						<table class="params">
 							<tbody>
 								<tr>
 									<td class="name">
-										<strong translate="no">uid</strong>
+										<strong translate="no">timer</strong>
 									</td>
 									<td class="description last">
-										<p>A unique identifier for the render context.</p>
+										<p>The timer, ended and resolved.</p>
 									</td>
 								</tr>
 							</tbody>
 						</table>
 						<dl class="details">
-							<dt class="tag-returns"><strong>Returns:</strong> True if a timestamp is available, false otherwise.</dt>
+							<dt class="tag-returns"><strong>Returns:</strong> The GPU time, or <code>null</code> if queries couldn't be read back.</dt>
 						</dl>
 					</div>
-					<h3 class="name name-method" id="resolveQueriesAsync" translate="no">.<a href="#resolveQueriesAsync">resolveQueriesAsync</a><span class="signature">()</span><span class="type-signature"> : Promise.&lt;number> | number</span> <span class="type-signature">(async, abstract) </span></h3>
+					<h3 class="name name-method" id="resolveQueries" translate="no">.<a href="#resolveQueries">resolveQueries</a><span class="signature">()</span> <span class="type-signature">(abstract) </span></h3>
 					<div class="method">
 						<div class="description">
-							<p>Resolve all timestamps and return data (or process them).</p>
+							<p>Reads back the queries that are ready.</p>
 						</div>
-						<dl class="details">
-							<dt class="tag-returns"><strong>Returns:</strong> The resolved timestamp value.</dt>
-						</dl>
 					</div>
 				<h2 class="subsection-title">Source</h2>
 				<p>

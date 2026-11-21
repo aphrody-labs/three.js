@@ -45,7 +45,7 @@ Default is `false`.
 
 ## Methods
 
-### .load( url : string, onLoad : function, onProgress : onProgressCallback, onError : onErrorCallback )
+### .load( url : string, onLoad : function, onProgress : onProgressCallback, onError : function )
 
 Starts loading from the given URL and passes the loaded LUT to the `onLoad()` callback.
 
@@ -63,7 +63,7 @@ Executed while the loading is in progress.
 
 **onError**
 
-Executed when errors occur.
+Executed when errors occur. Receives the image's `error` event if the image fails to load, or an `Error` if the LUT data cannot be read.
 
 **Overrides:** [Loader#load](Loader.html#load)
 

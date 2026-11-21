@@ -13,27 +13,34 @@
 		<section>
 			<header>
 				<div class="class-description"><p>Bakes indirect diffuse irradiance into a light map. The irradiance is defined by a
-function that returns a TSL node for a world-space position and normal, so any
-global illumination technique can be baked, e.g. a <a href="LightProbeGrid.html">LightProbeGrid</a> via
-<code>lightProbeGridIrradiance()</code> or a prepared <a href="VXGIVolume.html">VXGIVolume</a> via <code>vxgiIrradiance()</code>.</p>
+function that returns a TSL node for a world-space position and normal, e.g. a prepared
+<a href="RayTracedRadiosity.html">RayTracedRadiosity</a> via <code>rayTracedRadiosityIrradiance()</code>.</p>
 <p>Meshes need light map UVs in the <code>uv1</code> attribute, e.g. generated with <a href="global.html#unwrapUVs">unwrapUVs</a>.
 Each sample rasterizes the meshes in UV space with a sub-texel jitter and accumulates
-the result. The function also receives the sample index, so stochastic sources like
-<code>vxgiIrradiance()</code> can vary their samples and converge as they accumulate. Call
-<code>update()</code> once per frame to bake progressively, or pass a sample count to bake at once.
-Bake at most 256 samples, since samples accumulate in half float precision.
+the result. The function also receives the sample index, so stochastic sources can
+vary their samples and converge as they accumulate. Call <code>update()</code> once per frame
+to bake progressively, or pass a sample count to bake at once.
+Samples accumulate in float precision with the 'float32-blendable' renderer feature. Without it,
+they accumulate in half float precision with jittered weights, up to 1024 samples; further
+samples are ignored.
 Keep the source geometry and GI data static while accumulating. Call <code>reset()</code>
 after changing transforms or lighting. Atlas charts need at least three texels
-of padding; the resolve fills two texels around covered surfaces.
+of padding; the resolve fills two texels around covered surfaces. The alpha of the light map
+is its coverage, e.g. for <a href="SeamStitchGenerator.html">SeamStitchGenerator</a> and <a href="GutterFillGenerator.html">GutterFillGenerator</a>.
 Irradiance uses linear BT.709/sRGB primaries in lux.
 Do not include material ambient occlusion, base color, or exposure in the source
 irradiance. Material occlusion is applied once at runtime. Keep any contributions
-included in the bake out of runtime diffuse lighting to avoid counting them twice.</p>
+included in the bake out of runtime diffuse lighting to avoid counting them twice.
+The <code>variance</code> and <code>guides</code> options also bake the inputs of a denoiser like
+<a href="DenoiseNode.html">DenoiseNode</a>: the noise of each texel and the surface that it lies on,
+see <a href="LightMapper.html#getTextureNode">LightMapper#getTextureNode</a>.</p>
 <p>This class can only be used with <a href="WebGPURenderer.html">WebGPURenderer</a>.</p></div>
 				<h2>Code Example</h2>
-				<div translate="no"><pre><code class="language-js">const lightMapper = new LightMapper( renderer, size, ( position, normal ) => lightProbeGridIrradiance( probes, position, normal ) );
+				<div translate="no"><pre><code class="language-js">const radiosity = new RayTracedRadiosity();
+radiosity.update( renderer, scene );
+const lightMapper = new LightMapper( renderer, size, rayTracedRadiosityIrradiance( radiosity ) );
 lightMapper.addObjects( meshes );
-lightMapper.update( 16 );
+lightMapper.update( 64 );
 material.lightMap = lightMapper.texture;
 </code></pre></div>
 			</header>
@@ -91,6 +98,24 @@ material.lightMap = lightMapper.texture;
 										<p>Default is <code>[]</code>.</p>
 									</td>
 								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">variance</strong>
+									</td>
+									<td class="description last">
+										<p>Whether to also estimate the noise of each texel into <a href="LightMapper.html#varianceTexture">LightMapper#varianceTexture</a>. Requires the 'float32-blendable' renderer feature.</p>
+										<p>Default is <code>false</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">guides</strong>
+									</td>
+									<td class="description last">
+										<p>Whether to also rasterize the surface of each texel into <a href="LightMapper.html#positionTexture">LightMapper#positionTexture</a> and <a href="LightMapper.html#normalTexture">LightMapper#normalTexture</a>.</p>
+										<p>Default is <code>false</code>.</p>
+									</td>
+								</tr>
 							</tbody>
 						</table>
 									</td>
@@ -104,6 +129,20 @@ material.lightMap = lightMapper.texture;
 					<h3 class="name" id="irradianceNode" translate="no">.<a href="#irradianceNode">irradianceNode</a><span class="type-signature"> : function</span> </h3>
 					<div class="description">
 						<p>The source of indirect irradiance.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="normalTexture" translate="no">.<a href="#normalTexture">normalTexture</a><span class="type-signature"> : <a href="Texture.html">Texture</a></span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>The world-space normal of the surface of each texel. Only with the <code>guides</code> option, else <code>null</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="positionTexture" translate="no">.<a href="#positionTexture">positionTexture</a><span class="type-signature"> : <a href="Texture.html">Texture</a></span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>The world-space position of the surface of each texel, with the index of its chart + 1 in alpha,
+or 0 in alpha for texels without a surface. A chart is a set of triangles that are connected in
+the light map. Only with the <code>guides</code> option, else <code>null</code>.</p>
 					</div>
 				</div>
 				<div class="member">
@@ -130,7 +169,16 @@ material.lightMap = lightMapper.texture;
 					<div class="description">
 						<p>The baked light map. It stores linear diffuse irradiance in lux, without baked
 albedo, material ambient occlusion, or display exposure, and uses <code>uv1</code>.
-Values are not divided by pi, matching the runtime light map input.</p>
+Values are not divided by pi, matching the runtime light map input. Alpha is the
+coverage: 1 at the texels with samples, 0 at the padding and elsewhere.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="varianceTexture" translate="no">.<a href="#varianceTexture">varianceTexture</a><span class="type-signature"> : <a href="Texture.html">Texture</a></span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>The variance of the luminance of each texel of the light map, the variance of the mean of its
+samples, in the red channel. Texels without samples are -1. Only with the <code>variance</code> option and
+the 'float32-blendable' renderer feature, else <code>null</code>.</p>
 					</div>
 				</div>
 				<h2 class="subsection-title">Methods</h2>
@@ -158,6 +206,53 @@ Skinned and instanced meshes are not supported.</p>
 						<div class="description">
 							<p>Frees all internal resources.</p>
 						</div>
+					</div>
+					<h3 class="name name-method" id="getTexture" translate="no">.<a href="#getTexture">getTexture</a><span class="signature">( name : <span class="param-type">'color' | 'variance' | 'position' | 'normal'</span> )</span><span class="type-signature"> : <a href="Texture.html">Texture</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>Returns a texture of the light mapper: <code>'color'</code>, the light map, or the inputs of a denoiser like
+<a href="DenoiseNode.html">DenoiseNode</a>: <code>'variance'</code> with the <code>variance</code> option, <code>'position'</code> and <code>'normal'</code> with
+the <code>guides</code> option.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">name</strong>
+									</td>
+									<td class="description last">
+										<p>The name of the texture.</p>
+										<p>Default is <code>'color'</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>Returns:</strong> The texture.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getTextureNode" translate="no">.<a href="#getTextureNode">getTextureNode</a><span class="signature">( name : <span class="param-type">'color' | 'variance' | 'position' | 'normal'</span> )</span><span class="type-signature"> : <a href="TextureNode.html">TextureNode</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>Returns a texture of the light mapper as a texture node, see <a href="LightMapper.html#getTexture">LightMapper#getTexture</a>. The
+nodes sample the light map UVs, e.g. <code>material.lightMapNode = lightMapper.getTextureNode()</code>.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">name</strong>
+									</td>
+									<td class="description last">
+										<p>The name of the texture.</p>
+										<p>Default is <code>'color'</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>Returns:</strong> The texture node.</dt>
+						</dl>
 					</div>
 					<h3 class="name name-method" id="reset" translate="no">.<a href="#reset">reset</a><span class="signature">()</span> </h3>
 					<div class="method">

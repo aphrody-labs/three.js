@@ -110,7 +110,7 @@ Generate a [UUID](https://en.wikipedia.org/wiki/Universally_unique_identifier) (
 
 ### .inverseLerp( x : number, y : number, value : number ) : number
 
-Returns the percentage in the closed interval `[0, 1]` of the given value between the start and end point.
+Returns the interpolation factor of the given value between the start and end point. The result is not clamped, so values outside of the range produce factors outside of the closed interval `[0, 1]`.
 
 **x**
 
@@ -236,7 +236,7 @@ The upper value boundary
 
 ### .randFloatSpread( range : number ) : number
 
-Returns a random integer from `<-range/2, range/2>` interval.
+Returns a random float from `<-range/2, range/2>` interval.
 
 **range**
 

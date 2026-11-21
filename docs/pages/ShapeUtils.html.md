@@ -6,13 +6,13 @@ A class containing utility functions for shapes.
 
 ### .area( contour : Array.<Vector2> ) : number
 
-Calculate area of a ( 2D ) contour polygon.
+Calculate the signed area of a ( 2D ) contour polygon. The result is negative for a clockwise winding order.
 
 **contour**
 
 An array of 2D points.
 
-**Returns:** The area.
+**Returns:** The signed area.
 
 ### .isClockWise( pts : Array.<Vector2> ) : boolean
 

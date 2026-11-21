@@ -19,7 +19,7 @@ const mrtNode = mrt( {
 
 ### new MRTNode( outputNodes : Object.<string, Node> )
 
-Constructs a new output struct node.
+Constructs a new MRT node.
 
 **outputNodes**
 
@@ -77,7 +77,7 @@ The name of the output.
 
 **Returns:** The clear color. Returns `null` if no clear color is defined which means the renderer's default clear policy is applied.
 
-### .has( name : string ) : NodeBuilder
+### .has( name : string ) : boolean
 
 Returns `true` if the MRT node has an output with the given name.
 

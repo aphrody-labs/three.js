@@ -1,6 +1,6 @@
 # Backend
 
-Most of the rendering related logic is implemented in the [Renderer](Renderer.html) module and related management components. Sometimes it is required though to execute commands which are specific to the current 3D backend (which is WebGPU or WebGL 2). This abstract base class defines an interface that encapsulates all backend-related logic. Derived classes for each backend must implement the interface.
+Most of the rendering related logic is implemented in the [Renderer](Renderer.html) module and related management components. Sometimes it is required though to execute commands which are specific to the current 3D backend (which is WebGPU). This abstract base class defines an interface that encapsulates all backend-related logic. Derived classes for each backend must implement the interface.
 
 ## Constructor
 
@@ -42,27 +42,13 @@ A reference to the renderer.
 
 Default is `null`.
 
-### .timestampQueryPool : Object
+### .timestampQueryPool : TimestampQueryPool
 
-A reference to the timestamp query pool.
+The timestamp query pool of the GPU timers, created on first use.
 
-### .trackTimestamp : boolean
-
-Whether to track timestamps with a Timestamp Query API or not.
-
-Default is `false`.
+Default is `null`.
 
 ## Methods
-
-### ._getQueryPool( uid : string ) : TimestampQueryPool
-
-Returns the query pool for the given uid.
-
-**uid**
-
-The unique identifier.
-
-**Returns:** The query pool.
 
 ### .beginCompute( computeGroup : Node | Array.<Node> ) (abstract)
 
@@ -79,6 +65,12 @@ This method is executed at the beginning of a render call and can be used by the
 **renderContext**
 
 The render context.
+
+### .beginTimer() : Object
+
+Starts a GPU timer measurement. While a timer is active, the render and compute calls allocate timestamp queries.
+
+**Returns:** The timer, or `null` without timestamp queries.
 
 ### .compute( computeGroup : Node | Array.<Node>, computeNode : Node, bindings : Array.<BindGroup>, computePipeline : ComputePipeline ) (abstract)
 
@@ -308,6 +300,12 @@ Optional configuration parameter.
 
 Default is `{}`.
 
+### .createTimestampQueryPool() : TimestampQueryPool (abstract)
+
+Creates the timestamp query pool of the GPU timers.
+
+**Returns:** The timestamp query pool.
+
 ### .createUniformBuffer( uniformBuffer : Buffer ) (abstract)
 
 Creates a uniform buffer.
@@ -417,6 +415,16 @@ The render object to draw.
 **info**
 
 Holds a series of statistical information about the GPU memory and the rendering process.
+
+### .endTimer( timer : Object ) : Promise.<?{start: ?number, end: ?number, delta: number}> (async)
+
+Ends the given measurement and returns its GPU start and end times and their difference in milliseconds once its queries are read back, or `null` when the backend doesn't support timing.
+
+**timer**
+
+The value returned by [Backend#beginTimer](Backend.html#beginTimer).
+
+**Returns:** The GPU times in milliseconds.
 
 ### .finishCompute( computeGroup : Node | Array.<Node> ) (abstract)
 
@@ -532,29 +540,9 @@ The render object.
 
 **Returns:** The cache key.
 
-### .getTimestamp( uid : string ) : number
-
-Returns the timestamp for the given uid.
-
-**uid**
-
-The unique identifier.
-
-**Returns:** The timestamp.
-
-### .getTimestampFrames( type : string ) : Array.<number>
-
-Returns all timestamp frames for the given type.
-
-**type**
-
-The type of the time stamp.
-
-**Returns:** The timestamp frames.
-
 ### .getTimestampUID( abstractRenderContext : RenderContext | ComputeNode ) : string
 
-Returns a unique identifier for the given render context that can be used to allocate resources like occlusion queries or timestamp queries.
+Returns the unique identifier of the given render or compute call.
 
 **abstractRenderContext**
 
@@ -591,26 +579,6 @@ Checks if the given feature is supported by the backend.
 The feature's name.
 
 **Returns:** Whether the feature is supported or not.
-
-### .hasFeatureAsync( name : string ) : Promise.<boolean> (async, abstract)
-
-Checks if the given feature is supported by the backend.
-
-**name**
-
-The feature's name.
-
-**Returns:** A Promise that resolves with a bool that indicates whether the feature is supported or not.
-
-### .hasTimestampQuery( uid : string ) : boolean
-
-Returns `true` if a timestamp for the given uid is available.
-
-**uid**
-
-The unique identifier.
-
-**Returns:** Whether the timestamp is available or not.
 
 ### .init( renderer : Renderer ) : Promise (async)
 
@@ -658,17 +626,9 @@ The render object.
 
 Resets the backend's internal state. A no-op for backends without a state cache (e.g. WebGPU).
 
-### .resolveTimestampsAsync( type : string ) : Promise.<number> (async, abstract)
+### .resolveTimestamps()
 
-Resolves the time stamp for the given render context and type.
-
-**type**
-
-The type of the time stamp.
-
-Default is `'render'`.
-
-**Returns:** A Promise that resolves with the time stamp.
+Reads back the timestamp queries. The renderer calls this method once per frame.
 
 ### .set( object : Object, value : Object )
 
@@ -689,16 +649,6 @@ Defines the scissor test.
 **boolean**
 
 Whether the scissor test should be enabled or not.
-
-### .setXRTarget( xrTarget : Object )
-
-Sets the XR rendering destination.
-
-Backends that render directly into XR framebuffers can override this hook.
-
-**xrTarget**
-
-The XR rendering destination.
 
 ### .updateAttribute( attribute : BufferAttribute ) (abstract)
 
@@ -766,7 +716,7 @@ Default is `{}`.
 
 ### .updateTimeStampUID( abstractRenderContext : RenderContext | ComputeNode | Array.<ComputeNode> )
 
-Updates a unique identifier for the given render context that can be used to allocate resources like occlusion queries or timestamp queries.
+Updates a unique identifier for the given render or compute call. The inspector uses it to identify the call across frames.
 
 **abstractRenderContext**
 

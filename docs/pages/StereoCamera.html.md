@@ -18,11 +18,11 @@ Default is `1`.
 
 ### .cameraL : PerspectiveCamera
 
-The camera representing the left eye. This is added to layer `1` so objects to be rendered by the left camera must also be added to this layer.
+The camera representing the left eye. It has layer `1` enabled in addition to the default layer `0`, so objects only on layer `1` are rendered by the left camera only.
 
 ### .cameraR : PerspectiveCamera
 
-The camera representing the right eye. This is added to layer `2` so objects to be rendered by the right camera must also be added to this layer.
+The camera representing the right eye. It has layer `2` enabled in addition to the default layer `0`, so objects only on layer `2` are rendered by the right camera only.
 
 ### .eyeSep : number
 

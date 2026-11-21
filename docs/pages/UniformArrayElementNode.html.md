@@ -8,7 +8,7 @@ Represents the element access on uniform array nodes.
 
 ### new UniformArrayElementNode( uniformArrayNode : UniformArrayNode, indexNode : IndexNode )
 
-Constructs a new buffer node.
+Constructs a new uniform array element node.
 
 **uniformArrayNode**
 

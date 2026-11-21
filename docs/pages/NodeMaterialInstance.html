@@ -17,7 +17,10 @@
 All instances created from the same node material share a single shader build, so
 configure the node material before creating instances. Instance values are read in
 the shared node graph with <code>materialReference( name, type )</code>. Node properties such as
-<code>colorNode</code> are read-only and always read from the node material.</p></div>
+<code>colorNode</code> are read-only and always read from the node material.</p>
+<p>Object values such as <code>color</code> are shared with the node material (and thus with other
+instances) on construction, so assign a new object instead of mutating the existing one,
+e.g. <code>material.color = new Color( 1, 0, 0 )</code> instead of <code>material.color.set( 1, 0, 0 )</code>.</p></div>
 				<h2>Code Example</h2>
 				<div translate="no"><pre><code class="language-js">const nodeMaterial = new MeshBasicNodeMaterial();
 nodeMaterial.colorNode = materialReference( 'myColor', 'color' );

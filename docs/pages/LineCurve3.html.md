@@ -30,7 +30,7 @@ Default is `true`.
 
 The start point.
 
-### .v2 : Vector2
+### .v2 : Vector3
 
 The end point.
 

@@ -35,7 +35,7 @@ renderer.computeAsync( computeNode );
 			<article>
 				<div class="container-overview">
 					<h2>Constructor</h2>
-					<h3 class="name name-method" id="StorageTextureNode" translate="no">new <a href="#StorageTextureNode">StorageTextureNode</a><span class="signature">( value : <span class="param-type"><a href="StorageTexture.html">StorageTexture</a></span>, uvNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;(vec2|vec3)></span>, storeNode : <span class="param-type"><a href="Node.html">Node</a></span> )</span> </h3>
+					<h3 class="name name-method" id="StorageTextureNode" translate="no">new <a href="#StorageTextureNode">StorageTextureNode</a><span class="signature">( value : <span class="param-type"><a href="StorageTexture.html">StorageTexture</a></span>, uvNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;(uvec2|uvec3)></span>, storeNode : <span class="param-type"><a href="Node.html">Node</a></span> )</span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>Constructs a new storage texture node.</p>
@@ -55,7 +55,7 @@ renderer.computeAsync( computeNode );
 										<strong translate="no">uvNode</strong>
 									</td>
 									<td class="description last">
-										<p>The uv node.</p>
+										<p>The integer texel coordinates (not normalized uvs).</p>
 									</td>
 								</tr>
 								<tr>
@@ -332,7 +332,7 @@ by the texture uv matrix.</p>
 							<dt class="tag-returns"><strong>Returns:</strong> A reference to this node.</dt>
 						</dl>
 					</div>
-					<h3 class="name name-method" id="store" translate="no">.<a href="#store">store</a><span class="signature">( uvNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;(vec2|vec3)></span>, storeNode : <span class="param-type"><a href="Node.html">Node</a></span> )</span><span class="type-signature"> : <a href="StorageTextureNode.html">StorageTextureNode</a></span> </h3>
+					<h3 class="name name-method" id="store" translate="no">.<a href="#store">store</a><span class="signature">( uvNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;(uvec2|uvec3)></span>, storeNode : <span class="param-type"><a href="Node.html">Node</a></span> )</span><span class="type-signature"> : <a href="StorageTextureNode.html">StorageTextureNode</a></span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>Stores a value in this storage texture at the given coordinates.</p>
@@ -344,7 +344,7 @@ by the texture uv matrix.</p>
 										<strong translate="no">uvNode</strong>
 									</td>
 									<td class="description last">
-										<p>The storage texture coordinates.</p>
+										<p>The integer texel coordinates (not normalized uvs).</p>
 									</td>
 								</tr>
 								<tr>

@@ -8,7 +8,7 @@ In earlier `three.js` versions it was only possible to define attribute data on 
 const geometry = new THREE.PlaneGeometry();
 const positionAttribute = geometry.getAttribute( 'position' );
 const colors = [];
-for ( let i = 0; i < position.count; i ++ ) {
+for ( let i = 0; i < positionAttribute.count; i ++ ) {
 	colors.push( 1, 0, 0 );
 }
 material.colorNode = bufferAttribute( new THREE.Float32BufferAttribute( colors, 3 ) );

@@ -2,7 +2,7 @@
 
 Abstract base class for all post processing passes.
 
-This module is only relevant for post processing with [WebGLRenderer](WebGLRenderer.html).
+This module is only relevant for post processing with WebGLRenderer.
 
 ## Import
 

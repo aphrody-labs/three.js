@@ -32,7 +32,7 @@ The loading manager.
 
 ## Methods
 
-### .load( urls : Array.<string>, onLoad : function, onProgress : onProgressCallback, onError : onErrorCallback ) : CubeTexture
+### .load( urls : Array.<string>, onLoad : function, onProgress : onProgressCallback, onError : function ) : CubeTexture
 
 Starts loading from the given URL and pass the fully loaded cube texture to the `onLoad()` callback. The method also returns a new cube texture object which can directly be used for material creation. If you do it this way, the cube texture may pop up in your scene once the respective loading process is finished.
 
@@ -50,7 +50,7 @@ Unsupported in this loader.
 
 **onError**
 
-Executed when errors occur.
+Executed when errors occur. Receives the image's `error` event, not an `Error` instance.
 
 **Overrides:** [Loader#load](Loader.html#load)
 

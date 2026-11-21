@@ -98,7 +98,7 @@ Normalizes the skin weights which are defined as a buffer attribute in the skinn
 
 ### .pose()
 
-This method sets the skinned mesh in the rest pose).
+This method sets the skinned mesh in the rest pose.
 
 ## Source
 

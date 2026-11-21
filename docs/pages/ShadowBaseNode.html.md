@@ -8,13 +8,19 @@ Shadow nodes encapsulate shadow related logic and are always coupled to lighting
 
 ## Constructor
 
-### new ShadowBaseNode( light : Light )
+### new ShadowBaseNode( light : Light, shadow : LightShadow )
 
 Constructs a new shadow base node.
 
 **light**
 
 The shadow casting light.
+
+**shadow**
+
+The light shadow.
+
+Default is `light.shadow`.
 
 ## Properties
 
@@ -27,6 +33,10 @@ Default is `true`.
 ### .light : Light
 
 The shadow casting light.
+
+### .shadow : LightShadow
+
+The light shadow which defines the properties light's shadow.
 
 ### .updateBeforeType : string
 
@@ -66,6 +76,16 @@ Default is `this.light.shadow`.
 
 **Returns:** A function that renders shadow objects.
 
+### .needsRefresh( frame : NodeFrame ) : boolean
+
+Returns `true` if the shadow map must be rendered for the given frame. The shadow map is rendered once per camera and frame. Renders nested in the one that has updated the shadow map in the current frame share it.
+
+**frame**
+
+A reference to the current node frame.
+
+**Returns:** Whether the shadow map must be rendered.
+
 ### .setupShadowPosition( object : NodeBuilder )
 
 Setups the shadow position node which is by default the predefined TSL node object `shadowPositionWorld`.
@@ -73,6 +93,24 @@ Setups the shadow position node which is by default the predefined TSL node obje
 **object**
 
 A configuration object that must at least hold a material reference.
+
+### .updateBefore( frame : NodeFrame )
+
+The implementation performs the update of the shadow map if necessary.
+
+**frame**
+
+A reference to the current node frame.
+
+**Overrides:** [Node#updateBefore](Node.html#updateBefore)
+
+### .updateShadow( frame : NodeFrame ) (abstract)
+
+Updates the shadow. Must be implemented by subclasses.
+
+**frame**
+
+A reference to the current node frame.
 
 ## Source
 

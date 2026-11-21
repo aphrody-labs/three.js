@@ -54,7 +54,7 @@ Clamps a point within the sphere. If the point is outside the sphere, it will cl
 
 **point**
 
-The plane to clamp.
+The point to clamp.
 
 **target**
 
@@ -120,7 +120,7 @@ The point to include.
 
 ### .fromJSON( json : Object ) : Sphere
 
-Returns a serialized structure of the bounding sphere.
+Sets this bounding sphere from the given serialized structure.
 
 **json**
 
@@ -198,7 +198,7 @@ The radius.
 
 ### .setFromPoints( points : Array.<Vector3>, optionalCenter : Vector3 ) : Sphere
 
-Computes the minimum bounding sphere for list of points. If the optional center point is given, it is used as the sphere's center. Otherwise, the center of the axis-aligned bounding box encompassing the points is calculated.
+Computes a bounding sphere for the given list of points. If the optional center point is given, it is used as the sphere's center. Otherwise, the center of the axis-aligned bounding box encompassing the points is calculated. The radius is the distance to the farthest point, so the result is not necessarily the minimal bounding sphere.
 
 **points**
 

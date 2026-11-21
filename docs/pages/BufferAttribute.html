@@ -109,7 +109,7 @@ normal, or color), then the value should be <code>3</code>.</p>
 					</div>
 				</div>
 				<div class="member">
-					<h3 class="name" id="needsUpdate" translate="no">.<a href="#needsUpdate">needsUpdate</a><span class="type-signature"> : number</span> </h3>
+					<h3 class="name" id="needsUpdate" translate="no">.<a href="#needsUpdate">needsUpdate</a><span class="type-signature"> : boolean</span> </h3>
 					<div class="description">
 						<p>Flag to indicate that this attribute has changed and should be re-sent to
 the GPU. Set this to <code>true</code> when you modify the value of the array.</p>
@@ -152,7 +152,8 @@ instantiate a new one and set the desired usage before the next render.</p>
 					<h3 class="name name-method" id="addUpdateRange" translate="no">.<a href="#addUpdateRange">addUpdateRange</a><span class="signature">( start : <span class="param-type">number</span>, count : <span class="param-type">number</span> )</span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Adds a range of data in the data array to be updated on the GPU.</p>
+							<p>Adds a range of data in the data array to be updated on the GPU. The ranges are
+applied with the next upload triggered via <code>needsUpdate</code> and cleared afterwards.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -161,7 +162,7 @@ instantiate a new one and set the desired usage before the next render.</p>
 										<strong translate="no">start</strong>
 									</td>
 									<td class="description last">
-										<p>Position at which to start update.</p>
+										<p>The index into the array (in elements, not items) at which to start the update.</p>
 									</td>
 								</tr>
 								<tr>

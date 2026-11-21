@@ -33,7 +33,7 @@ precision floating point value (FP16).</p>
 										<strong translate="no">val</strong>
 									</td>
 									<td class="description last">
-										<p>A half precision floating point value.</p>
+										<p>A FP16 bit pattern, e.g. an element of a <code>Uint16Array</code>.</p>
 									</td>
 								</tr>
 							</tbody>
@@ -46,7 +46,9 @@ precision floating point value (FP16).</p>
 					<div class="method">
 						<div class="description">
 							<p>Returns a half precision floating point value (FP16) from the given single
-precision floating point value (FP32).</p>
+precision floating point value (FP32). The result is the FP16 bit pattern as
+an integer in the range <code>[0, 65535]</code>, e.g. for a <code>Uint16Array</code> used with
+<code>HalfFloatType</code>. Values are clamped to <code>[-65504, 65504]</code>.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -61,7 +63,7 @@ precision floating point value (FP32).</p>
 							</tbody>
 						</table>
 						<dl class="details">
-							<dt class="tag-returns"><strong>Returns:</strong> The FP16 value.</dt>
+							<dt class="tag-returns"><strong>Returns:</strong> The FP16 bit pattern.</dt>
 						</dl>
 					</div>
 				<h2 class="subsection-title">Source</h2>

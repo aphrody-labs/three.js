@@ -18,13 +18,13 @@ The loading manager.
 
 ## Methods
 
-### .load( url : string, onLoad : function, onProgress : onProgressCallback, onError : onErrorCallback ) : CompressedTexture
+### .load( url : string | Array.<string>, onLoad : function, onProgress : onProgressCallback, onError : onErrorCallback ) : CompressedTexture
 
 Starts loading from the given URL and passes the loaded compressed texture to the `onLoad()` callback. The method also returns a new texture object which can directly be used for material creation. If you do it this way, the texture may pop up in your scene once the respective loading process is finished.
 
 **url**
 
-The path/URL of the file to be loaded. This can also be a data URI.
+The path/URL of the file to be loaded. This can also be a data URI. Alternatively, an array of six URLs (one per cube face) to load a compressed cube texture.
 
 **onLoad**
 
@@ -56,7 +56,7 @@ The width of the base mip.
 **height**  
 number
 
-The width of the base mip.
+The height of the base mip.
 
 **isCubemap**  
 boolean

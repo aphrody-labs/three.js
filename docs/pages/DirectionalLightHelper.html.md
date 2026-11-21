@@ -27,7 +27,7 @@ The light to be visualized.
 
 **size**
 
-The dimensions of the plane.
+Half the side length of the plane.
 
 Default is `1`.
 

@@ -51,13 +51,13 @@ Default is `Math.PI*2`.
 
 **thetaStart**
 
-Start of the tubular sweep in radians.
+Start angle of the sweep around the tube's cross-section, in radians.
 
 Default is `0`.
 
 **thetaLength**
 
-Length of the tubular sweep in radians.
+Central angle of the sweep around the tube's cross-section, in radians. The default value results in a closed tube.
 
 Default is `Math.PI*2`.
 

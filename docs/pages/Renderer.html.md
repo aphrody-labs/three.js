@@ -10,7 +10,7 @@ Constructs a new renderer.
 
 **backend**
 
-The backend the renderer is targeting (e.g. WebGPU or WebGL 2).
+The backend the renderer is targeting (e.g. WebGPU).
 
 **parameters**
 
@@ -63,7 +63,7 @@ The context value object.
 
 ### .coordinateSystem : number (readonly)
 
-The coordinate system of the renderer. The value of this property depends on the selected backend. Either `THREE.WebGLCoordinateSystem` or `THREE.WebGPUCoordinateSystem`.
+The coordinate system of the renderer. The value of this property depends on the selected backend, which is `THREE.WebGPUCoordinateSystem`.
 
 ### .currentColorSpace : string
 
@@ -91,7 +91,7 @@ Default is `true`.
 
 ### .domElement : HTMLCanvasElement | OffscreenCanvas
 
-A reference to the canvas element the renderer is drawing to. This value of this property will automatically be created by the renderer.
+A reference to the canvas element the renderer is drawing to. If no `canvas` is passed to the constructor, the renderer creates one.
 
 ### .drawingPipeline : StandardDrawingPipeline
 
@@ -243,67 +243,17 @@ Whether the stencil buffer should be cleared or not.
 
 Default is `true`.
 
-### .clearAsync( color : boolean, depth : boolean, stencil : boolean ) : Promise (async)
-
-Async version of [Renderer#clear](Renderer.html#clear).
-
-**color**
-
-Whether the color buffer should be cleared or not.
-
-Default is `true`.
-
-**depth**
-
-Whether the depth buffer should be cleared or not.
-
-Default is `true`.
-
-**stencil**
-
-Whether the stencil buffer should be cleared or not.
-
-Default is `true`.
-
-**Deprecated:** Yes
-
-**Returns:** A Promise that resolves when the clear operation has been executed.
-
 ### .clearColor()
 
 Performs a manual clear operation of the color buffer. This method ignores `autoClear` properties.
-
-### .clearColorAsync() : Promise (async)
-
-Async version of [Renderer#clearColor](Renderer.html#clearColor).
-
-**Deprecated:** Yes
-
-**Returns:** A Promise that resolves when the clear operation has been executed.
 
 ### .clearDepth()
 
 Performs a manual clear operation of the depth buffer. This method ignores `autoClear` properties.
 
-### .clearDepthAsync() : Promise (async)
-
-Async version of [Renderer#clearDepth](Renderer.html#clearDepth).
-
-**Deprecated:** Yes
-
-**Returns:** A Promise that resolves when the clear operation has been executed.
-
 ### .clearStencil()
 
 Performs a manual clear operation of the stencil buffer. This method ignores `autoClear` properties.
-
-### .clearStencilAsync() : Promise (async)
-
-Async version of [Renderer#clearStencil](Renderer.html#clearStencil).
-
-**Deprecated:** Yes
-
-**Returns:** A Promise that resolves when the clear operation has been executed.
 
 ### .compile( scene : Object3D, camera : Camera, targetScene : Scene, onProgress : onProgressCallback ) : function
 
@@ -320,6 +270,8 @@ The camera that is used to render the scene.
 **targetScene**
 
 If the first argument is a 3D object, this parameter must represent the scene the 3D object is going to be added.
+
+Default is `null`.
 
 **onProgress**
 
@@ -381,9 +333,11 @@ The compute node(s).
 
 **dispatchSize**
 
-*   A single number representing count, or
-*   An array \[x, y, z\] representing dispatch size, or
-*   A IndirectStorageBufferAttribute for indirect dispatch size.
+An argument that defines the number of compute invocations executed in a compute call and the size of the dispatched workgroup grid in which they are executed. It can only be used with compute nodes created via `computeKernel()`. Nodes created via `compute()` with a count or dispatch size throw an error. Depending on the type of the argument, the dispatch size of a compute call will be determined in different ways.
+
+*   A number will dispatch a workgroup grid sized to fit `dispatchSize` invocations.
+*   An array \[x, y, z\] will directly define the size of the workgroup grid. The compute call will execute x \* y \* z \* workgroupSize invocations. WebGPU backend only.
+*   A IndirectStorageBufferAttribute will run an indirect compute dispatch. In an indirect dispatch, the \[x, y, z\] dimensions of the workgroup grid are defined by the first three values stored in the IndirectStorageBufferAttribute. WebGPU backend only.
 
 Default is `null`.
 
@@ -399,9 +353,11 @@ The compute node(s).
 
 **dispatchSize**
 
-*   A single number representing count, or
-*   An array \[x, y, z\] representing dispatch size, or
-*   A IndirectStorageBufferAttribute for indirect dispatch size.
+An argument that defines the number of compute invocations executed in a compute call and the size of the dispatched workgroup grid in which they are executed. It can only be used with compute nodes created via `computeKernel()`. Nodes created via `compute()` with a count or dispatch size throw an error. Depending on the type of the argument, the dispatch size of a compute call will be determined in different ways.
+
+*   A number will dispatch a workgroup grid sized to fit `dispatchSize` invocations.
+*   An array \[x, y, z\] will directly define the size of the workgroup grid. The compute call will execute x \* y \* z \* workgroupSize invocations. WebGPU backend only.
+*   A IndirectStorageBufferAttribute will run an indirect compute dispatch. In an indirect dispatch, the \[x, y, z\] dimensions of the workgroup grid are defined by the first three values stored in the IndirectStorageBufferAttribute. WebGPU backend only.
 
 Default is `null`.
 
@@ -457,9 +413,11 @@ The destination mip level to copy to.
 
 Default is `0`.
 
-### .dispose() (async)
+### .dispose() : Promise (async)
 
 Frees all internal resources of the renderer. Call this method if the renderer is no longer in use by your app.
+
+**Returns:** A Promise that resolves when all resources have been freed.
 
 ### .getActiveCubeFace() : number
 
@@ -482,6 +440,8 @@ Returns the current animation loop callback.
 ### .getArrayBufferAsync( attribute : BufferAttribute, target : ReadbackBuffer | ArrayBuffer, offset : number, count : number ) : Promise.<(ArrayBuffer|ReadbackBuffer)> (async)
 
 Can be used to transfer buffer data from a storage buffer attribute from the GPU to the CPU in context of compute shaders.
+
+When a [ReadbackBuffer](ReadbackBuffer.html) is used, the data is available in its `buffer` property until [ReadbackBuffer#release](ReadbackBuffer.html#release) is called. The readback buffer must be released before it can be used again.
 
 **attribute**
 
@@ -531,7 +491,7 @@ The method writes the result in this target object.
 
 ### .getClearDepth() : number
 
-Returns the clear depth.
+Returns the depth value the depth buffer is cleared with. With a reversed depth buffer, this is `1` minus the value defined via [Renderer#setClearDepth](Renderer.html#setClearDepth).
 
 **Returns:** The clear depth.
 
@@ -541,15 +501,7 @@ Returns the clear stencil.
 
 **Returns:** The clear stencil.
 
-### .getColorBufferType() : number
-
-Returns the output buffer type.
-
-**Deprecated:** since r182. Use \`.getOutputBufferType()\` instead.
-
-**Returns:** The output buffer type.
-
-### .getContext() : GPUCanvasContext | WebGL2RenderingContext
+### .getContext() : GPUCanvasContext
 
 Returns the rendering context.
 
@@ -573,7 +525,7 @@ Returns the MRT configuration.
 
 ### .getMaxAnisotropy() : number
 
-Returns the maximum available anisotropy for texture filtering.
+Returns the maximum available anisotropy for texture filtering. The renderer must be initialized via [Renderer#init](Renderer.html#init) before.
 
 **Returns:** The maximum available anisotropy.
 
@@ -645,7 +597,7 @@ The method writes the result in this target object.
 
 ### .hasCompatibility( name : string ) : boolean
 
-Checks if the given compatibility is supported by the selected backend.
+Checks if the given compatibility is supported by the selected backend. The renderer must be initialized via [Renderer#init](Renderer.html#init) before, otherwise this method throws.
 
 **name**
 
@@ -655,25 +607,13 @@ The compatibility's name.
 
 ### .hasFeature( name : string ) : boolean
 
-Checks if the given feature is supported by the selected backend. If the renderer has not been initialized, this method always returns `false`.
+Checks if the given feature is supported by the selected backend. The renderer must be initialized via [Renderer#init](Renderer.html#init) before, otherwise this method throws.
 
 **name**
 
 The feature's name.
 
 **Returns:** Whether the feature is supported or not.
-
-### .hasFeatureAsync( name : string ) : Promise.<boolean> (async)
-
-Checks if the given feature is supported by the selected backend.
-
-**name**
-
-The feature's name.
-
-**Deprecated:** Yes
-
-**Returns:** A Promise that resolves with a bool that indicates whether the feature is supported or not.
 
 ### .hasInitialized() : boolean
 
@@ -705,21 +645,9 @@ This method can only be used if the renderer has been initialized.
 
 The texture.
 
-### .initTextureAsync( texture : Texture ) : Promise (async)
+### .isOccluded( object : Object3D ) : boolean | null | undefined
 
-Initializes the given textures. Useful for preloading a texture rather than waiting until first render (which can cause noticeable lags due to decode and GPU upload overhead).
-
-**texture**
-
-The texture.
-
-**Deprecated:** Yes
-
-**Returns:** A Promise that resolves when the texture has been initialized.
-
-### .isOccluded( object : Object3D ) : boolean
-
-This method performs an occlusion query for the given 3D object. It returns `true` if the given 3D object is fully occluded by other 3D objects in the scene.
+Returns `true` if the given 3D object was fully occluded by other 3D objects in a previous render. The object must have `occlusionTest` set to `true`. Occlusion query results are resolved asynchronously so they lag behind by a few frames. This method must be called during a render call (e.g. in a node update or `onBeforeRender()`), otherwise it returns `null`. It returns `undefined` until the first occlusion query results are available.
 
 **object**
 
@@ -741,7 +669,7 @@ The `x` coordinate of the copy region's origin.
 
 **y**
 
-The `y` coordinate of the copy region's origin.
+The `y` coordinate of the copy region's origin. It is measured from the top. The row order of the returned data follows the same convention.
 
 **width**
 
@@ -780,22 +708,6 @@ The scene or 3D object to render.
 **camera**
 
 The camera to render the scene with.
-
-### .renderAsync( scene : Object3D, camera : Camera ) : Promise (async)
-
-Renders the scene in an async fashion.
-
-**scene**
-
-The scene or 3D object to render.
-
-**camera**
-
-The camera.
-
-**Deprecated:** Yes
-
-**Returns:** A Promise that resolves when the render has been finished.
 
 ### .renderObject( object : Object3D, scene : Scene, camera : Camera, geometry : BufferGeometry, material : Material, group : Object, lightsNode : LightsNode, clippingContext : ClippingContext, passId : string )
 
@@ -871,7 +783,7 @@ Defines the clear alpha.
 
 The clear alpha.
 
-### .setClearColor( color : Color, alpha : number )
+### .setClearColor( color : number | Color | string, alpha : number )
 
 Defines the clear color and optionally the clear alpha.
 
@@ -887,7 +799,7 @@ Default is `1`.
 
 ### .setClearDepth( depth : number )
 
-Defines the clear depth.
+Defines the clear depth in the conventional range where `1` represents the far plane. The value is inverted automatically when a reversed depth buffer is in use.
 
 **depth**
 
@@ -990,7 +902,7 @@ Default is `0`.
 
 ### .setScissor( x : number | Vector4, y : number, width : number, height : number )
 
-Defines the scissor rectangle.
+Defines the scissor rectangle. Only affects rendering to the canvas. When a render target is set, its own [RenderTarget#scissor](RenderTarget.html#scissor) is used.
 
 **x**
 
@@ -1010,7 +922,7 @@ The height of the scissor box in logical pixel unit.
 
 ### .setScissorTest( boolean : boolean )
 
-Defines the scissor test.
+Defines the scissor test. For render calls, it only affects rendering to the canvas. When a render target is set, its own [RenderTarget#scissorTest](RenderTarget.html#scissorTest) is used.
 
 **boolean**
 
@@ -1044,7 +956,7 @@ The sort function.
 
 ### .setViewport( x : number | Vector4, y : number, width : number, height : number, minDepth : number, maxDepth : number )
 
-Defines the viewport.
+Defines the viewport. Only affects rendering to the canvas. When a render target is set, its own [RenderTarget#viewport](RenderTarget.html#viewport) is used.
 
 **x**
 
@@ -1073,14 +985,6 @@ Default is `0`.
 The maximum depth value of the viewport. WebGPU only.
 
 Default is `1`.
-
-### .waitForGPU() : Promise (async)
-
-Can be used to synchronize CPU operations with GPU tasks. So when this method is called, the CPU waits for the GPU to complete its operation (e.g. a compute task).
-
-**Deprecated:** Yes
-
-**Returns:** A Promise that resolves when synchronization has been finished.
 
 ## Type Definitions
 
@@ -1133,16 +1037,9 @@ Default is `false`.
 **samples**  
 number
 
-When `antialias` is `true`, `4` samples are used by default. This parameter can set to any other integer value than 0 to overwrite the default.
+The number of MSAA samples. When `antialias` is `true`, `4` samples are used by default. A value other than `0` overwrites the default and enables MSAA even without `antialias`. The WebGPU backend only supports `4` samples.
 
 Default is `0`.
-
-**getFallback**  
-function
-
-This callback function can be used to provide a fallback backend, if the primary backend can't be targeted.
-
-Default is `null`.
 
 **outputBufferType**  
 number
@@ -1150,13 +1047,6 @@ number
 Defines the type of output buffers. The default `HalfFloatType` is recommend for best quality. To save memory and bandwidth, `UnsignedByteType` might be used. This will reduce rendering quality though.
 
 Default is `HalfFloatType`.
-
-**multiview**  
-boolean
-
-If set to `true`, the renderer will use multiview during WebXR rendering if supported.
-
-Default is `false`.
 
 ## Source
 

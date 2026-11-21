@@ -76,7 +76,7 @@ Default is `false`.
 
 Controls the thickness of the wireframe.
 
-WebGL and WebGPU ignore this property and always render 1 pixel wide lines.
+WebGPU ignores this property and always renders 1 pixel wide lines.
 
 Default is `1`.
 

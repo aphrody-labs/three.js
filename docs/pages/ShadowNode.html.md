@@ -34,12 +34,6 @@ This flag can be used for type testing.
 
 Default is `true`.
 
-### .shadow : LightShadow
-
-The light shadow which defines the properties light's shadow.
-
-Default is `null`.
-
 ### .shadowMap : RenderTarget
 
 A reference to the shadow map which is a render target.
@@ -162,16 +156,6 @@ The light shadow.
 
 **Returns:** The result node of the shadow filtering.
 
-### .updateBefore( frame : NodeFrame )
-
-The implementation performs the update of the shadow map if necessary.
-
-**frame**
-
-A reference to the current node frame.
-
-**Overrides:** [ShadowBaseNode#updateBefore](ShadowBaseNode.html#updateBefore)
-
 ### .updateShadow( frame : NodeFrame )
 
 Updates the shadow.
@@ -179,6 +163,8 @@ Updates the shadow.
 **frame**
 
 A reference to the current node frame.
+
+**Overrides:** [ShadowBaseNode#updateShadow](ShadowBaseNode.html#updateShadow)
 
 ### .vsmPass( renderer : Renderer )
 

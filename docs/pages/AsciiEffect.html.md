@@ -36,13 +36,13 @@ The configuration parameter.
 
 ### .domElement : HTMLDivElement
 
-The DOM element of the effect. This element must be used instead of the default [WebGLRenderer#domElement](WebGLRenderer.html#domElement).
+The DOM element of the effect. This element must be used instead of the default WebGLRenderer#domElement.
 
 ## Methods
 
 ### .render( scene : Object3D, camera : Camera )
 
-When using this effect, this method should be called instead of the default [WebGLRenderer#render](WebGLRenderer.html#render).
+When using this effect, this method should be called instead of the default WebGLRenderer#render.
 
 **scene**
 

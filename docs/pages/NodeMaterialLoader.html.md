@@ -20,13 +20,13 @@ A reference to a loading manager.
 
 Represents a dictionary of node material types.
 
-### .nodes : Object.<string, Node.constructor>
+### .nodes : Object.<string, Node>
 
-Represents a dictionary of node types.
+Represents a dictionary of deserialized node instances, keyed by UUID. They are assigned to the node properties of the parsed material.
 
 ## Methods
 
-### .createMaterialFromType( type : string ) : Node
+### .createMaterialFromType( type : string ) : Material
 
 Creates a node material from the given type.
 
@@ -36,9 +36,9 @@ The node material type.
 
 **Overrides:** [MaterialLoader#createMaterialFromType](MaterialLoader.html#createMaterialFromType)
 
-**Returns:** The created node material instance.
+**Returns:** The created material instance.
 
-### .parse( json : Object ) : NodeMaterial
+### .parse( json : Object ) : Material
 
 Parses the node material from the given JSON.
 
@@ -48,9 +48,9 @@ The JSON definition
 
 **Overrides:** [MaterialLoader#parse](MaterialLoader.html#parse)
 
-**Returns:** . The parsed material.
+**Returns:** The parsed material.
 
-### .setNodeMaterials( value : Object.<string, NodeMaterial.constructor> ) : NodeLoader
+### .setNodeMaterials( value : Object.<string, NodeMaterial.constructor> ) : NodeMaterialLoader
 
 Defines the dictionary of node material types.
 
@@ -60,13 +60,13 @@ The node material library defined as `<classname,class>`.
 
 **Returns:** A reference to this loader.
 
-### .setNodes( value : Object.<string, Node.constructor> ) : NodeLoader
+### .setNodes( value : Object.<string, Node> ) : NodeMaterialLoader
 
-Defines the dictionary of node types.
+Defines the dictionary of deserialized node instances.
 
 **value**
 
-The node library defined as `<classname,class>`.
+The node instances defined as `<uuid,node>`.
 
 **Returns:** A reference to this loader.
 

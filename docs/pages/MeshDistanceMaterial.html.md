@@ -2,9 +2,7 @@
 
 # MeshDistanceMaterial
 
-A material used internally for implementing shadow mapping with point lights.
-
-Can also be used to customize the shadow casting of an object by assigning an instance of `MeshDistanceMaterial` to [Object3D#customDistanceMaterial](Object3D.html#customDistanceMaterial). The following examples demonstrates this approach in order to ensure transparent parts of objects do not cast shadows.
+A material that stores the distance of fragments to a reference position.
 
 ## Constructor
 

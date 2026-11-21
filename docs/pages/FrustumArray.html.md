@@ -12,7 +12,7 @@ Constructs a new frustum array.
 
 ### .coordinateSystem : WebGLCoordinateSystem | WebGPUCoordinateSystem
 
-The coordinate system to use.
+The coordinate system. Note that it is not used by the culling tests: each frustum uses the coordinate system of its sub camera, see [FrustumArray#setFromArrayCamera](FrustumArray.html#setFromArrayCamera).
 
 Default is `WebGLCoordinateSystem`.
 

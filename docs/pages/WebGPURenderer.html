@@ -13,9 +13,10 @@
 	<h1 translate="no">WebGPURenderer</h1>
 		<section>
 			<header>
-				<div class="class-description"><p>This renderer is the new alternative of <code>WebGLRenderer</code>. <code>WebGPURenderer</code> has the ability
-to target different backends. By default, the renderer tries to use a WebGPU backend if the
-browser supports WebGPU. If not, <code>WebGPURenderer</code> falls backs to a WebGL 2 backend.</p></div>
+				<div class="class-description"><p>This renderer targets the WebGPU API.</p>
+<p>The renderer initializes asynchronously: call <code>await renderer.init()</code> before using
+<code>render()</code>, or define the animation loop with <code>setAnimationLoop()</code> which waits for
+the initialization.</p></div>
 			</header>
 			<article>
 				<div class="container-overview">
@@ -127,7 +128,8 @@ standard node library for type mapping.</p>
 <span class="param-type">boolean</span>
 				</td>
 			<td class="description last">
-				<p>Whether MSAA as the default anti-aliasing should be enabled or not.</p>
+				<p>Whether MSAA as the default anti-aliasing should be enabled or not. MSAA is disabled on devices
+running in WebGPU compatibility mode.</p>
 						<p>Default is <code>false</code>.</p>
 			</td>
 		</tr>
@@ -138,30 +140,64 @@ standard node library for type mapping.</p>
 <span class="param-type">number</span>
 				</td>
 			<td class="description last">
-				<p>When <code>antialias</code> is <code>true</code>, <code>4</code> samples are used by default. Set this parameter to any other integer value than 0 to overwrite the default.</p>
+				<p>The number of MSAA samples. When <code>antialias</code> is <code>true</code>, <code>4</code> samples are used by default. A value other than <code>0</code>
+overwrites the default and enables MSAA even without <code>antialias</code>. The WebGPU backend only supports <code>4</code> samples (higher values are
+clamped to <code>4</code>).</p>
 						<p>Default is <code>0</code>.</p>
 			</td>
 		</tr>
 		<tr>
 				<td class="name">
-					<strong>forceWebGL</strong>
+					<strong>canvas</strong>
 						<br>
-<span class="param-type">boolean</span>
+<span class="param-type">HTMLCanvasElement</span>
+|
+<span class="param-type">OffscreenCanvas</span>
 				</td>
 			<td class="description last">
-				<p>If set to <code>true</code>, the renderer uses a WebGL 2 backend no matter if WebGPU is supported or not.</p>
-						<p>Default is <code>false</code>.</p>
+				<p>The canvas the renderer draws its output to. If not provided, a new canvas is created.</p>
 			</td>
 		</tr>
 		<tr>
 				<td class="name">
-					<strong>multiview</strong>
+					<strong>context</strong>
 						<br>
-<span class="param-type">boolean</span>
+<span class="param-type">GPUCanvasContext</span>
 				</td>
 			<td class="description last">
-				<p>If set to <code>true</code>, the renderer will use multiview during WebXR rendering if supported.</p>
-						<p>Default is <code>false</code>.</p>
+				<p>An existing rendering context of <code>canvas</code>.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>powerPreference</strong>
+						<br>
+<span class="param-type">string</span>
+				</td>
+			<td class="description last">
+				<p>A hint for the GPU adapter selection, either <code>'low-power'</code> or <code>'high-performance'</code>.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>requiredLimits</strong>
+						<br>
+<span class="param-type">Object</span>
+				</td>
+			<td class="description last">
+				<p>The device limits to request. If the adapter cannot provide them, the initialization fails.</p>
+						<p>Default is <code>{}</code>.</p>
+			</td>
+		</tr>
+		<tr>
+				<td class="name">
+					<strong>device</strong>
+						<br>
+<span class="param-type">GPUDevice</span>
+				</td>
+			<td class="description last">
+				<p>An existing GPU device to use instead of requesting a new one. <code>powerPreference</code> and <code>requiredLimits</code>
+are ignored in this case, and the device is not destroyed when the renderer is disposed.</p>
 			</td>
 		</tr>
 		<tr>
@@ -171,7 +207,8 @@ standard node library for type mapping.</p>
 <span class="param-type">number</span>
 				</td>
 			<td class="description last">
-				<p>Texture type for output to canvas. By default, device's preferred format is used; other formats may incur overhead.</p>
+				<p>Texture type for output to canvas. Either <code>UnsignedByteType</code> or <code>HalfFloatType</code> (extended range,
+for HDR displays); other types are not supported. By default, device's preferred format is used; other formats may incur overhead.</p>
 			</td>
 		</tr>
 		<tr>

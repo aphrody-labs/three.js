@@ -21,9 +21,7 @@ sort only requires a fixed number of passes (reset, histogram, prefix sum, scatt
 <code>count</code>, at the cost of only being accurate to the resolution of <code>binCount</code> - elements that land
 in the same bin end up in an unspecified relative order.</p>
 <p>This class does not compute the sort key itself. Instead, a TSL function is supplied via
-<a href="CountingSort.html#setBinNode">CountingSort#setBinNode</a> that maps the current <code>instanceIndex</code> to a bin, and an equivalent
-plain JavaScript function can be supplied to <a href="CountingSort.html#computeCPU">CountingSort#computeCPU</a> for platforms without
-compute shader support (e.g. the WebGL backend of <a href="WebGPURenderer.html">WebGPURenderer</a>).</p></div>
+<a href="CountingSort.html#setBinNode">CountingSort#setBinNode</a> that maps the current <code>instanceIndex</code> to a bin.</p></div>
 				<h2>Code Example</h2>
 				<div translate="no"><pre><code class="language-js">const sort = new CountingSort( count, { binCount: 4096 } );
 sort.setBinNode( () => {
@@ -131,7 +129,7 @@ the scatter pass, as a per-bin write cursor.</p>
 					<h3 class="name" id="orderAttribute" translate="no">.<a href="#orderAttribute">orderAttribute</a><span class="type-signature"> : <a href="StorageBufferAttribute.html">StorageBufferAttribute</a></span> </h3>
 					<div class="description">
 						<p>The buffer attribute holding the sorted order (a permutation of <code>[0, count)</code>). This is
-also the attribute that is kept up to date by <a href="CountingSort.html#computeCPU">CountingSort#computeCPU</a>.</p>
+also the attribute that is kept up to date by CountingSort#computeCPU.</p>
 					</div>
 				</div>
 				<div class="member">
@@ -171,30 +169,11 @@ also the attribute that is kept up to date by <a href="CountingSort.html#compute
 							</tbody>
 						</table>
 					</div>
-					<h3 class="name name-method" id="computeCPU" translate="no">.<a href="#computeCPU">computeCPU</a><span class="signature">( binFn : <span class="param-type">function</span> )</span> </h3>
+					<h3 class="name name-method" id="dispose" translate="no">.<a href="#dispose">dispose</a><span class="signature">()</span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Executes a complete counting sort on the CPU, updating <a href="CountingSort.html#orderAttribute">CountingSort#orderAttribute</a>.
-Intended as a fallback for backends without compute shader support.</p>
-						</div>
-						<table class="params">
-							<tbody>
-								<tr>
-									<td class="name">
-										<strong translate="no">binFn</strong>
-									</td>
-									<td class="description last">
-										<p>A function taking an element index and returning its bin (a plain number in <code>[0, binCount)</code>).</p>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<h3 class="name name-method" id="enableWebGLBuffers" translate="no">.<a href="#enableWebGLBuffers">enableWebGLBuffers</a><span class="signature">()</span> </h3>
-					<div class="method">
-						<div class="description">
-							<p>Enables the WebGL-specific storage buffer path (PBO + dynamic draw usage) for the order buffer.
-Only needed when <a href="CountingSort.html#computeCPU">CountingSort#computeCPU</a> is used with the WebGL backend of <a href="WebGPURenderer.html">WebGPURenderer</a>.</p>
+							<p>Frees the GPU-related resources allocated by this instance. Call this
+method whenever this instance is no longer used in your app.</p>
 						</div>
 					</div>
 					<h3 class="name name-method" id="setBinNode" translate="no">.<a href="#setBinNode">setBinNode</a><span class="signature">( binNode : <span class="param-type">function</span> )</span> </h3>

@@ -147,7 +147,7 @@ This reduces blurriness under motion, but can introduce a square pattern artifac
 					<h3 class="name name-method" id="clearViewOffset" translate="no">.<a href="#clearViewOffset">clearViewOffset</a><span class="signature">()</span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Clears the view offset from the scene's camera.</p>
+							<p>Restores the original projection matrix of the scene's camera.</p>
 						</div>
 					</div>
 					<h3 class="name name-method" id="dispose" translate="no">.<a href="#dispose">dispose</a><span class="signature">()</span> </h3>
@@ -198,8 +198,8 @@ when the effect is no longer required.</p>
 					<h3 class="name name-method" id="setViewOffset" translate="no">.<a href="#setViewOffset">setViewOffset</a><span class="signature">( width : <span class="param-type">number</span>, height : <span class="param-type">number</span> )</span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Defines the TRAA's current jitter as a view offset
-to the scene's camera.</p>
+							<p>Applies the TRAA's current jitter to the projection
+matrix of the scene's camera.</p>
 						</div>
 						<table class="params">
 							<tbody>

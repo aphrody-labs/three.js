@@ -61,7 +61,7 @@ const data = await exporter.parseAsync( scene, options );
 				</div>
 				<h2 class="subsection-title">Properties</h2>
 				<div class="member">
-					<h3 class="name" id="textureUtils" translate="no">.<a href="#textureUtils">textureUtils</a><span class="type-signature"> : <a href="WebGLTextureUtils.html">WebGLTextureUtils</a> | <a href="WebGPUTextureUtils.html">WebGPUTextureUtils</a></span> </h3>
+					<h3 class="name" id="textureUtils" translate="no">.<a href="#textureUtils">textureUtils</a><span class="type-signature"> : WebGLTextureUtils | <a href="WebGPUTextureUtils.html">WebGPUTextureUtils</a></span> </h3>
 					<div class="description">
 						<p>A reference to a texture utils module.</p>
 						<p>Default is <code>null</code>.</p>
@@ -162,12 +162,12 @@ to the exporter.</p>
 							<dt class="tag-returns"><strong>Returns:</strong> A reference to this exporter.</dt>
 						</dl>
 					</div>
-					<h3 class="name name-method" id="setTextureUtils" translate="no">.<a href="#setTextureUtils">setTextureUtils</a><span class="signature">( utils : <span class="param-type"><a href="WebGLTextureUtils.html">WebGLTextureUtils</a> | <a href="WebGPUTextureUtils.html">WebGPUTextureUtils</a></span> )</span><span class="type-signature"> : <a href="GLTFExporter.html">GLTFExporter</a></span> </h3>
+					<h3 class="name name-method" id="setTextureUtils" translate="no">.<a href="#setTextureUtils">setTextureUtils</a><span class="signature">( utils : <span class="param-type">WebGLTextureUtils | <a href="WebGPUTextureUtils.html">WebGPUTextureUtils</a></span> )</span><span class="type-signature"> : <a href="GLTFExporter.html">GLTFExporter</a></span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>Sets the texture utils for this exporter. Only relevant when compressed textures have to be exported.</p>
-<p>Depending on whether you use <a href="WebGLRenderer.html">WebGLRenderer</a> or <a href="WebGPURenderer.html">WebGPURenderer</a>, you must inject the
-corresponding texture utils <a href="module-WebGLTextureUtils.html">module:WebGLTextureUtils</a> or <a href="module-WebGPUTextureUtils.html">module:WebGPUTextureUtils</a>.</p>
+<p>Depending on whether you use WebGLRenderer or <a href="WebGPURenderer.html">WebGPURenderer</a>, you must inject the
+corresponding texture utils module:WebGLTextureUtils or <a href="module-WebGPUTextureUtils.html">module:WebGPUTextureUtils</a>.</p>
 						</div>
 						<table class="params">
 							<tbody>

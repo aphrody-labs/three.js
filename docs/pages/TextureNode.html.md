@@ -382,7 +382,7 @@ TSL function for creating a texture node that fetches/loads texels without inter
 
 **uvNode**
 
-The uv node.
+The integer texel coordinates (not normalized uvs).
 
 **Returns:** A texture node representing the texture load.
 

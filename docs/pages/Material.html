@@ -45,7 +45,7 @@ blending without the associated problems of sorting. Using TAA can reduce the re
 					</div>
 				</div>
 				<div class="member">
-					<h3 class="name" id="alphaTest" translate="no">.<a href="#alphaTest">alphaTest</a><span class="type-signature"> : number</span> <span class="type-signature">(readonly) </span></h3>
+					<h3 class="name" id="alphaTest" translate="no">.<a href="#alphaTest">alphaTest</a><span class="type-signature"> : number</span> </h3>
 					<div class="description">
 						<p>Sets the alpha value to be used when running an alpha test. The material
 will not be rendered if the opacity is lower than this value.</p>
@@ -126,23 +126,9 @@ will smooth aliasing on clip plane edges and alphaTest-clipped edges.</p>
 <p>It must be set to <code>CustomBlending</code> if custom blending properties like
 <a href="Material.html#blendSrc">Material#blendSrc</a>, <a href="Material.html#blendDst">Material#blendDst</a> or <a href="Material.html#blendEquation">Material#blendEquation</a>
 should have any effect.</p>
+<p><code>SubtractiveBlending</code> and <code>MultiplyBlending</code> require <a href="Material.html#premultipliedAlpha">Material#premultipliedAlpha</a>
+to be <code>true</code>.</p>
 						<p>Default is <code>NormalBlending</code>.</p>
-					</div>
-				</div>
-				<div class="member">
-					<h3 class="name" id="clipIntersection" translate="no">.<a href="#clipIntersection">clipIntersection</a><span class="type-signature"> : boolean</span> </h3>
-					<div class="description">
-						<p>Changes the behavior of clipping planes so that only their intersection is
-clipped, rather than their union.</p>
-						<p>Default is <code>false</code>.</p>
-					</div>
-				</div>
-				<div class="member">
-					<h3 class="name" id="clipShadows" translate="no">.<a href="#clipShadows">clipShadows</a><span class="type-signature"> : boolean</span> </h3>
-					<div class="description">
-						<p>Defines whether to clip shadows according to the clipping planes specified
-on this material.</p>
-						<p>Default is <code>false</code>.</p>
 					</div>
 				</div>
 				<div class="member">
@@ -151,8 +137,8 @@ on this material.</p>
 						<p>User-defined clipping planes specified as THREE.Plane objects in world
 space. These planes apply to the objects this material is attached to.
 Points in space whose signed distance to the plane is negative are clipped
-(not rendered). This requires <a href="WebGLRenderer.html#localClippingEnabled">WebGLRenderer#localClippingEnabled</a> to
-be <code>true</code>.</p>
+(not rendered).</p>
+<p><code>WebGPURenderer</code> does not evaluate this property, use <a href="ClippingGroup.html">ClippingGroup</a> instead.</p>
 						<p>Default is <code>null</code>.</p>
 					</div>
 				</div>
@@ -160,7 +146,7 @@ be <code>true</code>.</p>
 					<h3 class="name" id="colorWrite" translate="no">.<a href="#colorWrite">colorWrite</a><span class="type-signature"> : boolean</span> </h3>
 					<div class="description">
 						<p>Whether to render the material's color.</p>
-<p>This can be used in conjunction with Object3D#renderOder to create invisible
+<p>This can be used in conjunction with <a href="Object3D.html#renderOrder">Object3D#renderOrder</a> to create invisible
 objects that occlude other objects.</p>
 						<p>Default is <code>true</code>.</p>
 					</div>
@@ -176,7 +162,8 @@ objects that occlude other objects.</p>
 					<h3 class="name" id="depthTest" translate="no">.<a href="#depthTest">depthTest</a><span class="type-signature"> : boolean</span> </h3>
 					<div class="description">
 						<p>Whether to have depth test enabled when rendering this material.
-When the depth test is disabled, the depth write will also be implicitly disabled.</p>
+Depth is still written when the depth test is disabled, unless
+<a href="Material.html#depthWrite">Material#depthWrite</a> is set to <code>false</code>.</p>
 						<p>Default is <code>true</code>.</p>
 					</div>
 				</div>
@@ -295,6 +282,7 @@ is determined as follows:</p>
 <li>When <a href="Material.html#side">Material#side</a> is set to <code>BackSide</code>, the front side cast shadows.</li>
 <li>When <a href="Material.html#side">Material#side</a> is set to <code>DoubleSide</code>, both sides cast shadows.</li>
 </ul>
+<p>With <code>VSMShadowMap</code>, the side casting shadows matches <a href="Material.html#side">Material#side</a> instead.</p>
 						<p>Default is <code>null</code>.</p>
 					</div>
 				</div>
@@ -462,10 +450,9 @@ four (RGBA) component color buffer attribute is used.</p>
 					<h3 class="name name-method" id="customProgramCacheKey" translate="no">.<a href="#customProgramCacheKey">customProgramCacheKey</a><span class="signature">()</span><span class="type-signature"> : string</span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>In case <a href="Material.html#onBeforeCompile">Material#onBeforeCompile</a> is used, this callback can be used to identify
-values of settings used in <code>onBeforeCompile()</code>, so three.js can reuse a cached
-shader or recompile the shader for this material as needed.</p>
-<p>This method can only be used when rendering with <a href="WebGLRenderer.html">WebGLRenderer</a>.</p>
+							<p>Returns a string that identifies settings which affect the generated shader
+beyond the material properties tracked by the renderer. Subclasses override
+this to share or separate pipeline caches.</p>
 						</div>
 						<dl class="details">
 							<dt class="tag-returns"><strong>Returns:</strong> The custom program cache key.</dt>
@@ -510,96 +497,6 @@ method whenever this instance is no longer used in your app.</p>
 						<dl class="details">
 							<dt class="tag-returns"><strong>Returns:</strong> A reference to this material.</dt>
 						</dl>
-					</div>
-					<h3 class="name name-method" id="onBeforeCompile" translate="no">.<a href="#onBeforeCompile">onBeforeCompile</a><span class="signature">( shaderobject : <span class="param-type">Object</span>, renderer : <span class="param-type"><a href="WebGLRenderer.html">WebGLRenderer</a></span> )</span> </h3>
-					<div class="method">
-						<div class="description">
-							<p>An optional callback that is executed immediately before the shader
-program is compiled. This function is called with the shader source code
-as a parameter. Useful for the modification of built-in materials.</p>
-<p>This method can only be used when rendering with <a href="WebGLRenderer.html">WebGLRenderer</a>. The
-recommended approach when customizing materials is to use <code>WebGPURenderer</code> with the new
-Node Material system and <a href="https://github.com/mrdoob/three.js/wiki/Three.js-Shading-Language" target="_blank" rel="noopener">TSL</a>.</p>
-						</div>
-						<table class="params">
-							<tbody>
-								<tr>
-									<td class="name">
-										<strong translate="no">shaderobject</strong>
-									</td>
-									<td class="description last">
-										<p>The object holds the uniforms and the vertex and fragment shader source.</p>
-									</td>
-								</tr>
-								<tr>
-									<td class="name">
-										<strong translate="no">renderer</strong>
-									</td>
-									<td class="description last">
-										<p>A reference to the renderer.</p>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<h3 class="name name-method" id="onBeforeRender" translate="no">.<a href="#onBeforeRender">onBeforeRender</a><span class="signature">( renderer : <span class="param-type"><a href="WebGLRenderer.html">WebGLRenderer</a></span>, scene : <span class="param-type"><a href="Scene.html">Scene</a></span>, camera : <span class="param-type"><a href="Camera.html">Camera</a></span>, geometry : <span class="param-type"><a href="BufferGeometry.html">BufferGeometry</a></span>, object : <span class="param-type"><a href="Object3D.html">Object3D</a></span>, group : <span class="param-type">Object</span> )</span> </h3>
-					<div class="method">
-						<div class="description">
-							<p>An optional callback that is executed immediately before the material is used to render a 3D object.</p>
-<p>This method can only be used when rendering with <a href="WebGLRenderer.html">WebGLRenderer</a>.</p>
-						</div>
-						<table class="params">
-							<tbody>
-								<tr>
-									<td class="name">
-										<strong translate="no">renderer</strong>
-									</td>
-									<td class="description last">
-										<p>The renderer.</p>
-									</td>
-								</tr>
-								<tr>
-									<td class="name">
-										<strong translate="no">scene</strong>
-									</td>
-									<td class="description last">
-										<p>The scene.</p>
-									</td>
-								</tr>
-								<tr>
-									<td class="name">
-										<strong translate="no">camera</strong>
-									</td>
-									<td class="description last">
-										<p>The camera that is used to render the scene.</p>
-									</td>
-								</tr>
-								<tr>
-									<td class="name">
-										<strong translate="no">geometry</strong>
-									</td>
-									<td class="description last">
-										<p>The 3D object's geometry.</p>
-									</td>
-								</tr>
-								<tr>
-									<td class="name">
-										<strong translate="no">object</strong>
-									</td>
-									<td class="description last">
-										<p>The 3D object.</p>
-									</td>
-								</tr>
-								<tr>
-									<td class="name">
-										<strong translate="no">group</strong>
-									</td>
-									<td class="description last">
-										<p>The geometry group data.</p>
-									</td>
-								</tr>
-							</tbody>
-						</table>
 					</div>
 					<h3 class="name name-method" id="setValues" translate="no">.<a href="#setValues">setValues</a><span class="signature">( values : <span class="param-type">Object</span> )</span> </h3>
 					<div class="method">

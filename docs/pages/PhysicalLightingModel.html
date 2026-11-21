@@ -390,6 +390,36 @@ rect area light nodes.</p>
 							</tbody>
 						</table>
 					</div>
+					<h3 class="name name-method" id="indirectRadiance" translate="no">.<a href="#indirectRadiance">indirectRadiance</a><span class="signature">( irradianceAt : <span class="param-type">function</span>, builder : <span class="param-type"><a href="NodeBuilder.html">NodeBuilder</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>Reflects ambient and hemisphere lights, which stand in for a distant
+environment that reflects its irradiance / PI.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">irradianceAt</strong>
+									</td>
+									<td class="description last">
+										<p>Returns the light's irradiance for a world space direction.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">builder</strong>
+									</td>
+									<td class="description last">
+										<p>The current node builder.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>Overrides:</strong> <a href="LightingModel.html#indirectRadiance">LightingModel#indirectRadiance</a></dt>
+						</dl>
+					</div>
 					<h3 class="name name-method" id="indirectSpecular" translate="no">.<a href="#indirectSpecular">indirectSpecular</a><span class="signature">( builder : <span class="param-type"><a href="NodeBuilder.html">NodeBuilder</a></span> )</span> </h3>
 					<div class="method">
 						<div class="description">

@@ -30,6 +30,18 @@ The projected error in pixels below which a simpler level of detail is selected.
 
 Default is `1`.
 
+**lodTransition**
+
+The fraction of `lodThreshold` over which adjacent levels of detail crossfade with a screen-door dither mask. Only the clusters drawn by the hardware rasterizer crossfade, the levels of the software rasterizer switch at once.
+
+Default is `0`.
+
+**transitionScreenRadius**
+
+The radius in pixels below which the levels of detail of objects switch without a transition, `0` crossfades all objects.
+
+Default is `0`.
+
 **shadowLodThreshold**
 
 The projected error in shadow map texels below which a simpler level of detail is selected for shadow casters.

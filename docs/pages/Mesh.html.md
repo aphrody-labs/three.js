@@ -93,7 +93,7 @@ The frustum to test.
 
 ### .raycast( raycaster : Raycaster, intersects : Array.<Object> )
 
-Computes intersection points between a casted ray and this line.
+Computes intersection points between a casted ray and this mesh.
 
 **raycaster**
 

@@ -2,7 +2,7 @@
 
 # RoomEnvironment
 
-This class represents a scene with a basic room setup that can be used as input for [PMREMGenerator#fromScene](PMREMGenerator.html#fromScene). The resulting PMREM represents the room's lighting and can be used for Image Based Lighting by assigning it to [Scene#environment](Scene.html#environment) or directly as an environment map to PBR materials.
+This class represents a scene with a basic room setup that can be used as input for PMREMGenerator#fromScene. The resulting PMREM represents the room's lighting and can be used for Image Based Lighting by assigning it to [Scene#environment](Scene.html#environment) or directly as an environment map to PBR materials.
 
 The implementation is based on the [EnvironmentScene](https://github.com/google/model-viewer/blob/master/packages/model-viewer/src/three-components/EnvironmentScene.ts) component from the `model-viewer` project.
 

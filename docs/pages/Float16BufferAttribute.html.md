@@ -4,11 +4,11 @@
 
 Convenient class that can be used when creating a `Float16` buffer attribute with a plain `Array` instance.
 
-This class automatically converts to and from FP16 via `Uint16Array` since `Float16Array` browser support is still problematic.
+The attribute data are stored in a `Float16Array`. If `Float16Array` is not supported, the class falls back to `Float32Array`.
 
 ## Constructor
 
-### new Float16BufferAttribute( array : Array.<number> | Uint16Array, itemSize : number, normalized : boolean )
+### new Float16BufferAttribute( array : Array.<number> | Float16Array, itemSize : number, normalized : boolean )
 
 Constructs a new buffer attribute.
 

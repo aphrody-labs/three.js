@@ -76,7 +76,7 @@ Default is `true`.
 
 ### .isCubeTexture : boolean (readonly)
 
-Set to true for cube texture handling in WebGLTextures.
+Set to true for cube texture handling.
 
 Default is `true`.
 

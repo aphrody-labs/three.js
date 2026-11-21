@@ -25,11 +25,11 @@ Executes when all items have been loaded.
 
 **onProgress**
 
-Executes when single items have been loaded.
+Executes when single items have been loaded. Receives `( url, itemsLoaded, itemsTotal )`.
 
 **onError**
 
-Executes when an error occurs.
+Executes when an error occurs. Receives the `url` of the item that failed.
 
 ## Properties
 
@@ -39,7 +39,7 @@ Used for aborting ongoing requests in loaders using this manager.
 
 ### .onError : function | undefined
 
-Executes when an error occurs.
+Executes when an error occurs. Receives the `url` of the item that failed.
 
 Default is `undefined`.
 
@@ -51,13 +51,13 @@ Default is `undefined`.
 
 ### .onProgress : function | undefined
 
-Executes when single items have been loaded.
+Executes when single items have been loaded. Receives `( url, itemsLoaded, itemsTotal )`.
 
 Default is `undefined`.
 
 ### .onStart : function | undefined
 
-Executes when an item starts loading.
+Executes when the first item of a new loading batch starts loading. Receives `( url, itemsLoaded, itemsTotal )`.
 
 Default is `undefined`.
 
@@ -65,11 +65,11 @@ Default is `undefined`.
 
 ### .abort() : LoadingManager
 
-Can be used to abort ongoing loading requests in loaders using this manager. The abort only works if the loaders implement [Loader#abort](Loader.html#abort) and `AbortSignal.any()` is supported in the browser.
+Can be used to abort ongoing loading requests in loaders using this manager. The abort only works for loaders that observe [LoadingManager#abortController](LoadingManager.html#abortController) (e.g. [FileLoader](FileLoader.html) and [ImageBitmapLoader](ImageBitmapLoader.html)) and if `AbortSignal.any()` is supported in the browser.
 
 **Returns:** A reference to this loading manager.
 
-### .addHandler( regex : string, loader : Loader ) : LoadingManager
+### .addHandler( regex : RegExp, loader : Loader ) : LoadingManager
 
 Registers a loader with the given regular expression. Can be used to define what loader should be used in order to load specific files. A typical use case is to overwrite the default loader for textures.
 
@@ -122,13 +122,13 @@ This should be called by any loader using the manager when the loader starts loa
 
 The URL to load.
 
-### .removeHandler( regex : string ) : LoadingManager
+### .removeHandler( regex : RegExp ) : LoadingManager
 
 Removes the loader for the given regular expression.
 
 **regex**
 
-A regular expression.
+The same regular expression instance that was passed to [LoadingManager#addHandler](LoadingManager.html#addHandler).
 
 **Returns:** A reference to this loading manager.
 
@@ -152,7 +152,10 @@ const manager = new THREE.LoadingManager();
 // Initialize loading manager with URL callback.
 const objectURLs = [];
 manager.setURLModifier( ( url ) => {
-	url = URL.createObjectURL( blobs[ url ] );
+	// resources of the glTF asset are requested relative to it, e.g. './diffuse.png'
+	const blob = blobs[ url.replace( /^\.\//, '' ) ];
+	if ( blob === undefined ) return url;
+	url = URL.createObjectURL( blob );
 	objectURLs.push( url );
 	return url;
 } );

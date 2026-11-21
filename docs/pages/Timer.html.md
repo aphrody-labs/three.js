@@ -1,6 +1,6 @@
 # Timer
 
-This class is an alternative to [Clock](Clock.html) with a different API design and behavior. The goal is to avoid the conceptual flaws that became apparent in `Clock` over time.
+Class for keeping track of time.
 
 *   `Timer` has an `update()` method that updates its internal state. That makes it possible to call `getDelta()` and `getElapsed()` multiple times per simulation step without getting different values.
 *   The class can make use of the Page Visibility API to avoid large time delta values when the app is inactive (e.g. tab switched or browser hidden).

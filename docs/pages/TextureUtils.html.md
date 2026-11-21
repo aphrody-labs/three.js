@@ -14,7 +14,7 @@ The texture.
 
 **aspect**
 
-The texture's aspect ratio.
+The aspect ratio (width / height) of the surface the texture is displayed on.
 
 **Returns:** The updated texture.
 
@@ -28,7 +28,7 @@ The texture.
 
 **aspect**
 
-The texture's aspect ratio.
+The aspect ratio (width / height) of the surface the texture is displayed on.
 
 **Returns:** The updated texture.
 

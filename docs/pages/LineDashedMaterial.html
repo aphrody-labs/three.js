@@ -13,8 +13,10 @@
 	<h1 translate="no">LineDashedMaterial</h1>
 		<section>
 			<header>
-				<div class="class-description"><p>A material for rendering line primitives.</p>
-<p>Materials define the appearance of renderable 3D objects.</p></div>
+				<div class="class-description"><p>A material for rendering dashed line primitives.</p>
+<p>Materials define the appearance of renderable 3D objects.</p>
+<p>The material requires the <code>lineDistance</code> attribute, so call
+<a href="Line.html#computeLineDistances">Line#computeLineDistances</a> on the line. Otherwise, it renders solid.</p></div>
 				<h2>Code Example</h2>
 				<div translate="no"><pre><code class="language-js">const material = new THREE.LineDashedMaterial( {
 	color: 0xffffff,
@@ -22,6 +24,8 @@
 	dashSize: 3,
 	gapSize: 1,
 } );
+const line = new THREE.Line( geometry, material );
+line.computeLineDistances();
 </code></pre></div>
 			</header>
 			<article>
@@ -54,7 +58,7 @@ by <a href="Color.html#set">Color#set</a>.</p>
 				<div class="member">
 					<h3 class="name" id="dashSize" translate="no">.<a href="#dashSize">dashSize</a><span class="type-signature"> : number</span> </h3>
 					<div class="description">
-						<p>The size of the dash. This is both the gap with the stroke.</p>
+						<p>The length of each dash.</p>
 						<p>Default is <code>3</code>.</p>
 					</div>
 				</div>
@@ -75,7 +79,8 @@ by <a href="Color.html#set">Color#set</a>.</p>
 				<div class="member">
 					<h3 class="name" id="scale" translate="no">.<a href="#scale">scale</a><span class="type-signature"> : number</span> </h3>
 					<div class="description">
-						<p>The scale of the dashed part of a line.</p>
+						<p>Scales the line distances before dashing. Values greater than <code>1</code>
+make dashes and gaps shorter.</p>
 						<p>Default is <code>1</code>.</p>
 					</div>
 				</div>

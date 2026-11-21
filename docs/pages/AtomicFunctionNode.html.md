@@ -8,7 +8,7 @@ This node can only be used with a WebGPU backend.
 
 ## Constructor
 
-### new AtomicFunctionNode( method : string, pointerNode : Node, valueNode : Node )
+### new AtomicFunctionNode( method : string, pointerNode : Node, valueNode : Node.<(uint|int)> )
 
 Constructs a new atomic function node.
 

@@ -47,25 +47,6 @@ properties and methods for manipulating objects in 3D space.</p></div>
 					</div>
 				</div>
 				<div class="member">
-					<h3 class="name" id="customDepthMaterial" translate="no">.<a href="#customDepthMaterial">customDepthMaterial</a><span class="type-signature"> : <a href="Material.html">Material</a> | undefined</span> </h3>
-					<div class="description">
-						<p>Custom depth material to be used when rendering to the depth map. Can only be used
-in context of meshes. When shadow-casting with a <a href="DirectionalLight.html">DirectionalLight</a> or <a href="SpotLight.html">SpotLight</a>,
-if you are modifying vertex positions in the vertex shader you must specify a custom depth
-material for proper shadows.</p>
-<p>Only relevant in context of <a href="WebGLRenderer.html">WebGLRenderer</a>.</p>
-						<p>Default is <code>undefined</code>.</p>
-					</div>
-				</div>
-				<div class="member">
-					<h3 class="name" id="customDistanceMaterial" translate="no">.<a href="#customDistanceMaterial">customDistanceMaterial</a><span class="type-signature"> : <a href="Material.html">Material</a> | undefined</span> </h3>
-					<div class="description">
-						<p>Same as <a href="Object3D.html#customDepthMaterial">Object3D#customDepthMaterial</a>, but used with <a href="PointLight.html">PointLight</a>.</p>
-<p>Only relevant in context of <a href="WebGLRenderer.html">WebGLRenderer</a>.</p>
-						<p>Default is <code>undefined</code>.</p>
-					</div>
-				</div>
-				<div class="member">
 					<h3 class="name" id="frustumCulled" translate="no">.<a href="#frustumCulled">frustumCulled</a><span class="type-signature"> : boolean</span> </h3>
 					<div class="description">
 						<p>When set to <code>true</code>, the 3D object is honored by view frustum culling.</p>
@@ -193,7 +174,7 @@ instead of the object's origin.</p>
 					<div class="description">
 						<p>This value allows the default rendering order of scene graph objects to be
 overridden although opaque and transparent objects remain sorted independently.
-When this property is set for an instance of <a href="Group.html">Group</a>,all descendants
+When this property is set for an instance of <a href="Group.html">Group</a>, all descendants
 objects will be sorted and rendered together. Sorting is from lowest to highest
 render order.</p>
 						<p>Default is <code>0</code>.</p>
@@ -563,6 +544,7 @@ itself, and returns all 3D objects with a matching property value.</p>
 									</td>
 									<td class="description last">
 										<p>The method stores the result in this array.</p>
+										<p>Default is <code>[]</code>.</p>
 									</td>
 								</tr>
 							</tbody>
@@ -616,7 +598,7 @@ itself, and returns all 3D objects with a matching property value.</p>
 					<h3 class="name name-method" id="getWorldQuaternion" translate="no">.<a href="#getWorldQuaternion">getWorldQuaternion</a><span class="signature">( target : <span class="param-type"><a href="Quaternion.html">Quaternion</a></span> )</span><span class="type-signature"> : <a href="Quaternion.html">Quaternion</a></span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Returns a Quaternion representing the position of the 3D object in world space.</p>
+							<p>Returns a Quaternion representing the rotation of the 3D object in world space.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -681,7 +663,8 @@ to use frustum culling. The default implementation always returns <code>true</co
 					<h3 class="name name-method" id="localToWorld" translate="no">.<a href="#localToWorld">localToWorld</a><span class="signature">( vector : <span class="param-type"><a href="Vector3.html">Vector3</a></span> )</span><span class="type-signature"> : <a href="Vector3.html">Vector3</a></span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Converts the given vector from this 3D object's local space to world space.</p>
+							<p>Converts the given vector from this 3D object's local space to world space.
+The vector is interpreted as a position, so the translation is applied as well.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -734,10 +717,12 @@ to use frustum culling. The default implementation always returns <code>true</co
 							</tbody>
 						</table>
 					</div>
-					<h3 class="name name-method" id="onAfterRender" translate="no">.<a href="#onAfterRender">onAfterRender</a><span class="signature">( renderer : <span class="param-type"><a href="Renderer.html">Renderer</a> | <a href="WebGLRenderer.html">WebGLRenderer</a></span>, scene : <span class="param-type"><a href="Object3D.html">Object3D</a></span>, camera : <span class="param-type"><a href="Camera.html">Camera</a></span>, geometry : <span class="param-type"><a href="BufferGeometry.html">BufferGeometry</a></span>, material : <span class="param-type"><a href="Material.html">Material</a></span>, group : <span class="param-type">Object</span> )</span> </h3>
+					<h3 class="name name-method" id="onAfterRender" translate="no">.<a href="#onAfterRender">onAfterRender</a><span class="signature">( renderer : <span class="param-type"><a href="Renderer.html">Renderer</a></span>, scene : <span class="param-type"><a href="Object3D.html">Object3D</a></span>, camera : <span class="param-type"><a href="Camera.html">Camera</a></span>, geometry : <span class="param-type"><a href="BufferGeometry.html">BufferGeometry</a></span>, material : <span class="param-type"><a href="Material.html">Material</a></span>, group : <span class="param-type">Object</span> )</span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>A callback that is executed immediately after a 3D object is rendered.</p>
+							<p>A callback that is executed immediately after a 3D object is rendered.
+Only invoked for renderable 3D objects like meshes, lines, points or sprites, and for
+the scene passed to <code>render()</code> (with different arguments).</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -792,7 +777,7 @@ to use frustum culling. The default implementation always returns <code>true</co
 							</tbody>
 						</table>
 					</div>
-					<h3 class="name name-method" id="onAfterShadow" translate="no">.<a href="#onAfterShadow">onAfterShadow</a><span class="signature">( renderer : <span class="param-type"><a href="Renderer.html">Renderer</a> | <a href="WebGLRenderer.html">WebGLRenderer</a></span>, object : <span class="param-type"><a href="Object3D.html">Object3D</a></span>, camera : <span class="param-type"><a href="Camera.html">Camera</a></span>, shadowCamera : <span class="param-type"><a href="Camera.html">Camera</a></span>, geometry : <span class="param-type"><a href="BufferGeometry.html">BufferGeometry</a></span>, depthMaterial : <span class="param-type"><a href="Material.html">Material</a></span>, group : <span class="param-type">Object</span> )</span> </h3>
+					<h3 class="name name-method" id="onAfterShadow" translate="no">.<a href="#onAfterShadow">onAfterShadow</a><span class="signature">( renderer : <span class="param-type"><a href="Renderer.html">Renderer</a></span>, object : <span class="param-type"><a href="Object3D.html">Object3D</a></span>, camera : <span class="param-type"><a href="Camera.html">Camera</a></span>, shadowCamera : <span class="param-type"><a href="Camera.html">Camera</a></span>, geometry : <span class="param-type"><a href="BufferGeometry.html">BufferGeometry</a></span>, depthMaterial : <span class="param-type"><a href="Material.html">Material</a></span>, group : <span class="param-type">Object</span> )</span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>A callback that is executed immediately after a 3D object is rendered to a shadow map.</p>
@@ -858,10 +843,12 @@ to use frustum culling. The default implementation always returns <code>true</co
 							</tbody>
 						</table>
 					</div>
-					<h3 class="name name-method" id="onBeforeRender" translate="no">.<a href="#onBeforeRender">onBeforeRender</a><span class="signature">( renderer : <span class="param-type"><a href="Renderer.html">Renderer</a> | <a href="WebGLRenderer.html">WebGLRenderer</a></span>, scene : <span class="param-type"><a href="Object3D.html">Object3D</a></span>, camera : <span class="param-type"><a href="Camera.html">Camera</a></span>, geometry : <span class="param-type"><a href="BufferGeometry.html">BufferGeometry</a></span>, material : <span class="param-type"><a href="Material.html">Material</a></span>, group : <span class="param-type">Object</span> )</span> </h3>
+					<h3 class="name name-method" id="onBeforeRender" translate="no">.<a href="#onBeforeRender">onBeforeRender</a><span class="signature">( renderer : <span class="param-type"><a href="Renderer.html">Renderer</a></span>, scene : <span class="param-type"><a href="Object3D.html">Object3D</a></span>, camera : <span class="param-type"><a href="Camera.html">Camera</a></span>, geometry : <span class="param-type"><a href="BufferGeometry.html">BufferGeometry</a></span>, material : <span class="param-type"><a href="Material.html">Material</a></span>, group : <span class="param-type">Object</span> )</span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>A callback that is executed immediately before a 3D object is rendered.</p>
+							<p>A callback that is executed immediately before a 3D object is rendered.
+Only invoked for renderable 3D objects like meshes, lines, points or sprites, and for
+the scene passed to <code>render()</code> (with different arguments).</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -916,7 +903,7 @@ to use frustum culling. The default implementation always returns <code>true</co
 							</tbody>
 						</table>
 					</div>
-					<h3 class="name name-method" id="onBeforeShadow" translate="no">.<a href="#onBeforeShadow">onBeforeShadow</a><span class="signature">( renderer : <span class="param-type"><a href="Renderer.html">Renderer</a> | <a href="WebGLRenderer.html">WebGLRenderer</a></span>, object : <span class="param-type"><a href="Object3D.html">Object3D</a></span>, camera : <span class="param-type"><a href="Camera.html">Camera</a></span>, shadowCamera : <span class="param-type"><a href="Camera.html">Camera</a></span>, geometry : <span class="param-type"><a href="BufferGeometry.html">BufferGeometry</a></span>, depthMaterial : <span class="param-type"><a href="Material.html">Material</a></span>, group : <span class="param-type">Object</span> )</span> </h3>
+					<h3 class="name name-method" id="onBeforeShadow" translate="no">.<a href="#onBeforeShadow">onBeforeShadow</a><span class="signature">( renderer : <span class="param-type"><a href="Renderer.html">Renderer</a></span>, object : <span class="param-type"><a href="Object3D.html">Object3D</a></span>, camera : <span class="param-type"><a href="Camera.html">Camera</a></span>, shadowCamera : <span class="param-type"><a href="Camera.html">Camera</a></span>, geometry : <span class="param-type"><a href="BufferGeometry.html">BufferGeometry</a></span>, depthMaterial : <span class="param-type"><a href="Material.html">Material</a></span>, group : <span class="param-type">Object</span> )</span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>A callback that is executed immediately before a 3D object is rendered to a shadow map.</p>
@@ -1083,7 +1070,9 @@ An arbitrary number of objects may be removed.</p>
 					<h3 class="name name-method" id="rotateOnWorldAxis" translate="no">.<a href="#rotateOnWorldAxis">rotateOnWorldAxis</a><span class="signature">( axis : <span class="param-type"><a href="Vector3.html">Vector3</a></span>, angle : <span class="param-type">number</span> )</span><span class="type-signature"> : <a href="Object3D.html">Object3D</a></span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Rotates the 3D object along an axis in world space.</p>
+							<p>Rotates the 3D object along an axis in world space. The method assumes the
+3D object has no rotated parent; otherwise the axis is interpreted in the
+parent's space.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -1463,7 +1452,7 @@ when <a href="Object3D.html#matrixWorldNeedsUpdate">Object3D#matrixWorldNeedsUpd
 							</tbody>
 						</table>
 					</div>
-					<h3 class="name name-method" id="updateWorldMatrix" translate="no">.<a href="#updateWorldMatrix">updateWorldMatrix</a><span class="signature">( updateParents : <span class="param-type">boolean</span>, updateChildren : <span class="param-type">boolean</span>, force : <span class="param-type">boolean</span> )</span> </h3>
+					<h3 class="name name-method" id="updateWorldMatrix" translate="no">.<a href="#updateWorldMatrix">updateWorldMatrix</a><span class="signature">( updateParents : <span class="param-type">boolean</span>, updateChildren : <span class="param-type">boolean</span>, force : <span class="param-type">boolean</span> )</span><span class="type-signature"> : boolean</span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>An alternative version of <a href="Object3D.html#updateMatrixWorld">Object3D#updateMatrixWorld</a> with more control over the
@@ -1501,11 +1490,15 @@ when <a href="Object3D.html#matrixWorldNeedsUpdate">Object3D#matrixWorldNeedsUpd
 								</tr>
 							</tbody>
 						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>Returns:</strong> Whether the world matrix has changed or not.</dt>
+						</dl>
 					</div>
 					<h3 class="name name-method" id="worldToLocal" translate="no">.<a href="#worldToLocal">worldToLocal</a><span class="signature">( vector : <span class="param-type"><a href="Vector3.html">Vector3</a></span> )</span><span class="type-signature"> : <a href="Vector3.html">Vector3</a></span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Converts the given vector from this 3D object's world space to local space.</p>
+							<p>Converts the given vector from world space to this 3D object's local space.
+The vector is interpreted as a position, so the translation is applied as well.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -1528,6 +1521,7 @@ when <a href="Object3D.html#matrixWorldNeedsUpdate">Object3D#matrixWorldNeedsUpd
 					<div class="method">
 						<div class="description">
 							<p>Fires when the object has been added to its parent object.</p>
+<p>Adding 3D objects inside a listener of this event is not supported.</p>
 						</div>
 						<h5>Type:</h5>
 						<ul>
@@ -1540,6 +1534,7 @@ when <a href="Object3D.html#matrixWorldNeedsUpdate">Object3D#matrixWorldNeedsUpd
 					<div class="method">
 						<div class="description">
 							<p>Fires when a new child object has been added.</p>
+<p>Adding 3D objects inside a listener of this event is not supported.</p>
 						</div>
 						<h5>Type:</h5>
 						<ul>
@@ -1552,6 +1547,7 @@ when <a href="Object3D.html#matrixWorldNeedsUpdate">Object3D#matrixWorldNeedsUpd
 					<div class="method">
 						<div class="description">
 							<p>Fires when a child object has been removed.</p>
+<p>Removing 3D objects inside a listener of this event is not supported.</p>
 						</div>
 						<h5>Type:</h5>
 						<ul>
@@ -1576,6 +1572,7 @@ when <a href="Object3D.html#matrixWorldNeedsUpdate">Object3D#matrixWorldNeedsUpd
 					<div class="method">
 						<div class="description">
 							<p>Fires when the object has been removed from its parent object.</p>
+<p>Removing 3D objects inside a listener of this event is not supported.</p>
 						</div>
 						<h5>Type:</h5>
 						<ul>

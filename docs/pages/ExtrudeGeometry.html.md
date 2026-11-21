@@ -93,7 +93,7 @@ Default is `true`.
 **bevelThickness**  
 number
 
-How deep into the original shape the bevel goes.
+How far the bevel extends along the extrusion axis, below `z = 0` and beyond `depth`. With bevels enabled, the total thickness is `depth + 2 * bevelThickness`.
 
 Default is `0.2`.
 

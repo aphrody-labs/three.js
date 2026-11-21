@@ -73,9 +73,9 @@ Default is `null`.
 
 ### .size : number
 
-Defines the size of the points in pixels.
+Defines the size of the points in pixels. When [PointsMaterial#sizeAttenuation](PointsMaterial.html#sizeAttenuation) is `true` and a perspective camera is used, the size is additionally scaled by `( 0.5 * canvasHeight ) / viewDepth`.
 
-Might be capped if the value exceeds hardware dependent parameters like [gl.ALIASED\_POINT\_SIZE\_RANGE](https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getParamete).
+Might be capped if the value exceeds hardware dependent parameters like [gl.ALIASED\_POINT\_SIZE\_RANGE](https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getParameter).
 
 Default is `1`.
 

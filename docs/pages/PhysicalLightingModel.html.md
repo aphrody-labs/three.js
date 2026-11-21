@@ -254,6 +254,20 @@ Implements the indirect diffuse term.
 
 The current node builder.
 
+### .indirectRadiance( irradianceAt : function, builder : NodeBuilder )
+
+Reflects ambient and hemisphere lights, which stand in for a distant environment that reflects its irradiance / PI.
+
+**irradianceAt**
+
+Returns the light's irradiance for a world space direction.
+
+**builder**
+
+The current node builder.
+
+**Overrides:** [LightingModel#indirectRadiance](LightingModel.html#indirectRadiance)
+
 ### .indirectSpecular( builder : NodeBuilder )
 
 Implements the indirect specular term.

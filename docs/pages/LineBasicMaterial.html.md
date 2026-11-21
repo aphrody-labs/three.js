@@ -62,7 +62,7 @@ Default is `'round'`.
 
 Controls line thickness or lines.
 
-Can only be used with [SVGRenderer](SVGRenderer.html). WebGL and WebGPU ignore this setting and always render line primitives with a width of one pixel.
+Can only be used with [SVGRenderer](SVGRenderer.html). WebGPU ignores this setting and always render line primitives with a width of one pixel.
 
 Default is `1`.
 

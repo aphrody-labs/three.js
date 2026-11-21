@@ -34,11 +34,11 @@ Default is `InterpolateDiscrete`.
 
 **Overrides:** [KeyframeTrack#DefaultInterpolation](KeyframeTrack.html#DefaultInterpolation)
 
-### .ValueBufferType : TypedArray | Array
+### .ValueBufferType : TypedArray.constructor | Array.constructor
 
 The value buffer type of this keyframe track.
 
-Default is `Array.constructor`.
+Default is `Array`.
 
 **Overrides:** [KeyframeTrack#ValueBufferType](KeyframeTrack.html#ValueBufferType)
 

@@ -6,7 +6,7 @@ Represents the lighting model for [MeshSSSNodeMaterial](MeshSSSNodeMaterial.html
 
 ## Constructor
 
-### new SSSLightingModel( clearcoat : boolean, sheen : boolean, iridescence : boolean, anisotropy : boolean, transmission : boolean, dispersion : boolean, sss : boolean )
+### new SSSLightingModel( clearcoat : boolean, sheen : boolean, iridescence : boolean, anisotropy : boolean, transmission : boolean, dispersion : boolean, retroreflection : boolean, diffuseRoughness : boolean, sss : boolean )
 
 Constructs a new physical lighting model.
 
@@ -43,6 +43,18 @@ Default is `false`.
 **dispersion**
 
 Whether dispersion is supported or not.
+
+Default is `false`.
+
+**retroreflection**
+
+Whether retroreflection is supported or not.
+
+Default is `false`.
+
+**diffuseRoughness**
+
+Whether diffuse roughness is supported or not.
 
 Default is `false`.
 

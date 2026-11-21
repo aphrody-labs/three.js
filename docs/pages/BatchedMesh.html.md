@@ -89,7 +89,7 @@ The maximum number of individual instances that can be stored in the batch.
 
 ### .perObjectFrustumCulled : boolean
 
-When set ot `true`, the individual objects of a batch are frustum culled.
+When set to `true`, the individual objects of a batch are frustum culled.
 
 Default is `true`.
 

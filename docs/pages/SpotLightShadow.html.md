@@ -2,7 +2,7 @@
 
 # SpotLightShadow
 
-Represents the shadow configuration of directional lights.
+Represents the shadow configuration of spot lights.
 
 ## Constructor
 

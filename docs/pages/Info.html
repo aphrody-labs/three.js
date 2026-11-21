@@ -30,17 +30,18 @@ and monitoring.</p></div>
 				<div class="member">
 					<h3 class="name" id="autoReset" translate="no">.<a href="#autoReset">autoReset</a><span class="type-signature"> : boolean</span> </h3>
 					<div class="description">
-						<p>Whether frame related metrics should automatically
-be resetted or not. This property should be set to <code>false</code>
-by apps which manage their own animation loop. They must
-then call <code>renderer.info.reset()</code> once per frame manually.</p>
+						<p>Whether frame related metrics should automatically be reset at the
+start of each animation frame or not. The renderer runs its internal
+animation loop once <code>render()</code> or <code>compute()</code> has been called, even
+when the app manages its own animation loop. When set to <code>false</code>, the
+app must call <code>renderer.info.reset()</code> manually.</p>
 						<p>Default is <code>true</code>.</p>
 					</div>
 				</div>
 				<div class="member">
 					<h3 class="name" id="calls" translate="no">.<a href="#calls">calls</a><span class="type-signature"> : number</span> <span class="type-signature">(readonly) </span></h3>
 					<div class="description">
-						<p>The number of render calls since the
+						<p>The number of render and compute calls since the
 app has been started.</p>
 						<p>Default is <code>0</code>.</p>
 					</div>
@@ -70,16 +71,6 @@ app has been started.</p>
 				</td>
 			<td class="description last">
 				<p>The number of compute calls of the current frame.</p>
-			</td>
-		</tr>
-		<tr>
-				<td class="name">
-					<strong>timestamp</strong>
-						<br>
-<span class="param-type">number</span>
-				</td>
-			<td class="description last">
-				<p>The timestamp of the frame when using <code>renderer.computeAsync()</code>.</p>
 			</td>
 		</tr>
 	</tbody>
@@ -360,16 +351,6 @@ by <code>NodeFrame</code>.</p>
 				<p>The number of rendered line primitives of the current frame.</p>
 			</td>
 		</tr>
-		<tr>
-				<td class="name">
-					<strong>timestamp</strong>
-						<br>
-<span class="param-type">number</span>
-				</td>
-			<td class="description last">
-				<p>The timestamp of the frame.</p>
-			</td>
-		</tr>
 	</tbody>
 </table>
 				</div>
@@ -482,7 +463,7 @@ by <code>NodeFrame</code>.</p>
 							</tbody>
 						</table>
 					</div>
-					<h3 class="name name-method" id="createTexture" translate="no">.<a href="#createTexture">createTexture</a><span class="signature">( texture : <span class="param-type"><a href="Texture.html">Texture</a></span> )</span> </h3>
+					<h3 class="name name-method" id="createTexture" translate="no">.<a href="#createTexture">createTexture</a><span class="signature">( texture : <span class="param-type"><a href="Texture.html">Texture</a></span>, options : <span class="param-type">Object</span> )</span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>Tracks texture memory explicitly, updating counts and byte tracking.</p>
@@ -494,6 +475,14 @@ by <code>NodeFrame</code>.</p>
 										<strong translate="no">texture</strong>
 									</td>
 									<td class="description last">
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">options</strong>
+									</td>
+									<td class="description last">
+										<p>The texture's size and level information.</p>
 									</td>
 								</tr>
 							</tbody>
@@ -646,6 +635,31 @@ by <code>NodeFrame</code>.</p>
 									</td>
 									<td class="description last">
 										<p>The instance count.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="updateTexture" translate="no">.<a href="#updateTexture">updateTexture</a><span class="signature">( texture : <span class="param-type"><a href="Texture.html">Texture</a></span>, options : <span class="param-type">Object</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>Updates the tracked memory of a texture when its default texture is replaced with the loaded one.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">texture</strong>
+									</td>
+									<td class="description last">
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">options</strong>
+									</td>
+									<td class="description last">
+										<p>The texture's size and level information.</p>
 									</td>
 								</tr>
 							</tbody>

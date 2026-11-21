@@ -257,16 +257,6 @@ Minimum and maximum values of thickness are defined by <code>iridescenceThicknes
 					</div>
 				</div>
 				<div class="member">
-					<h3 class="name" id="iridescenceThicknessRange" translate="no">.<a href="#iridescenceThicknessRange">iridescenceThicknessRange</a><span class="type-signature"> : Array.&lt;number, number></span> </h3>
-					<div class="description">
-						<p>Array of exactly 2 elements, specifying minimum and maximum thickness of the iridescence layer.</p>
-						<p>Default is <code>[100,400]</code>.</p>
-					</div>
-						<dl class="details">
-							<dt class="important tag-deprecated"><strong>Deprecated:</strong> since r187. Use <a href="MeshPhysicalMaterial.html#iridescenceThicknessMinimum">MeshPhysicalMaterial#iridescenceThicknessMinimum</a> and <a href="MeshPhysicalMaterial.html#iridescenceThicknessMaximum">MeshPhysicalMaterial#iridescenceThicknessMaximum</a> instead.</dt>
-						</dl>
-				</div>
-				<div class="member">
 					<h3 class="name" id="isMeshPhysicalMaterial" translate="no">.<a href="#isMeshPhysicalMaterial">isMeshPhysicalMaterial</a><span class="type-signature"> : boolean</span> <span class="type-signature">(readonly) </span></h3>
 					<div class="description">
 						<p>This flag can be used for type testing.</p>
@@ -296,14 +286,17 @@ toward the light source.</p>
 				<div class="member">
 					<h3 class="name" id="sheen" translate="no">.<a href="#sheen">sheen</a><span class="type-signature"> : number</span> </h3>
 					<div class="description">
-						<p>The intensity of the sheen layer, from <code>0.0</code> to <code>1.0</code>.</p>
+						<p>The intensity of the sheen layer, from <code>0.0</code> to <code>1.0</code>. The sheen color is
+<code>sheenColor * sheen</code>, so <a href="MeshPhysicalMaterial.html#sheenColor">MeshPhysicalMaterial#sheenColor</a> (black by
+default) must also be set for sheen to be visible.</p>
 						<p>Default is <code>0</code>.</p>
 					</div>
 				</div>
 				<div class="member">
 					<h3 class="name" id="sheenColor" translate="no">.<a href="#sheenColor">sheenColor</a><span class="type-signature"> : <a href="Color.html">Color</a></span> </h3>
 					<div class="description">
-						<p>The sheen tint.</p>
+						<p>The sheen tint. It is multiplied by <a href="MeshPhysicalMaterial.html#sheen">MeshPhysicalMaterial#sheen</a>, so
+it must be set to a non-black color for sheen to be visible.</p>
 						<p>Default is <code>(0,0,0)</code>.</p>
 					</div>
 				</div>

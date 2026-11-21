@@ -14,7 +14,7 @@ import * as WebGPUTextureUtils from 'three/addons/utils/WebGPUTextureUtils.js';
 
 Returns an uncompressed version of the given compressed texture.
 
-This module can only be used with [WebGPURenderer](WebGPURenderer.html). When using [WebGLRenderer](WebGLRenderer.html), import the function from [module:WebGLTextureUtils](module-WebGLTextureUtils.html).
+This module can only be used with [WebGPURenderer](WebGPURenderer.html). When using WebGLRenderer, import the function from module:WebGLTextureUtils.
 
 **blitTexture**
 

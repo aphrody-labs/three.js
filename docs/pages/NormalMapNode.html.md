@@ -22,7 +22,7 @@ Represents the normal map data.
 
 **scaleNode**
 
-Controls the intensity of the effect.
+Controls the intensity of the effect. Only affects tangent space normal maps.
 
 Default is `null`.
 
@@ -40,7 +40,7 @@ Default is `TangentSpaceNormalMap`.
 
 ### .scaleNode : Node.<vec2>
 
-Controls the intensity of the effect.
+Controls the intensity of the effect. Only affects tangent space normal maps.
 
 Default is `null`.
 

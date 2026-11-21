@@ -4,6 +4,8 @@
 
 A material instance that reuses the shader of a node material with its own properties. All instances created from the same node material share a single shader build, so configure the node material before creating instances. Instance values are read in the shared node graph with `materialReference( name, type )`. Node properties such as `colorNode` are read-only and always read from the node material.
 
+Object values such as `color` are shared with the node material (and thus with other instances) on construction, so assign a new object instead of mutating the existing one, e.g. `material.color = new Color( 1, 0, 0 )` instead of `material.color.set( 1, 0, 0 )`.
+
 ## Code Example
 
 ```js

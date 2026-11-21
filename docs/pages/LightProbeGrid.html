@@ -17,7 +17,7 @@
 position-dependent diffuse global illumination.</p>
 <p>This is the <a href="WebGPURenderer.html">WebGPURenderer</a> version of <code>LightProbeGrid</code>. The grid is a
 <a href="Light.html">Light</a>, so adding it to the scene applies its baked irradiance to every
-lit node material automatically. When using <a href="WebGLRenderer.html">WebGLRenderer</a>, import the
+lit node material automatically. When using WebGLRenderer, import the
 grid from <code>LightProbeGridWebGL.js</code> instead.</p>
 <p>The baked data is stored in a single RGBA <code>RenderTarget3D</code> atlas that packs
 the nine L2 SH coefficients into seven sub-volumes stacked along Z. Baking is

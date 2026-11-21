@@ -46,6 +46,14 @@ Default is `8`.
 
 The light's view of the world.
 
+### .filterNode : function
+
+A custom shadow filter function. Only supported with `WebGPURenderer`.
+
+If a filter node is defined, it replaces the filter selected by the renderer's shadow map type.
+
+Default is `null`.
+
 ### .intensity : number
 
 The intensity of the shadow. The default is `1`. Valid values are in the range `[0, 1]`.
@@ -66,13 +74,13 @@ Default is `null`.
 
 ### .mapSize : Vector2
 
-Defines the width and height of the shadow map. Higher values give better quality shadows at the cost of computation time. Values must be powers of two.
+Defines the width and height of the shadow map. Higher values give better quality shadows at the cost of computation time. Point light shadows only use the width.
 
 Default is `(512,512)`.
 
 ### .mapType : number
 
-The type of shadow texture. The default is `UnsignedByteType`.
+The type of the shadow map's color texture. The default is `UnsignedByteType`. Only supported with `WebGPURenderer`, and not for point light shadows.
 
 Default is `UnsignedByteType`.
 
@@ -99,6 +107,14 @@ Setting this to values greater than 1 will blur the edges of the shadow. High va
 The property has no effect when the shadow map type is `BasicShadowMap`.
 
 Default is `1`.
+
+### .shadowNode : Node
+
+A custom shadow node that replaces the default shadow node of the light. Only supported with `WebGPURenderer`.
+
+The node is bound to its light, so `copy()` and `clone()` do not transfer it.
+
+Default is `null`.
 
 ## Methods
 

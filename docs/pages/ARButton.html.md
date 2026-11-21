@@ -18,7 +18,7 @@ import { ARButton } from 'three/addons/webxr/ARButton.js';
 
 ## Static Methods
 
-### .createButton( renderer : WebGLRenderer | WebGPURenderer, sessionInit : XRSessionInit ) : HTMLElement
+### .createButton( renderer : WebGPURenderer, sessionInit : XRSessionInit ) : HTMLElement
 
 Constructs a new AR button.
 

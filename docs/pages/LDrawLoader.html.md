@@ -156,7 +156,7 @@ Path of the LDraw materials asset.
 
 ### .setConditionalLineMaterial( type : LDrawConditionalLineMaterial.constructor | LDrawConditionalLineNodeMaterial.constructor ) : LDrawLoader
 
-Sets the conditional line material type which depends on the used renderer. Use [LDrawConditionalLineMaterial](LDrawConditionalLineMaterial.html) when using `WebGLRenderer` and LDrawConditionalLineNodeMaterial when using `WebGPURenderer`.
+Sets the conditional line material type which depends on the used renderer. Use LDrawConditionalLineMaterial when using `WebGLRenderer` and LDrawConditionalLineNodeMaterial when using `WebGPURenderer`.
 
 **type**
 

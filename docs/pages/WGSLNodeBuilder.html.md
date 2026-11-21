@@ -42,13 +42,17 @@ A dictionary that holds for each shader stage a Map of builtins.
 
 A dictionary that holds for each shader stage a Set of directives.
 
+### .samplerNodes : Set.<TextureNode>
+
+The texture nodes that need a sampler although their texture is unfilterable, e.g. textures with `NearestFilter` passed to a function with layout.
+
 ### .scopedArrays : Map.<string, Object>
 
 A map for managing scope arrays. Only relevant for when using [WorkgroupInfoNode](WorkgroupInfoNode.html) in context of compute shaders.
 
-### .uniformGroups : Object.<string, Object.<string, NodeUniformsGroup>>
+### .uniformGroups : Object.<string, NodeUniformsGroup>
 
-A dictionary that holds for each shader stage ('vertex', 'fragment', 'compute') another dictionary which manages UBOs per group ('render','frame','object').
+A dictionary that holds the UBO of each uniform group ('render','frame','object') by group name. The UBOs are shared by all shader stages.
 
 ### .uniformGroupsBindings : Object.<string, {index: number, id: number}>
 
@@ -98,7 +102,7 @@ Enables dual source blending.
 
 **Overrides:** [NodeBuilder#enableDualSourceBlending](NodeBuilder.html#enableDualSourceBlending)
 
-### .enableHardwareClipping( planeCount : string )
+### .enableHardwareClipping( planeCount : number )
 
 Enables hardware clipping.
 
@@ -976,6 +980,22 @@ The expression to resolve to if the condition is false.
 
 **Returns:** The resolved method name.
 
+### .getTextureParameters( name : string, textureNode : TextureNode ) : Object.<string, Node>
+
+Returns the parameters that pass a texture to a function: the texture and its sampler.
+
+**name**
+
+The name of the texture parameter.
+
+**textureNode**
+
+The texture node.
+
+**Overrides:** [NodeBuilder#getTextureParameters](NodeBuilder.html#getTextureParameters)
+
+**Returns:** The nodes of the parameters, by name.
+
 ### .getType( type : string ) : string
 
 Returns the WGSL type of the given node data type.
@@ -1056,13 +1076,19 @@ Default is `''`.
 
 **Returns:** The WGSL snippet that defines a variable.
 
-### .getVars( shaderStage : string ) : string
+### .getVars( shaderStage : string, global : boolean ) : string
 
 Returns the variables of the given shader stage as a WGSL string.
 
 **shaderStage**
 
 The shader stage.
+
+**global**
+
+Whether to declare the variables in module scope (`var<private>`) or not.
+
+Default is `false`.
 
 **Overrides:** [NodeBuilder#getVars](NodeBuilder.html#getVars)
 
@@ -1155,6 +1181,16 @@ Returns `true` if the given texture is unfilterable.
 The texture.
 
 **Returns:** Whether the given texture is unfilterable or not.
+
+### .isUnfilterableFormat( texture : Texture ) : boolean
+
+Returns `true` if the format of the given texture can't be sampled with a filtering sampler, e.g. an integer texture. Unlike [WGSLNodeBuilder#isUnfilterable](WGSLNodeBuilder.html#isUnfilterable), the filters of the texture are ignored.
+
+**texture**
+
+The texture.
+
+**Returns:** Whether the format of the given texture is unfilterable or not.
 
 ## Source
 

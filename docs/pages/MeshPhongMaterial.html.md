@@ -32,7 +32,7 @@ Default is `null`.
 
 ### .aoMap : Texture
 
-The red channel of this texture is used as the ambient occlusion map. Requires a second set of UVs.
+The red channel of this texture is used as the ambient occlusion map, where `0` fully occludes ambient light and `1` does not occlude it. Uses `uv` by default, set [Texture#channel](Texture.html#channel) to use a different set of UVs.
 
 `aoMap` represents non-color data. Any texture assigned must have `texture.colorSpace = NoColorSpace` (default).
 
@@ -40,7 +40,7 @@ Default is `null`.
 
 ### .aoMapIntensity : number
 
-Intensity of the ambient occlusion effect. Range is `[0,1]`, where `0` disables ambient occlusion. Where intensity is `1` and the AO map's red channel is also `1`, ambient light is fully occluded on a surface.
+Intensity of the ambient occlusion effect. Range is `[0,1]`, where `0` disables ambient occlusion and `1` applies the AO map at full strength.
 
 Default is `1`.
 
@@ -68,7 +68,7 @@ Default is `(1,1,1)`.
 
 How to combine the result of the surface's color with the environment map, if any.
 
-When set to `MixOperation`, the [MeshBasicMaterial#reflectivity](MeshBasicMaterial.html#reflectivity) is used to blend between the two colors.
+When set to `MixOperation`, the [MeshPhongMaterial#reflectivity](MeshPhongMaterial.html#reflectivity) is used to blend between the two colors.
 
 Default is `MultiplyOperation`.
 
@@ -122,13 +122,13 @@ Default is `null`.
 
 ### .envMapIntensity : number
 
-Scales the effect of the environment map by multiplying its color.
+Scales the diffuse image-based lighting of the environment map. It does not affect the reflection blended in via [MeshPhongMaterial#combine](MeshPhongMaterial.html#combine). When the material is lit by [Scene#environment](Scene.html#environment), [Scene#environmentIntensity](Scene.html#environmentIntensity) is used instead.
 
 Default is `1`.
 
 ### .envMapRotation : Euler
 
-The rotation of the environment map in radians.
+The rotation of the environment map in radians. Only applies to [MeshPhongMaterial#envMap](MeshPhongMaterial.html#envMap). When the material is lit by [Scene#environment](Scene.html#environment), [Scene#environmentRotation](Scene.html#environmentRotation) is used instead.
 
 Default is `(0,0,0)`.
 
@@ -152,7 +152,7 @@ Default is `true`.
 
 ### .lightMap : Texture
 
-The light map. Requires a second set of UVs.
+The light map. Uses `uv` by default, set [Texture#channel](Texture.html#channel) to use a different set of UVs.
 
 `lightMap` represents pre-baked illuminance data, and the texture must be assigned a [Texture#colorSpace](Texture.html#colorSpace). Most `lightMap` textures set `texture.colorSpace = LinearSRGBColorSpace` and use float-type formats such as `.exr` or `.hdr`.
 
@@ -188,7 +188,7 @@ Default is `TangentSpaceNormalMap`.
 
 ### .normalScale : Vector2
 
-How much the normal map affects the material. Typical value range is `[0,1]`.
+How much the normal map affects the material. Typical value range is `[0,1]`. Only affects tangent space normal maps.
 
 Default is `(1,1)`.
 
@@ -218,7 +218,7 @@ This defines how shiny the material is and the color of its shine.
 
 ### .specularMap : Texture
 
-The specular map value affects both how much the specular surface highlight contributes and how much of the environment map affects the surface.
+The red channel of this texture is used as a scalar strength that affects both how much the specular surface highlight contributes and how much of the environment map reflection blended in via [MeshPhongMaterial#combine](MeshPhongMaterial.html#combine) affects the surface.
 
 `specularMap` represents color data, and the texture must be assigned a [Texture#colorSpace](Texture.html#colorSpace). Most `specularMap` textures set `texture.colorSpace = SRGBColorSpace`.
 

@@ -36,11 +36,11 @@ The JSON definition
 
 **onLoad**
 
-The onLoad callback function.
+Executed when all resources (e.g. textures) have been fully loaded.
 
 **Overrides:** [ObjectLoader#parse](ObjectLoader.html#parse)
 
-**Returns:** . The parsed 3D object.
+**Returns:** The parsed 3D object.
 
 ### .parseAsync( json : Object ) : Promise.<Object3D> (async)
 
@@ -66,7 +66,7 @@ The JSON definition
 
 The texture library.
 
-**Returns:** . The parsed materials.
+**Returns:** The parsed materials.
 
 ### .parseNodes( json : Array.<Object>, textures : Object.<string, Texture> ) : Object.<string, Node>
 
@@ -80,7 +80,7 @@ The JSON definition
 
 The texture library.
 
-**Returns:** . The parsed nodes.
+**Returns:** The parsed nodes.
 
 ### .setNodeMaterials( value : Object.<string, NodeMaterial.constructor> ) : NodeObjectLoader
 

@@ -4,7 +4,7 @@
 
 Creates a simulated lens flare that tracks a light.
 
-Note that this class can only be used with [WebGPURenderer](WebGPURenderer.html). When using [WebGLRenderer](WebGLRenderer.html), use [Lensflare](Lensflare.html).
+Note that this class can only be used with [WebGPURenderer](WebGPURenderer.html). When using WebGLRenderer, use Lensflare.
 
 ## Code Example
 

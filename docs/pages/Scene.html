@@ -34,7 +34,8 @@ This is where you place 3D objects like meshes, lines or lights.</p></div>
 <ul>
 <li>A color for defining a uniform colored background.</li>
 <li>A texture for defining a (flat) textured background.</li>
-<li>Cube textures or equirectangular textures for defining a skybox.</li>
+<li>Cube textures, or equirectangular textures with <code>mapping</code> set to
+<code>EquirectangularReflectionMapping</code>, for defining a skybox.</li>
 </ul>
 						<p>Default is <code>null</code>.</p>
 					</div>
@@ -66,9 +67,9 @@ assigned to <a href="Scene.html#background">Scene#background</a>.</p>
 				<div class="member">
 					<h3 class="name" id="environment" translate="no">.<a href="#environment">environment</a><span class="type-signature"> : <a href="Texture.html">Texture</a></span> </h3>
 					<div class="description">
-						<p>Sets the environment map for all physical materials in the scene. However,
-it's not possible to overwrite an existing texture assigned to the <code>envMap</code>
-material property.</p>
+						<p>Sets the environment map used for image-based lighting of <a href="MeshStandardMaterial.html">MeshStandardMaterial</a>
+and <a href="MeshPhysicalMaterial.html">MeshPhysicalMaterial</a>. However, it's not possible to overwrite an existing
+texture assigned to the <code>envMap</code> material property.</p>
 						<p>Default is <code>null</code>.</p>
 					</div>
 				</div>
@@ -76,15 +77,18 @@ material property.</p>
 					<h3 class="name" id="environmentIntensity" translate="no">.<a href="#environmentIntensity">environmentIntensity</a><span class="type-signature"> : number</span> </h3>
 					<div class="description">
 						<p>Attenuates the color of the environment. Only influences environment maps
-assigned to <a href="Scene.html#environment">Scene#environment</a>.</p>
+assigned to <a href="Scene.html#environment">Scene#environment</a>. Materials lit by the scene environment
+use this value instead of their own <code>envMapIntensity</code>, which only applies to
+a material's own <code>envMap</code>.</p>
 						<p>Default is <code>1</code>.</p>
 					</div>
 				</div>
 				<div class="member">
 					<h3 class="name" id="environmentRotation" translate="no">.<a href="#environmentRotation">environmentRotation</a><span class="type-signature"> : <a href="Euler.html">Euler</a></span> </h3>
 					<div class="description">
-						<p>The rotation of the environment map in radians. Only influences physical materials
-in the scene when <a href="Scene.html#environment">Scene#environment</a> is used.</p>
+						<p>The rotation of the environment map in radians. Only influences materials
+lit by <a href="Scene.html#environment">Scene#environment</a>, which use this value instead of their own
+<code>envMapRotation</code>.</p>
 						<p>Default is <code>(0,0,0)</code>.</p>
 					</div>
 				</div>

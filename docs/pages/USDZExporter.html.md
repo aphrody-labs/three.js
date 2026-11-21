@@ -71,7 +71,7 @@ The export options.
 
 Sets the texture utils for this exporter. Only relevant when compressed textures have to be exported.
 
-Depending on whether you use [WebGLRenderer](WebGLRenderer.html) or [WebGPURenderer](WebGPURenderer.html), you must inject the corresponding texture utils [module:WebGLTextureUtils](module-WebGLTextureUtils.html) or [module:WebGPUTextureUtils](module-WebGPUTextureUtils.html).
+Depending on whether you use WebGLRenderer or [WebGPURenderer](WebGPURenderer.html), you must inject the corresponding texture utils module:WebGLTextureUtils or [module:WebGPUTextureUtils](module-WebGPUTextureUtils.html).
 
 **utils**
 

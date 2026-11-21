@@ -2,7 +2,9 @@
 
 # WebGPURenderer
 
-This renderer is the new alternative of `WebGLRenderer`. `WebGPURenderer` has the ability to target different backends. By default, the renderer tries to use a WebGPU backend if the browser supports WebGPU. If not, `WebGPURenderer` falls backs to a WebGL 2 backend.
+This renderer targets the WebGPU API.
+
+The renderer initializes asynchronously: call `await renderer.init()` before using `render()`, or define the animation loop with `setAnimationLoop()` which waits for the initialization.
 
 ## Constructor
 
@@ -72,35 +74,48 @@ Default is `false`.
 **antialias**  
 boolean
 
-Whether MSAA as the default anti-aliasing should be enabled or not.
+Whether MSAA as the default anti-aliasing should be enabled or not. MSAA is disabled on devices running in WebGPU compatibility mode.
 
 Default is `false`.
 
 **samples**  
 number
 
-When `antialias` is `true`, `4` samples are used by default. Set this parameter to any other integer value than 0 to overwrite the default.
+The number of MSAA samples. When `antialias` is `true`, `4` samples are used by default. A value other than `0` overwrites the default and enables MSAA even without `antialias`. The WebGPU backend only supports `4` samples (higher values are clamped to `4`).
 
 Default is `0`.
 
-**forceWebGL**  
-boolean
+**canvas**  
+HTMLCanvasElement | OffscreenCanvas
 
-If set to `true`, the renderer uses a WebGL 2 backend no matter if WebGPU is supported or not.
+The canvas the renderer draws its output to. If not provided, a new canvas is created.
 
-Default is `false`.
+**context**  
+GPUCanvasContext
 
-**multiview**  
-boolean
+An existing rendering context of `canvas`.
 
-If set to `true`, the renderer will use multiview during WebXR rendering if supported.
+**powerPreference**  
+string
 
-Default is `false`.
+A hint for the GPU adapter selection, either `'low-power'` or `'high-performance'`.
+
+**requiredLimits**  
+Object
+
+The device limits to request. If the adapter cannot provide them, the initialization fails.
+
+Default is `{}`.
+
+**device**  
+GPUDevice
+
+An existing GPU device to use instead of requesting a new one. `powerPreference` and `requiredLimits` are ignored in this case, and the device is not destroyed when the renderer is disposed.
 
 **outputType**  
 number
 
-Texture type for output to canvas. By default, device's preferred format is used; other formats may incur overhead.
+Texture type for output to canvas. Either `UnsignedByteType` or `HalfFloatType` (extended range, for HDR displays); other types are not supported. By default, device's preferred format is used; other formats may incur overhead.
 
 **outputBufferType**  
 number

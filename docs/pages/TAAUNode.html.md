@@ -103,7 +103,7 @@ A node that represents the scene's velocity.
 
 ### .clearViewOffset()
 
-Clears the view offset from the scene's camera.
+Restores the original projection matrix of the scene's camera.
 
 ### .dispose()
 
@@ -131,7 +131,7 @@ The output height (drawing buffer height).
 
 ### .setViewOffset( inputWidth : number, inputHeight : number )
 
-Defines the TAAU's current jitter as a view offset to the scene's camera. The jitter is shrunk to one _output_ pixel (rather than one input pixel) so that the halton sequence gradually fills the output sub-pixel grid over multiple frames.
+Applies the TAAU's current jitter to the projection matrix of the scene's camera. The jitter is shrunk to one _output_ pixel (rather than one input pixel) so that the halton sequence gradually fills the output sub-pixel grid over multiple frames.
 
 **inputWidth**
 

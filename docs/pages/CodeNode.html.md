@@ -6,7 +6,7 @@ This class represents native code sections. It is the base class for modules lik
 
 ## Constructor
 
-### new CodeNode( code : string, includes : Array.<Node>, language : 'js' | 'wgsl' | 'glsl' )
+### new CodeNode( code : string, includes : Array.<Node>, language : 'js' | 'wgsl' )
 
 Constructs a new code node.
 
@@ -56,7 +56,7 @@ This flag can be used for type testing.
 
 Default is `true`.
 
-### .language : 'js' | 'wgsl' | 'glsl'
+### .language : 'js' | 'wgsl'
 
 The used language.
 

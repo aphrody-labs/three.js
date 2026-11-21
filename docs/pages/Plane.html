@@ -40,7 +40,7 @@ by a unit length normal vector and a constant.</p></div>
 										<strong translate="no">constant</strong>
 									</td>
 									<td class="description last">
-										<p>The signed distance from the origin to the plane.</p>
+										<p>The signed distance from the plane to the origin.</p>
 										<p>Default is <code>0</code>.</p>
 									</td>
 								</tr>
@@ -52,7 +52,9 @@ by a unit length normal vector and a constant.</p></div>
 				<div class="member">
 					<h3 class="name" id="constant" translate="no">.<a href="#constant">constant</a><span class="type-signature"> : number</span> </h3>
 					<div class="description">
-						<p>The signed distance from the origin to the plane.</p>
+						<p>The signed distance from the plane to the origin. The plane is the set of
+points <code>p</code> for which <code>normal.dot( p ) + constant = 0</code>, so the point on the
+plane closest to the origin is <code>normal * - constant</code>.</p>
 						<p>Default is <code>0</code>.</p>
 					</div>
 				</div>
@@ -70,7 +72,7 @@ by a unit length normal vector and a constant.</p></div>
 					</div>
 				</div>
 				<h2 class="subsection-title">Methods</h2>
-					<h3 class="name name-method" id="applyMatrix4" translate="no">.<a href="#applyMatrix4">applyMatrix4</a><span class="signature">( matrix : <span class="param-type"><a href="Matrix4.html">Matrix4</a></span>, optionalNormalMatrix : <span class="param-type"><a href="Matrix4.html">Matrix4</a></span> )</span><span class="type-signature"> : <a href="Plane.html">Plane</a></span> </h3>
+					<h3 class="name name-method" id="applyMatrix4" translate="no">.<a href="#applyMatrix4">applyMatrix4</a><span class="signature">( matrix : <span class="param-type"><a href="Matrix4.html">Matrix4</a></span>, optionalNormalMatrix : <span class="param-type"><a href="Matrix3.html">Matrix3</a></span> )</span><span class="type-signature"> : <a href="Plane.html">Plane</a></span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>Apply a 4x4 matrix to the plane. The matrix must be an affine, homogeneous transform.</p>
@@ -157,7 +159,8 @@ projection of the normal at the origin onto the plane.</p>
 					<h3 class="name name-method" id="distanceToPoint" translate="no">.<a href="#distanceToPoint">distanceToPoint</a><span class="signature">( point : <span class="param-type"><a href="Vector3.html">Vector3</a></span> )</span><span class="type-signature"> : number</span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Returns the signed distance from the given point to this plane.</p>
+							<p>Returns the signed distance from the given point to this plane. The distance is
+positive if the point lies on the side of the plane the normal points to.</p>
 						</div>
 						<table class="params">
 							<tbody>

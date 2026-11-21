@@ -8,7 +8,7 @@ This allows a 3D vector representing a point in 3D space to undergo transformati
 
 A Note on Row-Major and Column-Major Ordering:
 
-The constructor and [Matrix3#set](Matrix3.html#set) method take arguments in [row-major](https://en.wikipedia.org/wiki/Row-_and_column-major_order#Column-major_order) order, while internally they are stored in the [Matrix3#elements](Matrix3.html#elements) array in column-major order. This means that calling:
+The constructor and [Matrix4#set](Matrix4.html#set) method take arguments in [row-major](https://en.wikipedia.org/wiki/Row-_and_column-major_order#Column-major_order) order, while internally they are stored in the [Matrix4#elements](Matrix4.html#elements) array in column-major order. This means that calling:
 
 ```js
 const m = new THREE.Matrix4();
@@ -263,7 +263,7 @@ Inverts this matrix, using the [analytic method](https://en.wikipedia.org/wiki/I
 
 ### .lookAt( eye : Vector3, target : Vector3, up : Vector3 ) : Matrix4
 
-Sets the rotation component of the transformation matrix, looking from `eye` towards `target`, and oriented by the up-direction.
+Sets the rotation component of the transformation matrix, looking from `eye` towards `target`, and oriented by the up-direction. Following the camera convention, the negative z-axis of the result points towards `target`. The translation is not modified.
 
 **eye**
 
@@ -637,7 +637,7 @@ Sets the elements of the matrix.The arguments are supposed to be in row-major or
 
 ### .setFromMatrix3( m : Matrix3 ) : Matrix4
 
-Set the upper 3x3 elements of this matrix to the values of given 3x3 matrix.
+Sets the upper-left 3x3 elements of this matrix to the values of the given 3x3 matrix and the remaining elements to the identity (the translation is reset).
 
 **m**
 

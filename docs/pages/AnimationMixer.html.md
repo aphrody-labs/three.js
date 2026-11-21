@@ -120,7 +120,7 @@ The root object to uncache.
 
 Advances the global mixer time and updates the animation.
 
-This is usually done in the render loop by passing the delta time from [Clock](Clock.html) or [Timer](Timer.html).
+This is usually done in the render loop by passing the delta time from [Timer](Timer.html).
 
 **deltaTime**
 

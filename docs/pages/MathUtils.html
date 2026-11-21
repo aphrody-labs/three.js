@@ -240,8 +240,9 @@ is <code>( ( n % m ) + m ) % m</code>.</p>
 					<h3 class="name name-method" id=".inverseLerp" translate="no">.<a href="#.inverseLerp">inverseLerp</a><span class="signature">( x : <span class="param-type">number</span>, y : <span class="param-type">number</span>, value : <span class="param-type">number</span> )</span><span class="type-signature"> : number</span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Returns the percentage in the closed interval <code>[0, 1]</code> of the given value
-between the start and end point.</p>
+							<p>Returns the interpolation factor of the given value between the start and
+end point. The result is not clamped, so values outside of the range produce
+factors outside of the closed interval <code>[0, 1]</code>.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -500,7 +501,7 @@ for the given value.</p>
 					<h3 class="name name-method" id=".randFloatSpread" translate="no">.<a href="#.randFloatSpread">randFloatSpread</a><span class="signature">( range : <span class="param-type">number</span> )</span><span class="type-signature"> : number</span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Returns a random integer from <code>&lt;-range/2, range/2&gt;</code> interval.</p>
+							<p>Returns a random float from <code>&lt;-range/2, range/2&gt;</code> interval.</p>
 						</div>
 						<table class="params">
 							<tbody>

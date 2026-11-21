@@ -32,17 +32,17 @@ The default interpolation type of this keyframe track.
 
 Default is `InterpolateLinear`.
 
-### .TimeBufferType : TypedArray | Array
+### .TimeBufferType : TypedArray.constructor | Array.constructor
 
 The time buffer type of this keyframe track.
 
-Default is `Float32Array.constructor`.
+Default is `Float32Array`.
 
-### .ValueBufferType : TypedArray | Array
+### .ValueBufferType : TypedArray.constructor | Array.constructor
 
 The value buffer type of this keyframe track.
 
-Default is `Float32Array.constructor`.
+Default is `Float32Array`.
 
 ### .ValueTypeName : string
 

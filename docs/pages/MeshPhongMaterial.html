@@ -68,8 +68,10 @@ luminance/alpha textures will also still work as expected.</p>
 				<div class="member">
 					<h3 class="name" id="aoMap" translate="no">.<a href="#aoMap">aoMap</a><span class="type-signature"> : <a href="Texture.html">Texture</a></span> </h3>
 					<div class="description">
-						<p>The red channel of this texture is used as the ambient occlusion map.
-Requires a second set of UVs.</p>
+						<p>The red channel of this texture is used as the ambient occlusion map,
+where <code>0</code> fully occludes ambient light and <code>1</code> does not occlude it.
+Uses <code>uv</code> by default, set <a href="Texture.html#channel">Texture#channel</a> to use a different
+set of UVs.</p>
 <p><code>aoMap</code> represents non-color data. Any texture assigned must have
 <code>texture.colorSpace = NoColorSpace</code> (default).</p>
 						<p>Default is <code>null</code>.</p>
@@ -79,8 +81,7 @@ Requires a second set of UVs.</p>
 					<h3 class="name" id="aoMapIntensity" translate="no">.<a href="#aoMapIntensity">aoMapIntensity</a><span class="type-signature"> : number</span> </h3>
 					<div class="description">
 						<p>Intensity of the ambient occlusion effect. Range is <code>[0,1]</code>, where <code>0</code>
-disables ambient occlusion. Where intensity is <code>1</code> and the AO map's
-red channel is also <code>1</code>, ambient light is fully occluded on a surface.</p>
+disables ambient occlusion and <code>1</code> applies the AO map at full strength.</p>
 						<p>Default is <code>1</code>.</p>
 					</div>
 				</div>
@@ -114,7 +115,7 @@ this will be ignored.</p>
 					<h3 class="name" id="combine" translate="no">.<a href="#combine">combine</a><span class="type-signature"> : <a href="global.html#MultiplyOperation">MultiplyOperation</a> | <a href="global.html#MixOperation">MixOperation</a> | <a href="global.html#AddOperation">AddOperation</a></span> </h3>
 					<div class="description">
 						<p>How to combine the result of the surface's color with the environment map, if any.</p>
-<p>When set to <code>MixOperation</code>, the <a href="MeshBasicMaterial.html#reflectivity">MeshBasicMaterial#reflectivity</a> is used to
+<p>When set to <code>MixOperation</code>, the <a href="MeshPhongMaterial.html#reflectivity">MeshPhongMaterial#reflectivity</a> is used to
 blend between the two colors.</p>
 						<p>Default is <code>MultiplyOperation</code>.</p>
 					</div>
@@ -194,14 +195,18 @@ such as <code>.exr</code> or <code>.hdr</code>.</p>
 				<div class="member">
 					<h3 class="name" id="envMapIntensity" translate="no">.<a href="#envMapIntensity">envMapIntensity</a><span class="type-signature"> : number</span> </h3>
 					<div class="description">
-						<p>Scales the effect of the environment map by multiplying its color.</p>
+						<p>Scales the diffuse image-based lighting of the environment map. It does not
+affect the reflection blended in via <a href="MeshPhongMaterial.html#combine">MeshPhongMaterial#combine</a>. When the material is lit
+by <a href="Scene.html#environment">Scene#environment</a>, <a href="Scene.html#environmentIntensity">Scene#environmentIntensity</a> is used instead.</p>
 						<p>Default is <code>1</code>.</p>
 					</div>
 				</div>
 				<div class="member">
 					<h3 class="name" id="envMapRotation" translate="no">.<a href="#envMapRotation">envMapRotation</a><span class="type-signature"> : <a href="Euler.html">Euler</a></span> </h3>
 					<div class="description">
-						<p>The rotation of the environment map in radians.</p>
+						<p>The rotation of the environment map in radians. Only applies to
+<a href="MeshPhongMaterial.html#envMap">MeshPhongMaterial#envMap</a>. When the material is lit by
+<a href="Scene.html#environment">Scene#environment</a>, <a href="Scene.html#environmentRotation">Scene#environmentRotation</a> is used instead.</p>
 						<p>Default is <code>(0,0,0)</code>.</p>
 					</div>
 				</div>
@@ -229,7 +234,8 @@ such as <code>.exr</code> or <code>.hdr</code>.</p>
 				<div class="member">
 					<h3 class="name" id="lightMap" translate="no">.<a href="#lightMap">lightMap</a><span class="type-signature"> : <a href="Texture.html">Texture</a></span> </h3>
 					<div class="description">
-						<p>The light map. Requires a second set of UVs.</p>
+						<p>The light map. Uses <code>uv</code> by default, set <a href="Texture.html#channel">Texture#channel</a> to use
+a different set of UVs.</p>
 <p><code>lightMap</code> represents pre-baked illuminance data, and the texture must be assigned
 a <a href="Texture.html#colorSpace">Texture#colorSpace</a>. Most <code>lightMap</code> textures set
 <code>texture.colorSpace = LinearSRGBColorSpace</code> and use float-type formats
@@ -280,7 +286,8 @@ for the different handedness.</p>
 				<div class="member">
 					<h3 class="name" id="normalScale" translate="no">.<a href="#normalScale">normalScale</a><span class="type-signature"> : <a href="Vector2.html">Vector2</a></span> </h3>
 					<div class="description">
-						<p>How much the normal map affects the material. Typical value range is <code>[0,1]</code>.</p>
+						<p>How much the normal map affects the material. Typical value range is <code>[0,1]</code>.
+Only affects tangent space normal maps.</p>
 						<p>Default is <code>(1,1)</code>.</p>
 					</div>
 				</div>
@@ -319,9 +326,10 @@ The refraction ratio should not exceed <code>1</code>.</p>
 				<div class="member">
 					<h3 class="name" id="specularMap" translate="no">.<a href="#specularMap">specularMap</a><span class="type-signature"> : <a href="Texture.html">Texture</a></span> </h3>
 					<div class="description">
-						<p>The specular map value affects both how much the specular surface
-highlight contributes and how much of the environment map affects the
-surface.</p>
+						<p>The red channel of this texture is used as a scalar strength that affects
+both how much the specular surface highlight contributes and how much of
+the environment map reflection blended in via <a href="MeshPhongMaterial.html#combine">MeshPhongMaterial#combine</a>
+affects the surface.</p>
 <p><code>specularMap</code> represents color data, and the texture must be assigned a
 <a href="Texture.html#colorSpace">Texture#colorSpace</a>. Most <code>specularMap</code> textures set
 <code>texture.colorSpace = SRGBColorSpace</code>.</p>

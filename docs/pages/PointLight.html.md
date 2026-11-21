@@ -40,7 +40,7 @@ Default is `0`.
 
 **decay**
 
-The amount the light dims along the distance of the light.
+The exponent of the light's distance falloff.
 
 Default is `2`.
 
@@ -48,7 +48,7 @@ Default is `2`.
 
 ### .decay : number
 
-The amount the light dims along the distance of the light. In context of physically-correct rendering the default value should not be changed.
+The exponent of the light's distance falloff (`1 / distance^decay`). The default `2` gives physically correct inverse-square falloff and should not be changed in context of physically-correct rendering.
 
 Default is `2`.
 

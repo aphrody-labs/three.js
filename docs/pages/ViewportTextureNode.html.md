@@ -58,6 +58,12 @@ Default is `'render'`.
 
 ## Methods
 
+### .dispose()
+
+Frees internal resources. Should be called when the node is no longer in use.
+
+**Overrides:** [TextureNode#dispose](TextureNode.html#dispose)
+
 ### .getTextureForReference( reference : RenderTarget | CanvasTarget ) : Texture
 
 This methods returns a texture for the given render target or canvas target reference.

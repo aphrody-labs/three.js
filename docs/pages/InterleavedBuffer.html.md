@@ -26,7 +26,7 @@ A typed array with a shared buffer storing attribute data.
 
 ### .count : number (readonly)
 
-The total number of elements in the array
+The number of items (vertices) stored in the buffer, computed by dividing the `array` length by the `stride`.
 
 ### .isInterleavedBuffer : boolean (readonly)
 
@@ -34,7 +34,7 @@ This flag can be used for type testing.
 
 Default is `true`.
 
-### .needsUpdate : number
+### .needsUpdate : boolean
 
 Flag to indicate that this attribute has changed and should be re-sent to the GPU. Set this to `true` when you modify the value of the array.
 
@@ -68,11 +68,11 @@ A version number, incremented every time the `needsUpdate` is set to `true`.
 
 ### .addUpdateRange( start : number, count : number )
 
-Adds a range of data in the data array to be updated on the GPU.
+Adds a range of data in the data array to be updated on the GPU. The ranges are applied with the next upload triggered via `needsUpdate` and cleared afterwards.
 
 **start**
 
-Position at which to start update.
+The index into the array (in elements, not items) at which to start the update.
 
 **count**
 
@@ -166,7 +166,7 @@ Serializes the interleaved buffer into JSON.
 
 **data**
 
-An optional value holding meta information about the serialization.
+An object holding meta information about the serialization.
 
 **Returns:** A JSON object representing the serialized interleaved buffer.
 

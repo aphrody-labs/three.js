@@ -38,7 +38,7 @@ Default is `null`.
 
 ### .count : number
 
-The number of instances.
+The number of instances to render. It can be lowered at runtime but must not exceed the instance count passed to the constructor.
 
 **Overrides:** [Mesh#count](Mesh.html#count)
 

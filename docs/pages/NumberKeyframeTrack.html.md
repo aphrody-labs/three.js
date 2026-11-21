@@ -6,7 +6,7 @@ A track for numeric keyframe values.
 
 ## Constructor
 
-### new NumberKeyframeTrack( name : string, times : Array.<number>, values : Array.<number>, interpolation : InterpolateLinear | InterpolateDiscrete | InterpolateSmooth )
+### new NumberKeyframeTrack( name : string, times : Array.<number>, values : Array.<number>, interpolation : InterpolateLinear | InterpolateDiscrete | InterpolateSmooth | InterpolateBezier )
 
 Constructs a new number keyframe track.
 

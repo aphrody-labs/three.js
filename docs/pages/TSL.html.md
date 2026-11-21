@@ -12,17 +12,11 @@ Represents PI / 2.
 
 ### .INFINITY : Node.<float> (constant)
 
-Represents infinity.
+A large finite value (`1e6`) used as a stand-in for infinity.
 
 ### .PI : Node.<float> (constant)
 
 Represents PI.
-
-### .PI2 : Node.<float> (constant)
-
-Represents PI \* 2. Please use the non-deprecated version `TWO_PI`.
-
-**Deprecated:** Yes
 
 ### .TBNViewMatrix : Node.<mat3> (constant)
 
@@ -31,10 +25,6 @@ TSL object that represents the TBN matrix in view space.
 ### .TWO_PI : Node.<float> (constant)
 
 Represents PI \* 2.
-
-### .alphaLine : Node.<float> (constant)
-
-TSL fragment node that computes the shape/coverage (alpha) of the fat line segment. Handles dash/gap generation, alpha-to-coverage rendering, and round endcaps.
 
 ### .alphaT : PropertyNode.<float> (constant)
 
@@ -84,6 +74,10 @@ TSL object that represents the scene's background rotation.
 
 Maps a resolve (screen) texel to the corresponding beauty-input texel when resolutions differ.
 
+### .bentNormalView : Node.<vec3> (constant)
+
+TSL object that represents the bent normal in view space, used for anisotropic image-based lighting.
+
 ### .bitangentGeometry : Node.<vec3> (constant)
 
 TSL object that represents the bitangent attribute of the current rendered object.
@@ -94,7 +88,7 @@ TSL object that represents the vertex bitangent in local space of the current re
 
 ### .bitangentView : Node.<vec3> (constant)
 
-TSL object that represents the vertex bitangent in view space of the current rendered object.
+TSL object that represents the bitangent in view space of the current rendered object. In the fragment stage, it is derived from the shading normal [normalView](TSL.html#normalView), so it follows normal or bump mapping.
 
 ### .bitangentViewFrame : Node.<vec3> (constant)
 
@@ -104,7 +98,7 @@ Reference: http://www.thetenthplanet.de/archives/1180
 
 ### .bitangentWorld : Node.<vec3> (constant)
 
-TSL object that represents the vertex bitangent in world space of the current rendered object.
+TSL object that represents the bitangent in world space of the current rendered object. In the fragment stage, it is derived from the shading normal [normalWorld](TSL.html#normalWorld), so it follows normal or bump mapping.
 
 ### .cameraFar : UniformNode.<float> (constant)
 
@@ -152,7 +146,7 @@ TSL object that represents the shader variable `Clearcoat`.
 
 ### .clearcoatNormalView : Node.<vec3> (constant)
 
-TSL object that represents the clearcoat vertex normal of the current rendered object in view space.
+TSL object that represents the clearcoat normal of the current rendered object in view space. In the fragment stage, the value includes the material's `clearcoatNormalMap` (or `clearcoatNormalNode`).
 
 ### .clearcoatRoughness : PropertyNode.<float> (constant)
 
@@ -271,8 +265,8 @@ TSL object that contextually represents specific index data depending on the sha
 Within the vertex and fragment stages, `instanceIndex` will represent the index of the current mesh instance being evaluated by the shader. In these stages, use `instanceIndex` to modify a mesh based on its instance or to select per-instance data.
 
 ```js
-// instanceIndex will equal the current mesh's instance index between 0-500
-const material = new THREE.BasicNodeMaterial();
+// instanceIndex will equal the current mesh's instance index between 0-499
+const material = new THREE.MeshBasicNodeMaterial();
 material.positionNode = vec3( instanceIndex.mod( 10 ), instanceIndex.div( 10 ), 0 );
 const mesh = new THREE.InstancedMesh( geometry, material, 500 );
 ```
@@ -281,9 +275,9 @@ Within the compute stage, `instanceIndex` will represent the global index of a c
 
 ```js
 // instanceIndex will equal value between 0 - 255
-const computeFn = Fn() => {
+const computeFn = Fn( () => {
 	storageBuffer.element( instanceIndex ).assign( instanceIndex );
-} )().compute( 255 )
+} )().compute( 256 )
 ```
 
 ### .invocationLocalIndex : IndexNode (constant)
@@ -354,9 +348,15 @@ A non-linearized 3-dimensional representation of the current invocation's positi
 
 Maps an AO factor for edge-stopping comparisons.
 
+### .matcapUV : Node.<vec2> (constant)
+
+TSL object that represents the matcap uv coordinates.
+
+Can be used to compute texture coordinates for projecting a matcap onto a mesh. Used by [MeshMatcapNodeMaterial](MeshMatcapNodeMaterial.html).
+
 ### .materialAO : Node.<float> (constant)
 
-TSL object that represents the ambient occlusion map of the current material. The value is composed via `aoMap.r` - 1 \* `aoMapIntensity` + 1.
+TSL object that represents the ambient occlusion map of the current material. The value is composed via ( `aoMap.r` - 1 ) \* `aoMapIntensity` + 1.
 
 ### .materialAlphaTest : Node.<float> (constant)
 
@@ -384,11 +384,11 @@ TSL object that represents the clearcoat of the current material. The value is c
 
 ### .materialClearcoatNormal : Node.<vec3> (constant)
 
-TSL object that represents the clearcoat normal of the current material. The value will be either `clearcoatNormalMap` or `normalView`.
+TSL object that represents the clearcoat normal of the current material. The value will be either the normal perturbed by `clearcoatNormalMap` (scaled by `clearcoatNormalScale`) or `normalView`.
 
 ### .materialClearcoatRoughness : Node.<float> (constant)
 
-TSL object that represents the clearcoat roughness of the current material. The value is composed via `clearcoatRoughness` \* `clearcoatRoughnessMap.r`.
+TSL object that represents the clearcoat roughness of the current material. The value is composed via `clearcoatRoughness` \* `clearcoatRoughnessMap.g`.
 
 ### .materialColor : Node.<vec3> (constant)
 
@@ -460,7 +460,7 @@ TSL object that represents the metalness of the current material. The value is c
 
 ### .materialNormal : Node.<vec3> (constant)
 
-TSL object that represents the normal of the current material. The value will be either `normalMap` \* `normalScale`, `bumpMap` \* `bumpScale` or `normalView`.
+TSL object that represents the normal of the current material in view space. The value will be either the normal perturbed by `normalMap` (scaled by `normalScale`), the normal perturbed by `bumpMap` (scaled by `bumpScale`) or `normalView`.
 
 ### .materialOpacity : Node.<float> (constant)
 
@@ -508,11 +508,11 @@ TSL object that represents the specular of the current material.
 
 ### .materialSpecularColor : Node.<vec3> (constant)
 
-TSL object that represents the specular color of the current material. The value is composed via `specularColor` \* `specularMap.rgb`.
+TSL object that represents the specular color of the current material. The value is composed via `specularColor` \* `specularColorMap.rgb`.
 
 ### .materialSpecularIntensity : Node.<float> (constant)
 
-TSL object that represents the specular intensity of the current material. The value is composed via `specularIntensity` \* `specularMap.a`.
+TSL object that represents the specular intensity of the current material. The value is composed via `specularIntensity` \* `specularIntensityMap.a`.
 
 ### .materialSpecularStrength : Node.<float> (constant)
 
@@ -548,7 +548,7 @@ TSL object that represents the object's direction in world space.
 
 ### .modelNormalMatrix : UniformNode.<mat3> (constant)
 
-TSL object that represents the object's normal matrix.
+TSL object that represents the normal matrix of the object's world matrix. It transforms normals from local to world space. Unlike [Object3D#normalMatrix](Object3D.html#normalMatrix), it does not include the camera's view matrix.
 
 ### .modelPosition : ModelNode.<vec3> (constant)
 
@@ -582,10 +582,6 @@ TSL object that represents the object's world matrix.
 
 TSL object that represents the object's inverse world matrix.
 
-### .mvpLine : Node.<vec4> (constant)
-
-TSL node acting as a custom Model-View-Projection (MVP) for fat lines, expanding 3D segments into screen/world-facing ribbons of a specified width.
-
 ### .normalFlat : Node.<vec3> (constant)
 
 TSL object that represents the flat vertex normal of the current rendered object in view space.
@@ -600,7 +596,7 @@ TSL object that represents the vertex normal of the current rendered object in l
 
 ### .normalView : Node.<vec3> (constant)
 
-TSL object that represents the vertex normal of the current rendered object in view space.
+TSL object that represents the shading normal of the current rendered object in view space. In the fragment stage, the value is the material's `normalNode` if set, otherwise the normal with the material's normal or bump mapping applied, flipped on back faces (`MeshBasicNodeMaterial` always uses the vertex normal). Use [normalViewGeometry](TSL.html#normalViewGeometry) for the unperturbed vertex normal.
 
 ### .normalViewGeometry : Node.<vec3> (constant)
 
@@ -608,7 +604,7 @@ TSL object that represents the vertex normal of the current rendered object in v
 
 ### .normalWorld : Node.<vec3> (constant)
 
-TSL object that represents the vertex normal of the current rendered object in world space.
+TSL object that represents the shading normal of the current rendered object in world space. It is derived from [normalView](TSL.html#normalView), so it includes normal or bump mapping. Use [normalWorldGeometry](TSL.html#normalWorldGeometry) for the unperturbed vertex normal.
 
 ### .normalWorldGeometry : Node.<vec3> (constant)
 
@@ -639,17 +635,13 @@ TSL object that represents a uniform group node which is updated once per object
 
 TSL object that represents the shader variable `Output`.
 
-### .parallaxDirection : Node.<mat3> (constant)
+### .parallaxDirection : Node.<vec3> (constant)
 
-TSL object that represents the parallax direction.
+TSL object that represents the parallax direction, which is the surface-to-camera direction in tangent space.
 
 ### .planeDistance (constant)
 
 View-space plane distance between two surface points (edge-stopping geometry term).
-
-### .pointUV : PointUVNode (constant)
-
-TSL object that represents the uv coordinates of points.
 
 ### .pointWidth : PropertyNode.<float> (constant)
 
@@ -675,7 +667,7 @@ TSL object that represents the vertex position in view space of the current rend
 
 ### .positionViewDirection : VaryingNode.<vec3> (constant)
 
-TSL object that represents the position view direction of the current rendered object.
+TSL object that represents the normalized direction from the fragment toward the camera in view space. For orthographic cameras, the value is `( 0, 0, 1 )`.
 
 ### .positionWorld : VaryingNode.<vec3> (constant)
 
@@ -683,7 +675,7 @@ TSL object that represents the vertex position in world space of the current ren
 
 ### .positionWorldDirection : Node.<vec3> (constant)
 
-TSL object that represents the position world direction of the current rendered object.
+TSL object that represents the normalized direction from the origin of the current rendered object to the vertex in world space. The rotation and scale of the world matrix are applied, the translation is ignored.
 
 ### .projectWorldToUV (constant)
 
@@ -733,33 +725,25 @@ TSL object that represents the shader variable `Retroreflectivity`.
 
 TSL object that represents the shader variable `Roughness`.
 
-### .sampleBilinearTap (constant)
+### .screenCoordinate : Node.<vec2> (constant)
 
-Single bilinear history tap with plane-distance and normal confidence.
-
-### .sampleHistory4Tap (constant)
-
-Geometrically-weighted 4-tap bilinear history sample.
-
-### .screenCoordinate : ScreenNode.<vec2> (constant)
-
-TSL object that represents the current `x`/`y` pixel position on the screen in physical pixel units.
+TSL object that represents the current `x`/`y` pixel position on the screen in physical pixel units. The coordinates are window-relative according to WebGPU standards.
 
 ### .screenDPR : UniformNode.<float> (constant)
 
 TSL object that represents the current DPR.
 
-### .screenSize : ScreenNode.<vec2> (constant)
+### .screenSize : UniformNode.<vec2> (constant)
 
 TSL object that represents the screen resolution in physical pixel units.
 
-### .screenUV : ScreenNode.<vec2> (constant)
+### .screenUV : Node.<vec2> (constant)
 
 TSL object that represents normalized screen coordinates, unitless in `[0, 1]`.
 
 ### .shadowPositionWorld : Node.<vec3> (constant)
 
-TSL object that represents the vertex position in world space during the shadow pass.
+TSL object that represents the world space position used to look up the shadow map when receiving shadows. Defaults to `positionWorld`. It is replaced by `material.receivedShadowPositionNode` if set, or by the ray sample position when rendering volumetric lighting.
 
 ### .sheen : PropertyNode.<vec3> (constant)
 
@@ -838,7 +822,7 @@ TSL object that represents the shader variable `Thickness`.
 
 Represents the elapsed time in seconds.
 
-### .toneMappingExposure : RendererReferenceNode.<vec3> (constant)
+### .toneMappingExposure : RendererReferenceNode.<float> (constant)
 
 TSL object that represents the global tone mapping exposure of the renderer.
 
@@ -848,33 +832,29 @@ TSL object that represents the shader variable `Transmission`.
 
 ### .velocity : VelocityNode (constant)
 
-TSL object that represents the velocity of a render pass.
-
-### .velocityToUVOffset (constant)
-
-Converts screen-space velocity (NDC derivative) to a UV reprojection offset.
+TSL object that represents the velocity of a render pass. The value is the difference between the current and previous position in NDC space (`xy`, Y up), not a uv offset.
 
 ### .vertexIndex : IndexNode (constant)
 
 TSL object that represents the index of a vertex within a mesh.
 
-### .viewport : ScreenNode.<vec4> (constant)
+### .viewport : UniformNode.<vec4> (constant)
 
 TSL object that represents the viewport rectangle as `x`, `y`, `width` and `height` in physical pixel units.
 
-### .viewportCoordinate : ScreenNode.<vec2> (constant)
+### .viewportCoordinate : Node.<vec2> (constant)
 
 TSL object that represents the current `x`/`y` pixel position on the viewport in physical pixel units.
 
 ### .viewportLinearDepth : ViewportDepthNode (constant)
 
-TSL object that represents the linear (orthographic) depth value of the current fragment
+TSL object that represents the linear (orthographic) depth stored in the viewport depth texture at the current fragment's screen position, i.e. the depth of the geometry behind the fragment. Use `linearDepth()` for the depth of the current fragment itself.
 
-### .viewportSize : ScreenNode.<vec2> (constant)
+### .viewportSize : Node.<vec2> (constant)
 
 TSL object that represents the viewport resolution in physical pixel units.
 
-### .viewportUV : ScreenNode.<vec2> (constant)
+### .viewportUV : Node.<vec2> (constant)
 
 TSL object that represents normalized viewport coordinates, unitless in `[0, 1]`.
 
@@ -920,6 +900,8 @@ The node for which a constant should be created.
 **name**
 
 The name of the constant in the shader.
+
+Default is `null`.
 
 ### .Continue() : ExpressionNode
 
@@ -993,6 +975,8 @@ The node for which a variable should be created.
 **name**
 
 The name of the variable in the shader.
+
+Default is `null`.
 
 ### .abs( x : Node | number ) : Node
 
@@ -1172,7 +1156,7 @@ The source type.
 
 ### .atan( y : Node | number, x : Node | number ) : Node
 
-Returns the arc-tangent of the parameter. If two parameters are provided, the result is `atan2(y/x)`.
+Returns the arc-tangent of the parameter. If two parameters are provided, the result is `atan2( y, x )`.
 
 **y**
 
@@ -1190,21 +1174,9 @@ Returns the inverse hyperbolic tangent of the parameter.
 
 The parameter.
 
-### .atomicAdd( pointerNode : Node, valueNode : Node ) : AtomicFunctionNode
+### .atomicAdd( pointerNode : Node, valueNode : Node.<(uint|int)> ) : AtomicFunctionNode
 
-Increments the value stored in the atomic variable.
-
-**pointerNode**
-
-An atomic variable or element of an atomic buffer.
-
-**valueNode**
-
-The value that mutates the atomic variable.
-
-### .atomicAnd( pointerNode : Node, valueNode : Node ) : AtomicFunctionNode
-
-Stores in an atomic variable the bitwise AND of its value with a parameter.
+Increments the value stored in the atomic variable and returns the value stored in the atomic variable before the operation.
 
 **pointerNode**
 
@@ -1214,7 +1186,31 @@ An atomic variable or element of an atomic buffer.
 
 The value that mutates the atomic variable.
 
-### .atomicFunc( method : string, pointerNode : Node, valueNode : Node ) : AtomicFunctionNode
+### .atomicAnd( pointerNode : Node, valueNode : Node.<(uint|int)> ) : AtomicFunctionNode
+
+Stores, in an atomic variable, the bitwise AND of its value with a parameter and returns the value stored in the atomic variable before the operation.
+
+**pointerNode**
+
+An atomic variable or element of an atomic buffer.
+
+**valueNode**
+
+The value that mutates the atomic variable.
+
+### .atomicExchange( pointerNode : Node, valueNode : Node.<(uint|int)> ) : AtomicFunctionNode
+
+Stores a value in the atomic variable and returns the original value stored in the atomic variable before the operation.
+
+**pointerNode**
+
+An atomic variable or element of an atomic buffer.
+
+**valueNode**
+
+The value that mutates the atomic variable.
+
+### .atomicFunc( method : string, pointerNode : Node, valueNode : Node.<(uint|int)> ) : AtomicFunctionNode
 
 TSL function for appending an atomic function call into the programmatic flow of a compute shader.
 
@@ -1238,21 +1234,9 @@ Loads the value stored in the atomic variable.
 
 An atomic variable or element of an atomic buffer.
 
-### .atomicMax( pointerNode : Node, valueNode : Node ) : AtomicFunctionNode
+### .atomicMax( pointerNode : Node, valueNode : Node.<(uint|int)> ) : AtomicFunctionNode
 
-Stores in an atomic variable the maximum between its current value and a parameter.
-
-**pointerNode**
-
-An atomic variable or element of an atomic buffer.
-
-**valueNode**
-
-The value that mutates the atomic variable.
-
-### .atomicMin( pointerNode : Node, valueNode : Node ) : AtomicFunctionNode
-
-Stores in an atomic variable the minimum between its current value and a parameter.
+Stores, in an atomic variable, the maximum between its current value and a parameter and returns the value stored in the atomic variable before the operation.
 
 **pointerNode**
 
@@ -1262,7 +1246,19 @@ An atomic variable or element of an atomic buffer.
 
 The value that mutates the atomic variable.
 
-### .atomicNode( method : string, pointerNode : Node, valueNode : Node ) : AtomicFunctionNode
+### .atomicMin( pointerNode : Node, valueNode : Node.<(uint|int)> ) : AtomicFunctionNode
+
+Stores, in an atomic variable, the minimum between its current value and a parameter and returns the value stored in the atomic variable before the operation.
+
+**pointerNode**
+
+An atomic variable or element of an atomic buffer.
+
+**valueNode**
+
+The value that mutates the atomic variable.
+
+### .atomicNode( method : string, pointerNode : Node, valueNode : Node.<(uint|int)> ) : AtomicFunctionNode
 
 TSL function for creating an atomic function node.
 
@@ -1278,9 +1274,9 @@ An atomic variable or element of an atomic buffer.
 
 The value that mutates the atomic variable.
 
-### .atomicOr( pointerNode : Node, valueNode : Node ) : AtomicFunctionNode
+### .atomicOr( pointerNode : Node, valueNode : Node.<(uint|int)> ) : AtomicFunctionNode
 
-Stores in an atomic variable the bitwise OR of its value with a parameter.
+Stores, in an atomic variable, the bitwise OR of its value with a parameter and returns the value stored in the atomic variable before the operation.
 
 **pointerNode**
 
@@ -1290,7 +1286,7 @@ An atomic variable or element of an atomic buffer.
 
 The value that mutates the atomic variable.
 
-### .atomicStore( pointerNode : Node, valueNode : Node ) : AtomicFunctionNode
+### .atomicStore( pointerNode : Node, valueNode : Node.<(uint|int)> ) : AtomicFunctionNode
 
 Stores a value in the atomic variable.
 
@@ -1302,9 +1298,9 @@ An atomic variable or element of an atomic buffer.
 
 The value that mutates the atomic variable.
 
-### .atomicSub( pointerNode : Node, valueNode : Node ) : AtomicFunctionNode
+### .atomicSub( pointerNode : Node, valueNode : Node.<(uint|int)> ) : AtomicFunctionNode
 
-Decrements the value stored in the atomic variable.
+Decrements the value stored in the atomic variable and returns the value stored in the atomic variable before the operation.
 
 **pointerNode**
 
@@ -1314,9 +1310,9 @@ An atomic variable or element of an atomic buffer.
 
 The value that mutates the atomic variable.
 
-### .atomicXor( pointerNode : Node, valueNode : Node ) : AtomicFunctionNode
+### .atomicXor( pointerNode : Node, valueNode : Node.<(uint|int)> ) : AtomicFunctionNode
 
-Stores in an atomic variable the bitwise XOR of its value with a parameter.
+Stores, in an atomic variable, the bitwise XOR of its value with a parameter and returns the value stored in the atomic variable before the operation.
 
 **pointerNode**
 
@@ -1398,12 +1394,6 @@ TSL function representing the vertex shader batching setup. Applies the batch tr
 
 The batched mesh.
 
-### .bentNormalView() : Node.<vec3>
-
-TSL function for computing bent normals.
-
-**Returns:** Bent normals.
-
 ### .bilateralBlur( node : Node.<vec4>, directionNode : Node.<(vec2|float)>, sigma : number, sigmaColor : number ) : BilateralBlurNode
 
 TSL function for creating a bilateral blur node for post processing.
@@ -1426,7 +1416,7 @@ Controls the spatial kernel of the blur filter. Higher values mean a wider blur 
 
 Controls the intensity kernel. Higher values allow more color difference to be blurred together.
 
-### .billboarding( config : Object ) : Node.<vec3>
+### .billboarding( config : Object ) : Node.<vec4>
 
 This can be used to achieve a billboarding behavior for flat meshes. That means they are oriented always towards the camera.
 
@@ -1476,17 +1466,13 @@ The first input.
 
 The second input.
 
-### .bitNot( a : Node, b : Node ) : OperatorNode
+### .bitNot( a : Node ) : OperatorNode
 
 Performs bitwise NOT on a node.
 
 **a**
 
-The first input.
-
-**b**
-
-The second input.
+The input value.
 
 ### .bitOr( a : Node, b : Node ) : OperatorNode
 
@@ -1818,22 +1804,6 @@ The output node.
 
 The call node.
 
-### .cache( node : Node, parent : boolean ) : IsolateNode
-
-TSL function for creating a cache node.
-
-**node**
-
-The node that should be cached.
-
-**parent**
-
-Whether this node refers to a shared parent cache or not.
-
-Default is `true`.
-
-**Deprecated:** Yes
-
 ### .cbrt( a : Node | number ) : Node
 
 Returns the cube root of a number.
@@ -1880,7 +1850,7 @@ References:
 
 *   ASC CDL v1.2
 *   [https://blender.stackexchange.com/a/55239/43930](https://blender.stackexchange.com/a/55239/43930)
-*   [https://docs.acescentral.com/specifications/acescc/](https://docs.acescentral.com/specifications/acescc/)
+*   [https://docs.acescentral.com/encodings/acescc/](https://docs.acescentral.com/encodings/acescc/)
 
 ### .ceil( x : Node | number ) : Node
 
@@ -1897,6 +1867,8 @@ Creates a 2x2 checkerboard pattern that can be used as procedural texture data.
 **coord**
 
 The uv coordinates.
+
+Default is `uv()`.
 
 **Returns:** The result data.
 
@@ -2024,7 +1996,7 @@ Default is `64`.
 
 **Returns:** The clustered lights node.
 
-### .code( code : string, includes : Array.<Node>, language : 'js' | 'wgsl' | 'glsl' ) : CodeNode
+### .code( code : string, includes : Array.<Node>, language : 'js' | 'wgsl' ) : CodeNode
 
 TSL function for creating a code node.
 
@@ -2072,15 +2044,7 @@ Represents the node to convert.
 
 The source color space.
 
-### .colorToDirection( node : Node.<vec3> ) : Node.<vec3>
-
-**node**
-
-The color to unpack.
-
-**Deprecated:** since r185. Use [unpackRGBToNormal](TSL.html#unpackRGBToNormal) instead.
-
-### .compute( node : Node, count : number | Array.<number>, workgroupSize : Array.<number> ) : ComputeNode
+### .compute( node : Node, count : number | Array.<number> | IndirectStorageBufferAttribute, workgroupSize : Array.<number> ) : ComputeNode
 
 TSL function for creating a compute node.
 
@@ -2090,15 +2054,13 @@ The TSL logic for the compute shader.
 
 **count**
 
-The compute count or dispatch size.
+The compute count or dispatch size. A number defines the total number of invocations. An array \[x, y, z\] defines the number of workgroups per dimension, each executing `workgroupSize` invocations. An `IndirectStorageBufferAttribute` defines the workgroup grid via its first three values. Arrays and indirect dispatches require the WebGPU backend.
 
 **workgroupSize**
 
 The workgroup size.
 
 Default is `[64]`.
-
-**Returns:** ,
 
 ### .computeBuiltin( name : string, nodeType : string ) : ComputeBuiltinNode
 
@@ -2238,27 +2200,33 @@ The parameter.
 
 Finds the number of consecutive 0 bits starting from the most significant bit of the input value.
 
-Can only be used with [WebGPURenderer](WebGPURenderer.html) and a WebGPU backend.
-
 **x**
 
 The input value.
 
-### .countOneBits() : Node
+### .countOneBits( x : Node | number ) : Node
 
 Finds the number of '1' bits set in the input value
 
-Can only be used with [WebGPURenderer](WebGPURenderer.html) and a WebGPU backend.
+**x**
+
+The input value.
 
 ### .countTrailingZeros( x : Node | number ) : Node
 
 Finds the number of consecutive 0 bits from the least significant bit of the input value, which is also the index of the least significant bit of the input value.
 
-Can only be used with [WebGPURenderer](WebGPURenderer.html) and a WebGPU backend.
-
 **x**
 
 The input value.
+
+### .createSampleBilinearTap()
+
+Single bilinear history tap with plane-distance and normal confidence.
+
+### .createSampleHistory4Tap()
+
+Geometrically-weighted 4-tap bilinear history sample.
 
 ### .createVar( node : Node, name : string ) : VarNode
 
@@ -2272,7 +2240,7 @@ The node for which a variable should be created.
 
 The name of the variable in the shader.
 
-### .cross( x : Node.<(vec2|vec3)>, y : Node.<(vec2|vec3)> ) : Node.<(float|vec3)>
+### .cross( x : Node.<vec3>, y : Node.<vec3> ) : Node.<vec3>
 
 Calculates the cross product of two vectors.
 
@@ -2358,7 +2326,7 @@ Input coordinate vector.
 
 ### .dFdx( x : Node | number ) : Node
 
-Returns the partial derivative of the parameter with respect to x.
+Returns the partial derivative of the parameter with respect to x. Only available in the fragment stage.
 
 **x**
 
@@ -2366,7 +2334,7 @@ The parameter.
 
 ### .dFdy( x : Node | number ) : Node
 
-Returns the partial derivative of the parameter with respect to y.
+Returns the partial derivative of the parameter with respect to y. Only available in the fragment stage.
 
 **x**
 
@@ -2410,25 +2378,19 @@ Convert a quantity in radians to degrees.
 
 The input in radians.
 
-### .denoise( node : Node, depthNode : Node.<float>, normalNode : Node.<vec3>, camera : Camera ) : DenoiseNode
+### .denoise( node : Node, options : Object ) : DenoiseNode
 
-TSL function for creating a denoise effect.
+TSL function for creating a denoise node that filters a single noisy frame or texture, see [DenoiseNode](DenoiseNode.html).
 
 **node**
 
-The node that represents the input of the effect (e.g. AO).
+The noisy input.
 
-**depthNode**
+**options**
 
-A node that represents the scene's depth.
+The guides and options, see [DenoiseNode](DenoiseNode.html).
 
-**normalNode**
-
-A node that represents the scene's normals.
-
-**camera**
-
-The camera the scene is rendered with.
+Default is `{}`.
 
 ### .densityFogFactor( density : Node )
 
@@ -2498,6 +2460,28 @@ A reference to the camera.
 
 Options for the internal render target.
 
+### .depthToViewZ( depth : Node.<float>, near : Node.<float>, far : Node.<float>, camera : Camera ) : Node.<float>
+
+TSL function for converting a depth value to a viewZ value.
+
+It supports perspective and orthographic cameras and any depth buffer type.
+
+**depth**
+
+The depth value.
+
+**near**
+
+The camera's near value.
+
+**far**
+
+The camera's far value.
+
+**camera**
+
+The camera that produced the depth value.
+
 ### .determinant( x : Node.<(mat2|mat3|mat4)> ) : Node.<float>
 
 Returns the determinant of a matrix.
@@ -2517,30 +2501,6 @@ The first parameter.
 **y**
 
 The second parameter.
-
-### .directionToColor( node : Node.<vec3> ) : Node.<vec3>
-
-**node**
-
-The direction to pack.
-
-**Deprecated:** since r185. Use [packNormalToRGB](TSL.html#packNormalToRGB) instead.
-
-### .directionToFaceDirection( vector : Node.<vec3> ) : Node.<vec3>
-
-Negates a vector if the rendering occurs on the back side of a face, based on the material's side configuration.
-
-*   If the material's side is `BackSide`, the vector is inverted (negated).
-*   If the material's side is `DoubleSide`, the vector is multiplied by `faceDirection` (negated only for back-facing fragments).
-*   If the material's side is `FrontSide` (default), the vector remains unchanged.
-
-**vector**
-
-The vector to convert.
-
-**Deprecated:** since r185. Use [negateOnBackSide](TSL.html#negateOnBackSide) instead.
-
-**Returns:** The converted vector.
 
 ### .distance( x : Node.<(vec2|vec3|vec4)>, y : Node.<(vec2|vec3|vec4)> ) : Node.<float>
 
@@ -2586,13 +2546,19 @@ Represents the viewZ depth values of the scene.
 
 Defines the effect's focus which is the distance along the camera's look direction in world units.
 
+Default is `1`.
+
 **focalLength**
 
 How far an object can be from the focal plane before it goes completely out-of-focus in world units.
 
+Default is `1`.
+
 **bokehScale**
 
 A unitless value for artistic purposes to adjust the size of the bokeh.
+
+Default is `1`.
 
 ### .dot( x : Node.<(vec2|vec3|vec4)>, y : Node.<(vec2|vec3|vec4)> ) : Node.<float>
 
@@ -2778,7 +2744,7 @@ Default is `'void'`.
 
 ### .faceForward( N : Node.<(vec2|vec3|vec4)>, I : Node.<(vec2|vec3|vec4)>, Nref : Node.<(vec2|vec3|vec4)> ) : Node.<(vec2|vec3|vec4)>
 
-Returns a vector pointing in the same direction as another.
+Returns `N` if `dot( Nref, I ) < 0`, otherwise `-N`. With `Nref = N`, the result faces against the incident vector.
 
 **N**
 
@@ -2878,7 +2844,7 @@ Default is `false`.
 
 ### .fwidth( x : Node | number ) : Node
 
-Returns the sum of the absolute derivatives in x and y.
+Returns the sum of the absolute derivatives in x and y. Only available in the fragment stage.
 
 **x**
 
@@ -2956,7 +2922,7 @@ The depth texture.
 
 The camera's inverse projection matrix.
 
-**Returns:** The computed normal vector.
+**Returns:** The computed normal vector in view space.
 
 ### .getParallaxCorrectNormal( normal : Node.<vec3>, cubeSize : Node.<vec3>, cubePos : Node.<vec3> ) : Node.<vec3>
 
@@ -3013,29 +2979,17 @@ Computes a position in view space based on a fragment's screen position expresse
 
 **screenPosition**
 
-The fragment's screen position expressed as uv coordinates.
+The fragment's screen position expressed as uv coordinates (origin at the top-left, like [screenUV](TSL.html#screenUV)).
 
 **depth**
 
-The fragment's depth value.
+The fragment's raw depth buffer value (not linearized).
 
 **projectionMatrixInverse**
 
 The camera's inverse projection matrix.
 
 **Returns:** The fragments position in view space.
-
-### .glsl( src : string, includes : Array.<Node> ) : CodeNode
-
-TSL function for creating a GLSL code node.
-
-**src**
-
-The native code.
-
-**includes**
-
-An array of includes.
 
 ### .godrays( depthNode : TextureNode, camera : Camera, light : DirectionalLight | PointLight ) : GodraysNode
 
@@ -3095,9 +3049,9 @@ The second input.
 
 TSL function for setting up hardware-based clipping.
 
-### .hash( seed : Node.<float> ) : Node.<float>
+### .hash( seed : Node.<uint> ) : Node.<float>
 
-Generates a hash value in the range `[0, 1]` from the given seed.
+Generates a hash value in the range `[0, 1]` from the given seed. The seed is converted to `uint`, so the fractional part of a float seed is discarded.
 
 **seed**
 
@@ -3145,7 +3099,7 @@ Default is `false`.
 
 ### .hue( color : Node.<vec3>, adjustment : Node.<float> ) : Node.<vec3>
 
-Updates the hue component of the given RGB color while preserving its luminance and saturation.
+Rotates the hue of the given RGB color around the gray axis. The perceived luminance is not preserved.
 
 **color**
 
@@ -3340,11 +3294,11 @@ The depth value.
 
 ### .isolate( node : Node ) : IsolateNode
 
-TSL function for creating a cache node.
+TSL function for building a node in isolation. Nodes built inside it are not reused by the rest of the shader, while nodes already built outside it are still shared.
 
 **node**
 
-The node that should be cached.
+The node to build in isolation.
 
 ### .js( src : string, includes : Array.<Node> ) : CodeNode
 
@@ -3357,20 +3311,6 @@ The native code.
 **includes**
 
 An array of includes.
-
-### .label( node : Node, name : string ) : ContextNode
-
-TSL function for defining a label context value for a given node.
-
-**node**
-
-The node whose context should be modified.
-
-**name**
-
-The name/label to set.
-
-**Deprecated:** Yes
 
 ### .length( x : Node ) : Node.<float>
 
@@ -3518,13 +3458,13 @@ The light source.
 
 ### .lightTargetDirection( light : Light ) : Node.<vec3>
 
-TSL function for getting the light target direction for the given light.
+TSL function for getting the normalized direction from the light's target toward the given light, in view space.
 
 **light**
 
 The light source.
 
-**Returns:** The light's target direction.
+**Returns:** The light's target direction in view space.
 
 ### .lightTargetPosition( light : Light ) : UniformNode.<vec3>
 
@@ -3558,11 +3498,11 @@ An array of lights.
 
 ### .linearDepth( value : Node.<float> ) : ViewportDepthNode.<float>
 
-TSL function for converting a perspective depth value to linear depth.
+TSL function for converting a depth buffer value to linear depth in the `[0, 1]` range (near to far). Perspective, orthographic and logarithmic depth are handled according to the camera and renderer.
 
 **value**
 
-The perspective depth. If `null` is provided, the current fragment's depth is used.
+The depth buffer value. If `null` is provided, the current fragment's depth is used.
 
 Default is `null`.
 
@@ -3646,14 +3586,6 @@ The size of the lookup table.
 
 Controls the intensity of the effect.
 
-### .matcapUV() : Node.<vec2>
-
-TSL function for creating a matcap uv node.
-
-Can be used to compute texture coordinates for projecting a matcap onto a mesh. Used by [MeshMatcapNodeMaterial](MeshMatcapNodeMaterial.html).
-
-**Returns:** The matcap UV coordinates.
-
 ### .materialReference( name : string, type : string, material : Material ) : MaterialReferenceNode
 
 TSL function for creating a material reference node.
@@ -3698,7 +3630,7 @@ The values to compare.
 
 ### .mix( a : Node | number, b : Node | number, t : Node | number ) : Node
 
-Linearly interpolates between two values.
+Linearly interpolates between two values: `a * ( 1 - t ) + b * t`. When method chained, the receiver is the interpolation value: `t.mix( a, b )`.
 
 **a**
 
@@ -3730,7 +3662,7 @@ The second parameter.
 
 ### .mod( a : Node, b : Node ) : OperatorNode
 
-Computes the remainder of dividing the first node by the second one.
+Computes the remainder of dividing the first node by the second one. Float operands use floored modulo (`a - b * floor( a / b )`, the result has the sign of `b`), integer operands use the `%` operator (truncated remainder).
 
 **a**
 
@@ -3850,7 +3782,7 @@ Represents the normal map data.
 
 **scaleNode**
 
-Controls the intensity of the effect.
+Controls the intensity of the effect. Only affects tangent space normal maps.
 
 Default is `null`.
 
@@ -3988,6 +3920,8 @@ Generates a sawtooth wave oscillation based on a timer.
 
 The timer to generate the oscillation with.
 
+Default is `time`.
+
 **Returns:** The oscillation node.
 
 ### .oscSine( t : Node.<float> ) : Node.<float>
@@ -3997,6 +3931,8 @@ Generates a sine wave oscillation based on a timer.
 **t**
 
 The timer to generate the oscillation with.
+
+Default is `time`.
 
 **Returns:** The oscillation node.
 
@@ -4008,6 +3944,8 @@ Generates a square wave oscillation based on a timer.
 
 The timer to generate the oscillation with.
 
+Default is `time`.
+
 **Returns:** The oscillation node.
 
 ### .oscTriangle( t : Node.<float> ) : Node.<float>
@@ -4017,6 +3955,8 @@ Generates a triangle wave oscillation based on a timer.
 **t**
 
 The timer to generate the oscillation with.
+
+Default is `time`.
 
 **Returns:** The oscillation node.
 
@@ -4176,6 +4116,16 @@ Converts each component of the vec2 to 16-bit floating-point values. The results
 **value**
 
 The 2-component vector to be packed
+
+### .packNormalToOctahedral( normal : Node.<vec3> ) : Node.<vec2>
+
+Encodes a nonzero direction as signed octahedral coordinates in `[-1, 1]` (Cigolle et al., [A Survey of Efficient Representations for Independent Unit Vectors](https://jcgt.org/published/0003/02/01/), 2014). Store the result in a signed two-channel format such as RG16F or RG16 snorm. The input does not need to be normalized.
+
+**normal**
+
+The nonzero direction to encode.
+
+**Returns:** The signed octahedral coordinates.
 
 ### .packNormalToRGB( node : Node.<vec3> ) : Node.<vec3>
 
@@ -4383,13 +4333,13 @@ The input texture.
 
 **uvNode**
 
-The uv node.
+The world space sampling direction.
 
 Default is `null`.
 
 **levelNode**
 
-The level node.
+The roughness in the `[0, 1]` range, converted to a mip level internally.
 
 Default is `null`.
 
@@ -4633,21 +4583,17 @@ Returns a random value for the given uv.
 
 The uv node.
 
-### .range( minNode : Node.<any>, maxNode : Node.<any> ) : RangeNode
+### .range( minNode : number | Color | Vector2 | Vector3 | Vector4, maxNode : number | Color | Vector2 | Vector3 | Vector4 ) : RangeNode
 
-TSL function for creating a range node.
+TSL function for creating a range node. The bounds must be constant values, uniforms or other dynamic nodes are not supported.
 
 **minNode**
 
-A node defining the lower bound of the range.
-
-Default is `float()`.
+The lower bound of the range.
 
 **maxNode**
 
-A node defining the upper bound of the range.
-
-Default is `float()`.
+The upper bound of the range.
 
 ### .rangeFogFactor( near : Node, far : Node )
 
@@ -4669,9 +4615,9 @@ Returns the reciprocal of the parameter `(1/x)`.
 
 The parameter.
 
-### .reference( name : string, type : string, object : Object ) : ReferenceBaseNode
+### .reference( name : string, type : string, object : Object ) : ReferenceNode
 
-TSL function for creating a reference base node.
+TSL function for creating a reference node.
 
 **name**
 
@@ -4685,9 +4631,9 @@ The uniform type that should be used to represent the property value.
 
 The object the property belongs to.
 
-### .reference( name : string, type : string, object : Object ) : ReferenceNode
+### .reference( name : string, type : string, object : Object ) : ReferenceBaseNode
 
-TSL function for creating a reference node.
+TSL function for creating a reference base node.
 
 **name**
 
@@ -4721,9 +4667,9 @@ The object the property belongs to. The rendered object if not set.
 
 Default is `null`.
 
-### .referenceBuffer( name : string, type : string, count : number, object : Object ) : ReferenceBaseNode
+### .referenceBuffer( name : string, type : string, count : number, object : Object ) : ReferenceNode
 
-TSL function for creating a reference base node. Use this function if you want need a reference to an array-like property that should be represented as a uniform buffer.
+TSL function for creating a reference node. Use this function if you want need a reference to an array-like property that should be represented as a uniform buffer.
 
 **name**
 
@@ -4741,9 +4687,9 @@ The number of value inside the array-like object.
 
 An array-like object the property belongs to.
 
-### .referenceBuffer( name : string, type : string, count : number, object : Object ) : ReferenceNode
+### .referenceBuffer( name : string, type : string, count : number, object : Object ) : ReferenceBaseNode
 
-TSL function for creating a reference node. Use this function if you want need a reference to an array-like property that should be represented as a uniform buffer.
+TSL function for creating a reference base node. Use this function if you want need a reference to an array-like property that should be represented as a uniform buffer.
 
 **name**
 
@@ -4789,7 +4735,7 @@ The 3D object the reflector is linked to.
 
 Default is `new Object3D()`.
 
-**resolution**
+**resolutionScale**
 
 The resolution scale.
 
@@ -4819,7 +4765,7 @@ Anti-Aliasing samples of the internal render-target.
 
 **defaultTexture**
 
-The default texture node.
+The default texture.
 
 **reflector**
 
@@ -5064,6 +5010,8 @@ The rotation defined in radians.
 
 The center of rotation
 
+Default is `vec2(0.5)`.
+
 **Returns:** The rotated uv coordinates.
 
 ### .roughnessToMip( roughness : Node.<float>, maxLod : Node.<float> ) : Node.<float>
@@ -5296,9 +5244,11 @@ Generates a circle based on the uv coordinates.
 
 The uv to generate the circle.
 
+Default is `uv()`.
+
 **Returns:** The circle shape.
 
-### .sharedUniformGroup( name : string, order : number ) : UniformGroupNode
+### .sharedUniformGroup( name : string, order : number, updateType : string | null ) : UniformGroupNode
 
 TSL function for creating a shared uniform group node with the given name and order.
 
@@ -5311,6 +5261,12 @@ The name of the uniform group node.
 Influences the internal sorting.
 
 Default is `0`.
+
+**updateType**
+
+The update type of the uniform group node.
+
+Default is `null`.
 
 ### .sharpen( node : Node.<vec4>, sharpness : number | Node.<float>, denoise : boolean | Node.<bool> ) : SharpenNode
 
@@ -5486,6 +5442,8 @@ The strength of the effect.
 
 The center point
 
+Default is `vec2(0.5)`.
+
 **Returns:** The updated uv coordinates.
 
 ### .spritesheetUV( countNode : Node.<vec2>, uvNode : Node.<vec2>, frameNode : Node.<float> ) : Node.<vec2>
@@ -5583,7 +5541,7 @@ A node that represents the beauty pass's depth.
 
 **normalNode**
 
-A node that represents the beauty pass's normals.
+A node that represents the beauty pass's unit view-space normals.
 
 **options**
 
@@ -5615,17 +5573,17 @@ The parent stack node.
 
 Default is `null`.
 
-### .step( x : Node | number, y : Node | number ) : Node
+### .step( edge : Node | number, x : Node | number ) : Node
 
-Generate a step function by comparing two values.
+Generate a step function by comparing two values. Returns `0` if `x < edge`, otherwise `1`. When method chained, the receiver is `x`: `x.step( edge )`.
+
+**edge**
+
+The edge value.
 
 **x**
 
-The y parameter.
-
-**y**
-
-The x parameter.
+The value to compare.
 
 ### .stepElement( x : Node | number, edge : Node | number ) : Node
 
@@ -5651,7 +5609,7 @@ The scene to render.
 
 The camera to render the scene with.
 
-### .storage( value : StorageBufferAttribute | StorageInstancedBufferAttribute | BufferAttribute, type : string | Struct, count : number ) : StorageBufferNode
+### .storage( value : StorageBufferAttribute | StorageInstancedBufferAttribute | BufferAttribute, type : string | Struct ) : StorageBufferNode
 
 TSL function for creating a storage buffer node.
 
@@ -5664,12 +5622,6 @@ The buffer data.
 The buffer type (e.g. `'vec3'`).
 
 Default is `null`.
-
-**count**
-
-The buffer count.
-
-Default is `0`.
 
 ### .storageBarrier() : BarrierNode
 
@@ -5687,7 +5639,19 @@ The storage buffer node.
 
 The index node that defines the element access.
 
-### .storageTexture( value : StorageTexture, uvNode : Node.<(vec2|vec3)>, storeNode : Node ) : StorageTextureNode
+### .storageStruct( value : StorageBufferAttribute, structType : Struct ) : StorageStructNode
+
+TSL function for creating a storage struct node.
+
+**value**
+
+The buffer data.
+
+**structType**
+
+The struct type of the buffer.
+
+### .storageTexture( value : StorageTexture, uvNode : Node.<(uvec2|uvec3)>, storeNode : Node ) : StorageTextureNode
 
 TSL function for creating a storage texture node.
 
@@ -5697,7 +5661,9 @@ The storage texture.
 
 **uvNode**
 
-The uv node.
+The integer texel coordinates (not normalized uvs).
+
+Default is `null`.
 
 **storeNode**
 
@@ -5705,7 +5671,7 @@ The value node that should be stored in the texture.
 
 Default is `null`.
 
-### .storageTexture3D( value : Storage3DTexture, uvNode : Node.<vec3>, storeNode : Node ) : StorageTexture3DNode
+### .storageTexture3D( value : Storage3DTexture, uvNode : Node.<uvec3>, storeNode : Node ) : StorageTexture3DNode
 
 TSL function for creating a 3D storage texture node.
 
@@ -5715,7 +5681,7 @@ The 3D storage texture.
 
 **uvNode**
 
-The uv node.
+The integer texel coordinates (not normalized uvs).
 
 Default is `null`.
 
@@ -5945,7 +5911,7 @@ Returns v from the active invocation whose subgroup\_invocation\_id matches id
 
 **v**
 
-The value to return from subgroup invocation id^mask.
+The value to return from subgroup invocation id.
 
 **id**
 
@@ -5959,7 +5925,7 @@ Returns v from the active invocation whose subgroup\_invocation\_id matches subg
 
 **v**
 
-The value to return from subgroup invocation id^mask.
+The value to return from subgroup invocation subgroup\_invocation\_id + delta.
 
 **delta**
 
@@ -5973,11 +5939,11 @@ Returns v from the active invocation whose subgroup\_invocation\_id matches subg
 
 **v**
 
-The value to return from subgroup invocation id^mask.
+The value to return from subgroup invocation subgroup\_invocation\_id - delta.
 
 **delta**
 
-A value that offsets the current in.
+A value that offsets the current subgroup invocation.
 
 **Returns:** The broadcast value.
 
@@ -6057,6 +6023,20 @@ Returns the hyperbolic tangent of the parameter.
 
 The parameter.
 
+### .temporalDenoise( node : Node, options : Object ) : DenoiseNode
+
+TSL function for creating a denoise node that accumulates a noisy screen-space effect in time before filtering it, see [DenoiseNode](DenoiseNode.html). It needs `velocity`.
+
+**node**
+
+The noisy input.
+
+**options**
+
+The guides and options, see [DenoiseNode](DenoiseNode.html).
+
+Default is `{}`.
+
 ### .texture( value : Texture | TextureNode, uvNode : Node.<(vec2|vec3)>, levelNode : Node.<int>, biasNode : Node.<float> ) : TextureNode
 
 TSL function for creating a texture node or sample a texture node already existing.
@@ -6105,53 +6085,39 @@ The level node.
 
 Default is `null`.
 
-### .texture3DLevel( value : Texture | TextureNode, uvNode : Node.<vec3>, levelNode : Node.<int> ) : TextureNode
+### .texture3DLevel( value : Data3DTexture, uvNode : Node.<vec3>, levelNode : Node.<int> ) : Texture3DNode
+
+TSL function for creating a 3D texture node that samples a specific mip level.
+
+**value**
+
+The 3D texture.
+
+**uvNode**
+
+The uv node.
+
+**levelNode**
+
+The level node.
+
+### .texture3DLoad( value : Data3DTexture, uvNode : Node.<(ivec3|uvec3)>, levelNode : Node.<int> ) : Texture3DNode
 
 TSL function for creating a texture node that fetches/loads texels without interpolation.
 
 **value**
 
-The texture.
-
-Default is `EmptyTexture`.
+The 3D texture.
 
 **uvNode**
 
-The uv node.
+The integer texel coordinates (not normalized uvs).
 
 Default is `null`.
 
 **levelNode**
 
 The level node.
-
-Default is `null`.
-
-### .texture3DLoad( value : Texture | TextureNode, uvNode : Node.<vec3>, levelNode : Node.<int>, biasNode : Node.<float> ) : TextureNode
-
-TSL function for creating a texture node that fetches/loads texels without interpolation.
-
-**value**
-
-The texture.
-
-Default is `EmptyTexture`.
-
-**uvNode**
-
-The uv node.
-
-Default is `null`.
-
-**levelNode**
-
-The level node.
-
-Default is `null`.
-
-**biasNode**
-
-The bias node.
 
 Default is `null`.
 
@@ -6191,11 +6157,11 @@ Applies mipped bicubic texture filtering to the given texture node.
 
 **textureNode**
 
-The texture node that should be filtered.
+The texture node that should be filtered. It must define an explicit uv node, e.g. `texture( map, uv() )`.
 
 **strength**
 
-Defines the strength of the bicubic filtering.
+The LOD to sample from, as a fraction in the range `[0, 1]` of the texture's max mip level (`0` samples the base level).
 
 **Returns:** The filtered texture sample.
 
@@ -6205,7 +6171,7 @@ Applies mipped bicubic texture filtering to the given texture node.
 
 **textureNode**
 
-The texture node that should be filtered.
+The texture node that should be filtered. It must define an explicit uv node, e.g. `texture( map, uv() )`.
 
 **lodNode**
 
@@ -6213,7 +6179,7 @@ Defines the LOD to sample from.
 
 **Returns:** The filtered texture sample.
 
-### .textureLoad( value : Texture | TextureNode, uvNode : Node.<(vec2|vec3)>, levelNode : Node.<int>, biasNode : Node.<float> ) : TextureNode
+### .textureLoad( value : Texture | TextureNode, uvNode : Node.<(ivec2|uvec2)>, levelNode : Node.<int> ) : TextureNode
 
 TSL function for creating a texture node that fetches/loads texels without interpolation.
 
@@ -6225,19 +6191,13 @@ Default is `EmptyTexture`.
 
 **uvNode**
 
-The uv node.
+The integer texel coordinates (not normalized uvs).
 
 Default is `null`.
 
 **levelNode**
 
 The level node.
-
-Default is `null`.
-
-**biasNode**
-
-The bias node.
 
 Default is `null`.
 
@@ -6255,7 +6215,7 @@ A level node which defines the requested mip.
 
 Default is `null`.
 
-### .textureStore( value : StorageTexture | StorageTextureNode, uvNode : Node.<(vec2|vec3)>, storeNode : Node ) : StorageTextureNode
+### .textureStore( value : StorageTexture | StorageTextureNode, uvNode : Node.<(uvec2|uvec3)>, storeNode : Node ) : StorageTextureNode
 
 TSL function for storing a value in a storage texture.
 
@@ -6267,7 +6227,7 @@ The storage texture or storage texture node.
 
 **uvNode**
 
-The uv node.
+The integer texel coordinates (not normalized uvs).
 
 **storeNode**
 
@@ -6287,9 +6247,11 @@ The tone mapping type.
 
 The tone mapping exposure.
 
+Default is `toneMappingExposure`.
+
 **color**
 
-The color node to process.
+The color node to process. Defaults to the current context color.
 
 ### .toonOutlinePass( scene : Scene, camera : Camera, color : Color, thickness : number, alpha : number ) : ToonOutlinePassNode
 
@@ -6306,6 +6268,8 @@ A reference to the camera.
 **color**
 
 Defines the outline's color.
+
+Default is `new Color( 0, 0, 0 )`.
 
 **thickness**
 
@@ -6399,17 +6363,13 @@ The view matrix.
 
 **Returns:** The normal vector in view space.
 
-### .transformNormalToView( normal : Node.<vec3>, builder : NodeBuilder ) : Node.<vec3>
+### .transformNormalToView( normal : Node.<vec3> ) : Node.<vec3>
 
 Transforms the given normal from local to view space.
 
 **normal**
 
 The normal.
-
-**builder**
-
-The current node builder.
 
 **Returns:** The transformed normal.
 
@@ -6607,13 +6567,25 @@ TSL function for defining a uniformFlow context value for a given node.
 
 The node whose dependencies should all execute within a uniform control-flow path.
 
-### .uniformGroup( name : string ) : UniformGroupNode
+### .uniformGroup( name : string, order : number, updateType : string | null ) : UniformGroupNode
 
 TSL function for creating a uniform group node with the given name.
 
 **name**
 
 The name of the uniform group node.
+
+**order**
+
+Influences the internal sorting.
+
+Default is `1`.
+
+**updateType**
+
+The update type of the uniform group node.
+
+Default is `null`.
 
 ### .uniformTexture( value : Texture ) : TextureNode
 
@@ -6622,6 +6594,8 @@ TSL function for creating a non-mergeable uniform texture node.
 **value**
 
 The texture.
+
+Default is `EmptyTexture`.
 
 ### .unpack4xI8( value : Node.<uint> ) : Node.<ivec4>
 
@@ -6660,6 +6634,16 @@ Unpacks a tangent space normal, reconstructing the Z component by projecting the
 The X,Y coordinates of the normal.
 
 **Returns:** The resulting normal.
+
+### .unpackOctahedralToNormal( encoded : Node.<vec2> ) : Node.<vec3>
+
+Decodes signed octahedral coordinates into a unit direction.
+
+**encoded**
+
+The signed octahedral coordinates in `[-1, 1]`.
+
+**Returns:** The normalized direction.
 
 ### .unpackRGBToNormal( node : Node.<vec3> ) : Node.<vec3>
 
@@ -6755,6 +6739,8 @@ The node for which a varying should be created.
 
 The name of the varying in the shader.
 
+Default is `null`.
+
 ### .varyingProperty( type : string, name : string, placeholderNode : Node ) : PropertyNode
 
 TSL function for creating a varying property node.
@@ -6777,7 +6763,7 @@ Default is `null`.
 
 ### .vertexColor( index : number ) : VertexColorNode
 
-TSL function for creating a reference node.
+TSL function for creating a vertex color node. If the geometry has no matching color attribute, the node returns white.
 
 **index**
 
@@ -6795,7 +6781,7 @@ The node which should be executed in the vertex stage.
 
 ### .vibrance( color : Node.<vec3>, adjustment : Node.<float> ) : Node.<vec3>
 
-Selectively enhance the intensity of less saturated RGB colors. Can result in a more natural and visually appealing image with enhanced color depth compared to ColorAdjustment#saturation.
+Selectively enhance the intensity of less saturated RGB colors. Can result in a more natural and visually appealing image with enhanced color depth compared to [saturation](TSL.html#saturation).
 
 **color**
 
@@ -7183,12 +7169,12 @@ Flat interpolation.
 
 This type represents mouse buttons and interaction types in context of controls.
 
-**MIDDLE**  
+**LEFT**  
 number
 
 The left mouse button.
 
-**LEFT**  
+**MIDDLE**  
 number
 
 The middle mouse button.
@@ -7296,11 +7282,6 @@ function
 
 A callback function that is executed after a node builder has been created and before it is built.
 
-**onShaderError**  
-function
-
-A callback function that is executed when a shader error happens. Only supported with WebGL 2 right now.
-
 **getShaderAsync**  
 function
 
@@ -7322,7 +7303,7 @@ Default is `null`.
 **normal**  
 [Node](Node.html).<vec3>
 
-View-space normals for geometric edge stopping.
+A sampleable node that returns unit view-space normals for geometric edge stopping.
 
 Default is `null`.
 
@@ -7481,6 +7462,11 @@ boolean
 When `true`, history is stored in this pass (classic temporal resolve). When `false`, use [TemporalReprojectNode#setHistoryTexture](TemporalReprojectNode.html#setHistoryTexture) to read history from another pass (e.g. denoise output).
 
 Default is `false`.
+
+**normalDecode**  
+function
+
+Decodes a sample of the normal texture into a unit view-space normal. Defaults to [unpackRGBToNormal](TSL.html#unpackRGBToNormal).
 
 ### .XRConfig
 

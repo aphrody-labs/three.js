@@ -89,13 +89,9 @@ The current node builder.
 
 **Returns:** The element type.
 
-### .getPaddedType( builder : NodeBuilder ) : string
+### .getPaddedType() : string
 
 Returns the padded type based on the element type.
-
-**builder**
-
-The current node builder.
 
 **Returns:** The padded type.
 

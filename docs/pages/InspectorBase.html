@@ -127,7 +127,7 @@
 							</tbody>
 						</table>
 					</div>
-					<h3 class="name name-method" id="computeAsync" translate="no">.<a href="#computeAsync">computeAsync</a><span class="signature">( computeNode : <span class="param-type"><a href="ComputeNode.html">ComputeNode</a></span>, dispatchSizeOrCount : <span class="param-type">number | Array.&lt;number></span> )</span> </h3>
+					<h3 class="name name-method" id="computeAsync" translate="no">.<a href="#computeAsync">computeAsync</a><span class="signature">( computeNode : <span class="param-type"><a href="ComputeNode.html">ComputeNode</a></span>, dispatchSizeOrCount : <span class="param-type">number | Array.&lt;number> | <a href="IndirectStorageBufferAttribute.html">IndirectStorageBufferAttribute</a></span> )</span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>When a compute operation is performed.</p>
@@ -209,7 +209,7 @@
 							<p>Called when a frame ends.</p>
 						</div>
 					</div>
-					<h3 class="name name-method" id="finishCompute" translate="no">.<a href="#finishCompute">finishCompute</a><span class="signature">( uid : <span class="param-type">string</span>, computeNode : <span class="param-type"><a href="ComputeNode.html">ComputeNode</a></span> )</span> </h3>
+					<h3 class="name name-method" id="finishCompute" translate="no">.<a href="#finishCompute">finishCompute</a><span class="signature">( uid : <span class="param-type">string</span> )</span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>Called when a compute operation ends.</p>
@@ -224,21 +224,13 @@
 										<p>A unique identifier for the render context.</p>
 									</td>
 								</tr>
-								<tr>
-									<td class="name">
-										<strong translate="no">computeNode</strong>
-									</td>
-									<td class="description last">
-										<p>The compute node being executed.</p>
-									</td>
-								</tr>
 							</tbody>
 						</table>
 					</div>
 					<h3 class="name name-method" id="finishRender" translate="no">.<a href="#finishRender">finishRender</a><span class="signature">( uid : <span class="param-type">string</span> )</span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Called when an animation loop ends.</p>
+							<p>Called when a render operation ends.</p>
 						</div>
 						<table class="params">
 							<tbody>

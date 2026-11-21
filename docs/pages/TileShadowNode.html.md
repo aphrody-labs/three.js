@@ -116,16 +116,6 @@ Updates the light transformations and shadow cameras for each tile.
 
 **Overrides:** [ShadowBaseNode#update](ShadowBaseNode.html#update)
 
-### .updateBefore( frame : NodeFrame )
-
-The implementation performs the update of the shadow map if necessary.
-
-**frame**
-
-A reference to the current node frame.
-
-**Overrides:** [ShadowBaseNode#updateBefore](ShadowBaseNode.html#updateBefore)
-
 ### .updateLightDirection()
 
 Updates the initial light direction based on the light's target position.
@@ -137,6 +127,8 @@ Updates the shadow map rendering.
 **frame**
 
 A reference to the current node frame.
+
+**Overrides:** [ShadowBaseNode#updateShadow](ShadowBaseNode.html#updateShadow)
 
 ## Source
 

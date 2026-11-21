@@ -14,12 +14,8 @@
 		<section>
 			<header>
 				<div class="class-description"><p>This class represents a native shader function. It can be used to implement
-certain aspects of a node material with native shader code. There are two predefined
-TSL functions for easier usage.</p>
-<ul>
-<li><code>wgslFn</code>: Creates a WGSL function node.</li>
-<li><code>glslFn</code>: Creates a GLSL function node.</li>
-</ul>
+certain aspects of a node material with native shader code. The predefined TSL function
+<code>wgslFn</code> creates a WGSL function node.</p>
 <p>A basic example with one include looks like so:</p></div>
 				<h2>Code Example</h2>
 				<div translate="no"><pre><code class="language-js">const desaturateWGSLFn = wgslFn( `
@@ -39,7 +35,7 @@ material.colorNode = someWGSLFn( { color: texture( map ) } );
 			<article>
 				<div class="container-overview">
 					<h2>Constructor</h2>
-					<h3 class="name name-method" id="FunctionNode" translate="no">new <a href="#FunctionNode">FunctionNode</a><span class="signature">( code : <span class="param-type">string</span>, includes : <span class="param-type">Array.&lt;<a href="Node.html">Node</a>></span>, language : <span class="param-type">'js' | 'wgsl' | 'glsl'</span> )</span> </h3>
+					<h3 class="name name-method" id="FunctionNode" translate="no">new <a href="#FunctionNode">FunctionNode</a><span class="signature">( code : <span class="param-type">string</span>, includes : <span class="param-type">Array.&lt;<a href="Node.html">Node</a>></span>, language : <span class="param-type">'js' | 'wgsl'</span> )</span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>Constructs a new function node.</p>

@@ -2,7 +2,7 @@
 
 # ColorEnvironment
 
-This class represents a scene with a uniform color that can be used as input for [PMREMGenerator#fromScene](PMREMGenerator.html#fromScene). The resulting PMREM represents uniform ambient lighting and can be used for Image Based Lighting by assigning it to [Scene#environment](Scene.html#environment).
+This class represents a scene with a uniform color that can be used as input for PMREMGenerator#fromScene. The resulting PMREM represents uniform ambient lighting and can be used for Image Based Lighting by assigning it to [Scene#environment](Scene.html#environment).
 
 ## Code Example
 

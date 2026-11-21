@@ -22,10 +22,11 @@ with a pixel size of <code>1</code>, it's not possible to define a size.</li>
 <pre><code class="language-js">const pointCloud = new THREE.Points( geometry, new THREE.PointsNodeMaterial() );
 </code></pre>
 <ul>
-<li>By rendering point primitives with Sprites. In this case, size is honored,
-see <a href="PointsNodeMaterial.html#sizeNode">PointsNodeMaterial#sizeNode</a>.</li>
+<li>By rendering instanced quads with <a href="Sprite.html">Sprite</a>. In this case, size is honored,
+see <a href="PointsNodeMaterial.html#sizeNode">PointsNodeMaterial#sizeNode</a>. Set <a href="Sprite.html#count">Sprite#count</a> to the number of points.</li>
 </ul>
 <pre><code class="language-js">const instancedPoints = new THREE.Sprite( new THREE.PointsNodeMaterial( { positionNode: instancedBufferAttribute( positionAttribute ) } ) );
+instancedPoints.count = positionAttribute.count;
 </code></pre></div>
 			</header>
 			<article>
@@ -55,7 +56,7 @@ see <a href="PointsNodeMaterial.html#sizeNode">PointsNodeMaterial#sizeNode</a>.<
 					<h3 class="name" id="alphaToCoverage" translate="no">.<a href="#alphaToCoverage">alphaToCoverage</a><span class="type-signature"> : boolean</span> </h3>
 					<div class="description">
 						<p>Whether alpha to coverage should be used or not.</p>
-						<p>Default is <code>true</code>.</p>
+						<p>Default is <code>false</code>.</p>
 					</div>
 						<dl class="details">
 							<dt class="tag-overrides"><strong>Overrides:</strong> <a href="SpriteNodeMaterial.html#alphaToCoverage">SpriteNodeMaterial#alphaToCoverage</a></dt>
@@ -71,10 +72,11 @@ see <a href="PointsNodeMaterial.html#sizeNode">PointsNodeMaterial#sizeNode</a>.<
 				<div class="member">
 					<h3 class="name" id="sizeNode" translate="no">.<a href="#sizeNode">sizeNode</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec2></span> </h3>
 					<div class="description">
-						<p>This node property provides an additional way to set the point size.</p>
-<p>Note that WebGPU only supports point primitives with 1 pixel size. Consequently,
-this node has no effect when the material is used with <a href="Points.html">Points</a> and a WebGPU
-backend. If an application wants to render points with a size larger than 1 pixel,
+						<p>This node property allows to overwrite the point size defined by <code>size</code>. The size
+is in pixels, additionally scaled by distance when <code>sizeAttenuation</code> is <code>true</code>.</p>
+<p>Note that <code>WebGPURenderer</code> always renders point primitives with a size of 1 pixel (with
+both backends). Consequently, this node has no effect when the material is used with
+<a href="Points.html">Points</a>. If an application wants to render points with a size larger than 1 pixel,
 the material should be used with <a href="Sprite.html">Sprite</a> and instancing.</p>
 						<p>Default is <code>null</code>.</p>
 					</div>

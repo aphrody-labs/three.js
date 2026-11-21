@@ -4,7 +4,7 @@
 
 A basic flat, reflective water effect.
 
-Note that this class can only be used with [WebGPURenderer](WebGPURenderer.html). When using [WebGLRenderer](WebGLRenderer.html), use [Water](Water.html).
+Note that this class can only be used with [WebGPURenderer](WebGPURenderer.html). When using WebGLRenderer, use Water.
 
 References:
 
@@ -39,6 +39,8 @@ The configuration options.
 ### .alpha : UniformNode.<float>
 
 The alpha value.
+
+If `material.transparent` is not set to `true` (automatically enabled when constructed with `alpha < 1`), the water will remain fully opaque.
 
 Default is `1`.
 
@@ -149,6 +151,20 @@ number
 The distortion scale.
 
 Default is `20`.
+
+**side**  
+[FrontSide](global.html#FrontSide) | [BackSide](global.html#BackSide) | [DoubleSide](global.html#DoubleSide)
+
+The water material's `side` property.
+
+Default is `FrontSide`.
+
+**fog**  
+boolean
+
+Whether the water should be affected by fog or not.
+
+Default is `false`.
 
 ## Source
 

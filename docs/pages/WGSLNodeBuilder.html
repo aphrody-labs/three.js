@@ -77,6 +77,13 @@ for render objects.</p></div>
 					</div>
 				</div>
 				<div class="member">
+					<h3 class="name" id="samplerNodes" translate="no">.<a href="#samplerNodes">samplerNodes</a><span class="type-signature"> : Set.&lt;<a href="TextureNode.html">TextureNode</a>></span> </h3>
+					<div class="description">
+						<p>The texture nodes that need a sampler although their texture is unfilterable,
+e.g. textures with <code>NearestFilter</code> passed to a function with layout.</p>
+					</div>
+				</div>
+				<div class="member">
 					<h3 class="name" id="scopedArrays" translate="no">.<a href="#scopedArrays">scopedArrays</a><span class="type-signature"> : Map.&lt;string, Object></span> </h3>
 					<div class="description">
 						<p>A map for managing scope arrays. Only relevant for when using
@@ -84,10 +91,10 @@ for render objects.</p></div>
 					</div>
 				</div>
 				<div class="member">
-					<h3 class="name" id="uniformGroups" translate="no">.<a href="#uniformGroups">uniformGroups</a><span class="type-signature"> : Object.&lt;string, Object.&lt;string, <a href="NodeUniformsGroup.html">NodeUniformsGroup</a>>></span> </h3>
+					<h3 class="name" id="uniformGroups" translate="no">.<a href="#uniformGroups">uniformGroups</a><span class="type-signature"> : Object.&lt;string, <a href="NodeUniformsGroup.html">NodeUniformsGroup</a>></span> </h3>
 					<div class="description">
-						<p>A dictionary that holds for each shader stage ('vertex', 'fragment', 'compute')
-another dictionary which manages UBOs per group ('render','frame','object').</p>
+						<p>A dictionary that holds the UBO of each uniform group ('render','frame','object')
+by group name. The UBOs are shared by all shader stages.</p>
 					</div>
 				</div>
 				<div class="member">
@@ -173,7 +180,7 @@ This ensures the same binding index is used across all shader stages.</p>
 							<dt class="tag-overrides"><strong>Overrides:</strong> <a href="NodeBuilder.html#enableDualSourceBlending">NodeBuilder#enableDualSourceBlending</a></dt>
 						</dl>
 					</div>
-					<h3 class="name name-method" id="enableHardwareClipping" translate="no">.<a href="#enableHardwareClipping">enableHardwareClipping</a><span class="signature">( planeCount : <span class="param-type">string</span> )</span> </h3>
+					<h3 class="name name-method" id="enableHardwareClipping" translate="no">.<a href="#enableHardwareClipping">enableHardwareClipping</a><span class="signature">( planeCount : <span class="param-type">number</span> )</span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>Enables hardware clipping.</p>
@@ -1877,6 +1884,38 @@ Returns <code>undefined</code> when used in the vertex or fragment stage.</dt>
 							<dt class="tag-returns"><strong>Returns:</strong> The resolved method name.</dt>
 						</dl>
 					</div>
+					<h3 class="name name-method" id="getTextureParameters" translate="no">.<a href="#getTextureParameters">getTextureParameters</a><span class="signature">( name : <span class="param-type">string</span>, textureNode : <span class="param-type"><a href="TextureNode.html">TextureNode</a></span> )</span><span class="type-signature"> : Object.&lt;string, <a href="Node.html">Node</a>></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>Returns the parameters that pass a texture to a function: the texture and its sampler.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">name</strong>
+									</td>
+									<td class="description last">
+										<p>The name of the texture parameter.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">textureNode</strong>
+									</td>
+									<td class="description last">
+										<p>The texture node.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>Overrides:</strong> <a href="NodeBuilder.html#getTextureParameters">NodeBuilder#getTextureParameters</a></dt>
+						</dl>
+						<dl class="details">
+							<dt class="tag-returns"><strong>Returns:</strong> The nodes of the parameters, by name.</dt>
+						</dl>
+					</div>
 					<h3 class="name name-method" id="getType" translate="no">.<a href="#getType">getType</a><span class="signature">( type : <span class="param-type">string</span> )</span><span class="type-signature"> : string</span> </h3>
 					<div class="method">
 						<div class="description">
@@ -2027,7 +2066,7 @@ and layouts.</p>
 							<dt class="tag-returns"><strong>Returns:</strong> The WGSL snippet that defines a variable.</dt>
 						</dl>
 					</div>
-					<h3 class="name name-method" id="getVars" translate="no">.<a href="#getVars">getVars</a><span class="signature">( shaderStage : <span class="param-type">string</span> )</span><span class="type-signature"> : string</span> </h3>
+					<h3 class="name name-method" id="getVars" translate="no">.<a href="#getVars">getVars</a><span class="signature">( shaderStage : <span class="param-type">string</span>, global : <span class="param-type">boolean</span> )</span><span class="type-signature"> : string</span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>Returns the variables of the given shader stage as a WGSL string.</p>
@@ -2040,6 +2079,15 @@ and layouts.</p>
 									</td>
 									<td class="description last">
 										<p>The shader stage.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">global</strong>
+									</td>
+									<td class="description last">
+										<p>Whether to declare the variables in module scope (<code>var&lt;private&gt;</code>) or not.</p>
+										<p>Default is <code>false</code>.</p>
 									</td>
 								</tr>
 							</tbody>
@@ -2217,6 +2265,29 @@ and layouts.</p>
 						</table>
 						<dl class="details">
 							<dt class="tag-returns"><strong>Returns:</strong> Whether the given texture is unfilterable or not.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="isUnfilterableFormat" translate="no">.<a href="#isUnfilterableFormat">isUnfilterableFormat</a><span class="signature">( texture : <span class="param-type"><a href="Texture.html">Texture</a></span> )</span><span class="type-signature"> : boolean</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>Returns <code>true</code> if the format of the given texture can't be sampled with a filtering sampler,
+e.g. an integer texture. Unlike <a href="WGSLNodeBuilder.html#isUnfilterable">WGSLNodeBuilder#isUnfilterable</a>, the filters of the
+texture are ignored.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">texture</strong>
+									</td>
+									<td class="description last">
+										<p>The texture.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>Returns:</strong> Whether the format of the given texture is unfilterable or not.</dt>
 						</dl>
 					</div>
 				<h2 class="subsection-title">Source</h2>

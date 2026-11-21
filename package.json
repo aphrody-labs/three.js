@@ -40,7 +40,7 @@
     "start": "bun run dev",
     "test": "bun lint && bun test",
     "build": "bun run utils/build/build.ts",
-    "build-docs": "bun x --bun jsdoc -c utils/docs/jsdoc.config.json && bun run build-llms",
+    "build-docs": "bun --preload ./utils/docs/jsdoc-bun.ts node_modules/jsdoc/jsdoc.js -c utils/docs/jsdoc.config.json && bun run build-llms",
     "build-llms": "bun run utils/llms/build.js",
     "dev": "bun run utils/build/dev.js && bun run utils/server.js -p 8080",
     "preview": "bun run utils/build/preview.js",
@@ -82,5 +82,8 @@
     "pngjs": "^7.0.0",
     "puppeteer-core": "^25.0.0",
     "turndown": "^7.2.2"
+  },
+  "patchedDependencies": {
+    "jsdoc@4.0.5": "patches/jsdoc@4.0.5.patch"
   }
 }

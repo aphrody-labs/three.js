@@ -45,6 +45,18 @@ The projected error in pixels below which a simpler level of detail is selected.
 
 Default is `1`.
 
+**lodTransition**
+
+The fraction of `lodThreshold` over which adjacent levels of detail crossfade with a screen-door dither mask.
+
+Default is `0`.
+
+**transitionScreenRadius**
+
+The radius in pixels below which the levels of detail of objects switch without a transition, `0` crossfades all objects.
+
+Default is `0`.
+
 **shadowLodThreshold**
 
 The projected error in shadow map texels below which a simpler level of detail is selected for shadow casters.
@@ -103,7 +115,7 @@ Default is `false`.
 
 ### .info : Object (readonly)
 
-The clusters and triangles drawn by the GPU-driven pipeline in the main view, read from the counters of the culling without waiting for the GPU. The values are updated every interval of frames, the triangles include the degenerate triangles which pad the clusters.
+The clusters and triangles drawn by the GPU-driven pipeline in the main view, read from the counters of the culling without waiting for the GPU. The values are updated every interval of frames, the triangles include the degenerate triangles which pad the clusters. `transitionClusters` are the clusters of the dithered crossfades between levels of detail, included in `clusters`.
 
 ### .isMeshletDrawingPipeline : boolean (readonly)
 
@@ -116,6 +128,12 @@ Default is `true`.
 The projected error in pixels below which a simpler level of detail is selected.
 
 Default is `1`.
+
+### .lodTransition : number
+
+The fraction of `lodThreshold` over which adjacent levels of detail crossfade with a complementary screen-door dither mask (`0` disables transitions).
+
+Default is `0`.
 
 ### .maxInstances : number (readonly)
 
@@ -138,6 +156,12 @@ Default is `true`.
 The projected error in shadow map texels below which a simpler level of detail is selected for the shadow casters. The level of detail of shadow passes doesn't depend on the camera, so shadow maps which are not updated every frame stay valid when the camera moves.
 
 Default is `1`.
+
+### .transitionScreenRadius : number
+
+The radius of the bounding sphere of objects on the screen in pixels below which their levels of detail switch without a transition. The popping of small objects is hardly visible, while their transitions draw two levels of detail. `0` crossfades all objects, see [MeshletDrawingPipeline#lodTransition](MeshletDrawingPipeline.html#lodTransition).
+
+Default is `0`.
 
 ## Methods
 
@@ -173,7 +197,7 @@ The culling of the render list.
 
 **Returns:** The batch.
 
-### .createView( width : number, height : number, occlusion : boolean, shadow : boolean, clusterBudget : number ) : Object
+### .createView( width : number, height : number, occlusion : boolean ) : Object
 
 Creates the view of a render list.
 
@@ -188,16 +212,6 @@ The height of the view in pixels.
 **occlusion**
 
 Whether the clusters are occlusion culled.
-
-**shadow**
-
-Whether the culling draws a shadow map.
-
-**clusterBudget**
-
-The measured number of clusters of the visible objects.
-
-Default is `0`.
 
 **Returns:** The view, or `null` if the draw doesn't need one.
 

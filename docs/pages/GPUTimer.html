@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>GPUTimer - Three.js Docs</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+	<h1 translate="no">GPUTimer</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>Measures the GPU time of the render and compute passes issued between <a href="GPUTimer.html#begin">GPUTimer#begin</a> and
+<a href="GPUTimer.html#end">GPUTimer#end</a>, from the start of the first pass to the end of the last one.</p>
+<p>Requires the <code>timestamp-query</code> feature in WebGPU. Otherwise the results are <code>null</code>.</p></div>
+				<h2>Code Example</h2>
+				<div translate="no"><pre><code class="language-js">const timer = new GPUTimer( renderer );
+timer.begin();
+renderer.render( scene, camera );
+const { delta } = await timer.end();
+</code></pre></div>
+			</header>
+			<article>
+				<div class="container-overview">
+					<h2>Constructor</h2>
+					<h3 class="name name-method" id="GPUTimer" translate="no">new <a href="#GPUTimer">GPUTimer</a><span class="signature">( renderer : <span class="param-type"><a href="Renderer.html">Renderer</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>Constructs a new GPU timer.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">renderer</strong>
+									</td>
+									<td class="description last">
+										<p>The renderer whose passes are timed. Must be initialized before
+<a href="GPUTimer.html#begin">GPUTimer#begin</a> is called.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">Properties</h2>
+				<div class="member">
+					<h3 class="name" id="renderer" translate="no">.<a href="#renderer">renderer</a><span class="type-signature"> : <a href="Renderer.html">Renderer</a></span> </h3>
+					<div class="description">
+						<p>The renderer whose passes are timed.</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">Methods</h2>
+					<h3 class="name name-method" id="begin" translate="no">.<a href="#begin">begin</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>Starts timing the passes the renderer issues.</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="end" translate="no">.<a href="#end">end</a><span class="signature">()</span><span class="type-signature"> : Promise.&lt;?{start: ?number, end: ?number, delta: number}></span> <span class="type-signature">(async) </span></h3>
+					<div class="method">
+						<div class="description">
+							<p>Stops timing and returns the GPU timing of the passes issued since <a href="GPUTimer.html#begin">GPUTimer#begin</a>.
+The timer can begin a new measurement before the result is read.</p>
+<ul>
+<li><code>start</code>: The GPU timestamp of the start of the first pass.</li>
+<li><code>end</code>: The GPU timestamp of the end of the last pass.</li>
+<li><code>delta</code>: The time between them, <code>0</code> without any pass.</li>
+</ul>
+<p>The timestamps can only be compared with each other, and are <code>null</code> without any pass.
+The result is <code>null</code> when the backend doesn't support timing.</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>Returns:</strong> The GPU timing in milliseconds.</dt>
+						</dl>
+					</div>
+				<h2 class="subsection-title">Source</h2>
+				<p>
+					<a href="https://github.com/mrdoob/three.js/blob/master/src/renderers/common/GPUTimer.js" translate="no" target="_blank" rel="noopener">src/renderers/common/GPUTimer.js</a>
+				</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

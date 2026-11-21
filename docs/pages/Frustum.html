@@ -294,7 +294,9 @@ by a single frustum plane. It never reports false negatives, so it is safe for c
 					<h3 class="name name-method" id="setFromProjectionMatrix" translate="no">.<a href="#setFromProjectionMatrix">setFromProjectionMatrix</a><span class="signature">( m : <span class="param-type"><a href="Matrix4.html">Matrix4</a></span>, coordinateSystem : <span class="param-type"><a href="global.html#WebGLCoordinateSystem">WebGLCoordinateSystem</a> | <a href="global.html#WebGPUCoordinateSystem">WebGPUCoordinateSystem</a></span>, reversedDepth : <span class="param-type">boolean</span> )</span><span class="type-signature"> : <a href="Frustum.html">Frustum</a></span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Sets the frustum planes from the given projection matrix.</p>
+							<p>Sets the frustum planes from the given projection matrix. The planes are expressed
+in the space the matrix maps from, so pass <code>camera.projectionMatrix</code> multiplied by
+<code>camera.matrixWorldInverse</code> to get world space planes.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -312,6 +314,7 @@ by a single frustum plane. It never reports false negatives, so it is safe for c
 									</td>
 									<td class="description last">
 										<p>The coordinate system.</p>
+										<p>Default is <code>WebGLCoordinateSystem</code>.</p>
 									</td>
 								</tr>
 								<tr>

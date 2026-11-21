@@ -126,7 +126,7 @@ Computes the distance from the ray's origin to the given plane. Returns `null` i
 
 The plane to compute the distance to.
 
-**Returns:** Whether this ray intersects with the given sphere or not.
+**Returns:** The distance from the ray's origin to the plane, or `null` if there is no intersection.
 
 ### .distanceToPoint( point : Vector3 ) : number
 

@@ -8,7 +8,7 @@ A special type of camera that is positioned in 3D space to render its surroundin
 
 ```js
 // Create cube render target
-const cubeRenderTarget = new THREE.WebGLCubeRenderTarget( 256, { generateMipmaps: true, minFilter: THREE.LinearMipmapLinearFilter } );
+const cubeRenderTarget = new THREE.CubeRenderTarget( 256, { generateMipmaps: true, minFilter: THREE.LinearMipmapLinearFilter } );
 // Create cube camera
 const cubeCamera = new THREE.CubeCamera( 1, 100000, cubeRenderTarget );
 scene.add( cubeCamera );
@@ -27,7 +27,7 @@ renderer.render( scene, camera );
 
 ## Constructor
 
-### new CubeCamera( near : number, far : number, renderTarget : WebGLCubeRenderTarget )
+### new CubeCamera( near : number, far : number, renderTarget : CubeRenderTarget )
 
 Constructs a new cube camera.
 
@@ -57,13 +57,13 @@ The current active coordinate system.
 
 Default is `null`.
 
-### .renderTarget : WebGLCubeRenderTarget
+### .renderTarget : CubeRenderTarget
 
 A reference to the cube render target.
 
 ## Methods
 
-### .update( renderer : Renderer | WebGLRenderer, scene : Scene )
+### .update( renderer : Renderer, scene : Scene )
 
 Calling this method will render the given scene with the given renderer into the cube render target of the camera.
 

@@ -15,7 +15,7 @@
 			<header>
 				<div class="class-description"><p>A curve representing a Catmull-Rom spline.</p></div>
 				<h2>Code Example</h2>
-				<div translate="no"><pre><code class="language-js">//Create a closed wavey loop
+				<div translate="no"><pre><code class="language-js">//Create a wavey curve
 const curve = new THREE.CatmullRomCurve3( [
 	new THREE.Vector3( -10, 0, 10 ),
 	new THREE.Vector3( -5, 5, 5 ),
@@ -71,7 +71,7 @@ const curveObject = new THREE.Line( geometry, material );
 										<strong translate="no">tension</strong>
 									</td>
 									<td class="description last">
-										<p>Tension of the curve.</p>
+										<p>Tension of the curve. Only used when <code>curveType</code> is <code>'catmullrom'</code>.</p>
 										<p>Default is <code>0.5</code>.</p>
 									</td>
 								</tr>
@@ -110,7 +110,7 @@ const curveObject = new THREE.Line( geometry, material );
 				<div class="member">
 					<h3 class="name" id="tension" translate="no">.<a href="#tension">tension</a><span class="type-signature"> : number</span> </h3>
 					<div class="description">
-						<p>Tension of the curve.</p>
+						<p>Tension of the curve. Only used when <a href="CatmullRomCurve3.html#curveType">CatmullRomCurve3#curveType</a> is <code>'catmullrom'</code>.</p>
 						<p>Default is <code>0.5</code>.</p>
 					</div>
 				</div>

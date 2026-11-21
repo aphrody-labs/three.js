@@ -55,7 +55,7 @@ scene.background = cubeTexture;
 					</div>
 				</div>
 				<h2 class="subsection-title">Methods</h2>
-					<h3 class="name name-method" id="load" translate="no">.<a href="#load">load</a><span class="signature">( urls : <span class="param-type">Array.&lt;string></span>, onLoad : <span class="param-type">function</span>, onProgress : <span class="param-type"><a href="global.html#onProgressCallback">onProgressCallback</a></span>, onError : <span class="param-type"><a href="global.html#onErrorCallback">onErrorCallback</a></span> )</span><span class="type-signature"> : <a href="CubeTexture.html">CubeTexture</a></span> </h3>
+					<h3 class="name name-method" id="load" translate="no">.<a href="#load">load</a><span class="signature">( urls : <span class="param-type">Array.&lt;string></span>, onLoad : <span class="param-type">function</span>, onProgress : <span class="param-type"><a href="global.html#onProgressCallback">onProgressCallback</a></span>, onError : <span class="param-type">function</span> )</span><span class="type-signature"> : <a href="CubeTexture.html">CubeTexture</a></span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>Starts loading from the given URL and pass the fully loaded cube texture
@@ -96,7 +96,7 @@ neg-x, pos-y, neg-y, pos-z, neg-z. An array of data URIs are allowed as well.</p
 										<strong translate="no">onError</strong>
 									</td>
 									<td class="description last">
-										<p>Executed when errors occur.</p>
+										<p>Executed when errors occur. Receives the image's <code>error</code> event, not an <code>Error</code> instance.</p>
 									</td>
 								</tr>
 							</tbody>

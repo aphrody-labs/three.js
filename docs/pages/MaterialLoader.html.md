@@ -75,13 +75,13 @@ The serialized material.
 
 **Returns:** The parsed material.
 
-### .setTextures( value : Object ) : MaterialLoader
+### .setTextures( value : Object.<string, Texture> ) : MaterialLoader
 
 Textures are not embedded in the material JSON so they have to be injected before the loading process starts.
 
 **value**
 
-A dictionary holding textures for material properties.
+A dictionary holding textures for material properties, keyed by texture UUID.
 
 **Returns:** A reference to this material loader.
 

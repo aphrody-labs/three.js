@@ -260,7 +260,8 @@ within the passed time interval.</p>
 					<div class="method">
 						<div class="description">
 							<p>Fades the animation out by decreasing its weight gradually from <code>1</code> to <code>0</code>,
-within the passed time interval.</p>
+within the passed time interval. When the fade completes, <a href="AnimationAction.html#enabled">AnimationAction#enabled</a>
+is set to <code>false</code>, so call <a href="AnimationAction.html#reset">AnimationAction#reset</a> before fading the action in again.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -479,7 +480,9 @@ action is disabled.</p>
 					<h3 class="name name-method" id="startAt" translate="no">.<a href="#startAt">startAt</a><span class="signature">( time : <span class="param-type">number</span> )</span><span class="type-signature"> : <a href="AnimationAction.html">AnimationAction</a></span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Defines the time when the animation should start.</p>
+							<p>Defines the time when the animation should start. The time is compared against
+the global mixer time (see <a href="AnimationMixer.html#time">AnimationMixer#time</a>), so to start after a delay,
+pass <code>mixer.time + delay</code>.</p>
 						</div>
 						<table class="params">
 							<tbody>

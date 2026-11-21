@@ -20,7 +20,7 @@ import { XRButton } from 'three/addons/webxr/XRButton.js';
 
 ## Static Methods
 
-### .createButton( renderer : WebGLRenderer | WebGPURenderer, sessionInit : XRSessionInit ) : HTMLElement
+### .createButton( renderer : WebGPURenderer, sessionInit : XRSessionInit ) : HTMLElement
 
 Constructs a new XR button.
 

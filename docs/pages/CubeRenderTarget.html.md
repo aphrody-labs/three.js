@@ -2,7 +2,7 @@
 
 # CubeRenderTarget
 
-This class represents a cube render target. It is a special version of `WebGLCubeRenderTarget` which is compatible with `WebGPURenderer`.
+This class represents a cube render target.
 
 ## Constructor
 
@@ -28,7 +28,7 @@ This flag can be used for type testing.
 
 Default is `true`.
 
-### .texture : DataArrayTexture
+### .texture : CubeTexture
 
 Overwritten with a different texture type.
 

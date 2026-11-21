@@ -342,7 +342,7 @@ the result.</p>
 										<strong translate="no">q</strong>
 									</td>
 									<td class="description last">
-										<p>The Quaternion.</p>
+										<p>The Quaternion (assumed to be normalized).</p>
 									</td>
 								</tr>
 							</tbody>
@@ -489,7 +489,8 @@ replaced by the min value.</p>
 					<h3 class="name name-method" id="cross" translate="no">.<a href="#cross">cross</a><span class="signature">( v : <span class="param-type"><a href="Vector3.html">Vector3</a></span> )</span><span class="type-signature"> : <a href="Vector3.html">Vector3</a></span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Calculates the cross product of the given vector with this instance.</p>
+							<p>Calculates the cross product of this vector and the given one (in that order)
+and stores the result in this instance.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -504,7 +505,7 @@ replaced by the min value.</p>
 							</tbody>
 						</table>
 						<dl class="details">
-							<dt class="tag-returns"><strong>Returns:</strong> The result of the cross product.</dt>
+							<dt class="tag-returns"><strong>Returns:</strong> A reference to this vector.</dt>
 						</dl>
 					</div>
 					<h3 class="name name-method" id="crossVectors" translate="no">.<a href="#crossVectors">crossVectors</a><span class="signature">( a : <span class="param-type"><a href="Vector3.html">Vector3</a></span>, b : <span class="param-type"><a href="Vector3.html">Vector3</a></span> )</span><span class="type-signature"> : <a href="Vector3.html">Vector3</a></span> </h3>

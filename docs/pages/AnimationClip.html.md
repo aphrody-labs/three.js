@@ -26,6 +26,8 @@ Default is `-1`.
 
 An array of keyframe tracks.
 
+Default is `[]`.
+
 **blendMode**
 
 Defines how the animation is blended/combined when two or more animations are simultaneously played.

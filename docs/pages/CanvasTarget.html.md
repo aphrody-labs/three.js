@@ -26,7 +26,7 @@ The depth texture of the default framebuffer.
 
 ### .domElement : HTMLCanvasElement | OffscreenCanvas
 
-A reference to the canvas element the renderer is drawing to. This value of this property will automatically be created by the renderer.
+A reference to the canvas element the renderer is drawing to.
 
 ## Methods
 
@@ -36,7 +36,7 @@ Frees the GPU-related resources allocated by this instance. Call this method whe
 
 ##### Fires:
 
-*   RenderTarget#event:dispose
+*   CanvasTarget#event:dispose
 
 ### .getDrawingBufferSize( target : Vector2 ) : Vector2
 
@@ -127,11 +127,11 @@ Defines the scissor rectangle.
 
 **x**
 
-The horizontal coordinate for the lower left corner of the box in logical pixel unit. Instead of passing four arguments, the method also works with a single four-dimensional vector.
+The horizontal coordinate for the upper left corner of the box in logical pixel unit. Instead of passing four arguments, the method also works with a single four-dimensional vector.
 
 **y**
 
-The vertical coordinate for the lower left corner of the box in logical pixel unit.
+The vertical coordinate for the upper left corner of the box in logical pixel unit.
 
 **width**
 
@@ -173,11 +173,11 @@ Defines the viewport.
 
 **x**
 
-The horizontal coordinate for the lower left corner of the viewport origin in logical pixel unit.
+The horizontal coordinate for the upper left corner of the viewport origin in logical pixel unit.
 
 **y**
 
-The vertical coordinate for the lower left corner of the viewport origin in logical pixel unit.
+The vertical coordinate for the upper left corner of the viewport origin in logical pixel unit.
 
 **width**
 

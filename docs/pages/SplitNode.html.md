@@ -66,14 +66,6 @@ The current node builder.
 
 **Returns:** The component type.
 
-### .getScope() : Node
-
-Returns the scope of the node.
-
-**Overrides:** [Node#getScope](Node.html#getScope)
-
-**Returns:** The scope of the node.
-
 ### .getVectorLength() : number
 
 Returns the vector length which is computed based on the requested components.

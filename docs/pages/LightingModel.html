@@ -136,6 +136,33 @@ to the outgoing light.</p>
 							</tbody>
 						</table>
 					</div>
+					<h3 class="name name-method" id="indirectRadiance" translate="no">.<a href="#indirectRadiance">indirectRadiance</a><span class="signature">( irradianceAt : <span class="param-type">function</span>, builder : <span class="param-type"><a href="NodeBuilder.html">NodeBuilder</a></span> )</span> <span class="type-signature">(abstract) </span></h3>
+					<div class="method">
+						<div class="description">
+							<p>This method is intended for reflecting ambient and hemisphere lights, which stand
+in for a distant environment. It is called by the light nodes while they are set up.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">irradianceAt</strong>
+									</td>
+									<td class="description last">
+										<p>Returns the light's irradiance for a world space direction.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">builder</strong>
+									</td>
+									<td class="description last">
+										<p>The current node builder.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 					<h3 class="name name-method" id="start" translate="no">.<a href="#start">start</a><span class="signature">( builder : <span class="param-type"><a href="NodeBuilder.html">NodeBuilder</a></span> )</span> <span class="type-signature">(abstract) </span></h3>
 					<div class="method">
 						<div class="description">

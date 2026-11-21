@@ -25,7 +25,7 @@ These offsets represent the final velocity.</p></div>
 					<h3 class="name name-method" id="VelocityNode" translate="no">new <a href="#VelocityNode">VelocityNode</a><span class="signature">()</span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Constructs a new vertex color node.</p>
+							<p>Constructs a new velocity node.</p>
 						</div>
 					</div>
 				</div>
@@ -63,16 +63,6 @@ These offsets represent the final velocity.</p></div>
 						<p>An optional projection matrix that overrides the camera's projection matrix.</p>
 						<p>Default is <code>null</code>.</p>
 					</div>
-				</div>
-				<div class="member">
-					<h3 class="name" id="updateAfterType" translate="no">.<a href="#updateAfterType">updateAfterType</a><span class="type-signature"> : string</span> </h3>
-					<div class="description">
-						<p>Overwritten since velocity nodes save data after the update.</p>
-						<p>Default is <code>'object'</code>.</p>
-					</div>
-						<dl class="details">
-							<dt class="tag-overrides"><strong>Overrides:</strong> <a href="Node.html#updateAfterType">Node#updateAfterType</a></dt>
-						</dl>
 				</div>
 				<div class="member">
 					<h3 class="name" id="updateType" translate="no">.<a href="#updateType">updateType</a><span class="type-signature"> : string</span> </h3>
@@ -146,27 +136,6 @@ These offsets represent the final velocity.</p></div>
 						</table>
 						<dl class="details">
 							<dt class="tag-overrides"><strong>Overrides:</strong> <a href="Node.html#update">Node#update</a></dt>
-						</dl>
-					</div>
-					<h3 class="name name-method" id="updateAfter" translate="no">.<a href="#updateAfter">updateAfter</a><span class="signature">( frame : <span class="param-type"><a href="NodeFrame.html">NodeFrame</a></span> )</span> </h3>
-					<div class="method">
-						<div class="description">
-							<p>Overwritten to updated velocity specific uniforms.</p>
-						</div>
-						<table class="params">
-							<tbody>
-								<tr>
-									<td class="name">
-										<strong translate="no">frame</strong>
-									</td>
-									<td class="description last">
-										<p>A reference to the current node frame.</p>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-						<dl class="details">
-							<dt class="tag-overrides"><strong>Overrides:</strong> <a href="Node.html#updateAfter">Node#updateAfter</a></dt>
 						</dl>
 					</div>
 				<h2 class="subsection-title">Source</h2>

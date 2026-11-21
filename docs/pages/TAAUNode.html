@@ -158,7 +158,7 @@ its effect once per frame in <code>updateBefore()</code>.</p>
 					<h3 class="name name-method" id="clearViewOffset" translate="no">.<a href="#clearViewOffset">clearViewOffset</a><span class="signature">()</span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Clears the view offset from the scene's camera.</p>
+							<p>Restores the original projection matrix of the scene's camera.</p>
 						</div>
 					</div>
 					<h3 class="name name-method" id="dispose" translate="no">.<a href="#dispose">dispose</a><span class="signature">()</span> </h3>
@@ -211,8 +211,8 @@ track the scene's current depth texture.</p>
 					<h3 class="name name-method" id="setViewOffset" translate="no">.<a href="#setViewOffset">setViewOffset</a><span class="signature">( inputWidth : <span class="param-type">number</span>, inputHeight : <span class="param-type">number</span> )</span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Defines the TAAU's current jitter as a view offset to the scene's
-camera. The jitter is shrunk to one <em>output</em> pixel (rather than one
+							<p>Applies the TAAU's current jitter to the projection matrix of the
+scene's camera. The jitter is shrunk to one <em>output</em> pixel (rather than one
 input pixel) so that the halton sequence gradually fills the output
 sub-pixel grid over multiple frames.</p>
 						</div>

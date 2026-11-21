@@ -101,7 +101,7 @@ A node that represents the scene's velocity.
 
 ### .clearViewOffset()
 
-Clears the view offset from the scene's camera.
+Restores the original projection matrix of the scene's camera.
 
 ### .dispose()
 
@@ -129,7 +129,7 @@ The height of the effect.
 
 ### .setViewOffset( width : number, height : number )
 
-Defines the TRAA's current jitter as a view offset to the scene's camera.
+Applies the TRAA's current jitter to the projection matrix of the scene's camera.
 
 **width**
 

@@ -118,7 +118,7 @@ This flag can be used for type testing.
 
 Default is `true`.
 
-### .unpackAlignment : boolean
+### .unpackAlignment : number
 
 Specifies the alignment requirements for the start of each pixel row in memory.
 

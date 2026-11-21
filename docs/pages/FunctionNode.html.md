@@ -2,10 +2,7 @@
 
 # FunctionNode
 
-This class represents a native shader function. It can be used to implement certain aspects of a node material with native shader code. There are two predefined TSL functions for easier usage.
-
-*   `wgslFn`: Creates a WGSL function node.
-*   `glslFn`: Creates a GLSL function node.
+This class represents a native shader function. It can be used to implement certain aspects of a node material with native shader code. The predefined TSL function `wgslFn` creates a WGSL function node.
 
 A basic example with one include looks like so:
 
@@ -28,7 +25,7 @@ material.colorNode = someWGSLFn( { color: texture( map ) } );
 
 ## Constructor
 
-### new FunctionNode( code : string, includes : Array.<Node>, language : 'js' | 'wgsl' | 'glsl' )
+### new FunctionNode( code : string, includes : Array.<Node>, language : 'js' | 'wgsl' )
 
 Constructs a new function node.
 

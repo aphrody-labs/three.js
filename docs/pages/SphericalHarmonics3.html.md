@@ -89,7 +89,7 @@ The array offset where to start copying.
 
 Default is `0`.
 
-**Returns:** A clone of this instance.
+**Returns:** A reference to this spherical harmonics.
 
 ### .getAt( normal : Vector3, target : Vector3 ) : Vector3
 

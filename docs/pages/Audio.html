@@ -110,8 +110,8 @@ more complex sound effects e.g. via <code>BiquadFilterNode</code>.</p>
 					<div class="description">
 						<p>Indicates whether the audio playback can be controlled
 with method like <a href="Audio.html#play">Audio#play</a> or <a href="Audio.html#pause">Audio#pause</a>.</p>
-<p>This flag will be automatically set when audio sources are
-defined.</p>
+<p>This flag is set to <code>false</code> by <a href="Audio.html#setNodeSource">Audio#setNodeSource</a>,
+<a href="Audio.html#setMediaElementSource">Audio#setMediaElementSource</a> and <a href="Audio.html#setMediaStreamSource">Audio#setMediaStreamSource</a>.</p>
 						<p>Default is <code>true</code>.</p>
 					</div>
 				</div>
@@ -314,7 +314,7 @@ initialisation and when setting / removing filters.</p>
 					<div class="method">
 						<div class="description">
 							<p>Sets the given audio buffer as the source of this instance.</p>
-<p><a href="Audio.html#sourceType">Audio#sourceType</a> is set to <code>buffer</code> and <a href="Audio.html#hasPlaybackControl">Audio#hasPlaybackControl</a> to <code>true</code>.</p>
+<p><a href="Audio.html#sourceType">Audio#sourceType</a> is set to <code>buffer</code>.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -421,7 +421,9 @@ initialisation and when setting / removing filters.</p>
 					<div class="method">
 						<div class="description">
 							<p>Sets the loop end value which defines where in the audio buffer the replay should
-stop, in seconds.</p>
+stop, in seconds. A value of <code>0</code> (the default) loops the whole buffer and also ignores
+<a href="Audio.html#loopStart">Audio#loopStart</a>. Only used when <a href="Audio.html#loop">Audio#loop</a> is <code>true</code> and applied on the
+next call of <a href="Audio.html#play">Audio#play</a>.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -443,7 +445,8 @@ stop, in seconds.</p>
 					<div class="method">
 						<div class="description">
 							<p>Sets the loop start value which defines where in the audio buffer the replay should
-start, in seconds.</p>
+start, in seconds. Only used when <a href="Audio.html#loop">Audio#loop</a> is <code>true</code> and <a href="Audio.html#loopEnd">Audio#loopEnd</a>
+is greater than this value, and applied on the next call of <a href="Audio.html#play">Audio#play</a>.</p>
 						</div>
 						<table class="params">
 							<tbody>

@@ -20,9 +20,9 @@ transformations such as translation, rotation, shear, scale, reflection,
 orthogonal or perspective projection and so on, by being multiplied by the
 matrix. This is known as <code>applying</code> the matrix to the vector.</p>
 <p>A Note on Row-Major and Column-Major Ordering:</p>
-<p>The constructor and <a href="Matrix3.html#set">Matrix3#set</a> method take arguments in
+<p>The constructor and <a href="Matrix4.html#set">Matrix4#set</a> method take arguments in
 <a href="https://en.wikipedia.org/wiki/Row-_and_column-major_order#Column-major_order" target="_blank" rel="noopener">row-major</a>
-order, while internally they are stored in the <a href="Matrix3.html#elements">Matrix3#elements</a> array in column-major order.
+order, while internally they are stored in the <a href="Matrix4.html#elements">Matrix4#elements</a> array in column-major order.
 This means that calling:</p>
 <pre><code class="language-js">const m = new THREE.Matrix4();
 m.set( 11, 12, 13, 14,
@@ -492,7 +492,8 @@ a zero matrix instead.</p>
 					<div class="method">
 						<div class="description">
 							<p>Sets the rotation component of the transformation matrix, looking from <code>eye</code> towards
-<code>target</code>, and oriented by the up-direction.</p>
+<code>target</code>, and oriented by the up-direction. Following the camera convention, the
+negative z-axis of the result points towards <code>target</code>. The translation is not modified.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -1261,7 +1262,8 @@ in row-major order.</p>
 					<h3 class="name name-method" id="setFromMatrix3" translate="no">.<a href="#setFromMatrix3">setFromMatrix3</a><span class="signature">( m : <span class="param-type"><a href="Matrix3.html">Matrix3</a></span> )</span><span class="type-signature"> : <a href="Matrix4.html">Matrix4</a></span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Set the upper 3x3 elements of this matrix to the values of given 3x3 matrix.</p>
+							<p>Sets the upper-left 3x3 elements of this matrix to the values of the given 3x3 matrix
+and the remaining elements to the identity (the translation is reset).</p>
 						</div>
 						<table class="params">
 							<tbody>

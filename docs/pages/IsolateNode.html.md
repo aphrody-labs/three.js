@@ -8,7 +8,7 @@ This node can be used as a cache management component for another node. Caching 
 
 ### new IsolateNode( node : Node, parent : boolean )
 
-Constructs a new cache node.
+Constructs a new isolate node.
 
 **node**
 

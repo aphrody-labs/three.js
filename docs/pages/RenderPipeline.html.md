@@ -26,6 +26,8 @@ A reference to the renderer.
 
 An optional output node.
 
+Default is `vec4(0,0,1,1)`.
+
 ## Properties
 
 ### .isRenderPipeline : boolean (readonly)
@@ -34,9 +36,11 @@ This flag can be used for type testing.
 
 Default is `true`.
 
-### .needsUpdate : Node.<vec4>
+### .needsUpdate : boolean
 
-Must be set to `true` when the output node changes.
+Must be set to `true` when the output node or [RenderPipeline#outputColorTransform](RenderPipeline.html#outputColorTransform) changes.
+
+Default is `true`.
 
 ### .outputColorTransform : boolean
 
@@ -49,6 +53,8 @@ When set to `false`, the app must control the output transformation with `Render
 ```js
 const outputPass = renderOutput( scenePass );
 ```
+
+Default is `true`.
 
 ### .outputNode : Node.<vec4>
 
@@ -67,14 +73,6 @@ Frees internal resources.
 ### .render()
 
 When `RenderPipeline` is used to apply rendering pipeline and post processing effects, the application must use this version of `render()` inside its animation loop (not the one from the renderer).
-
-### .renderAsync() : Promise (async)
-
-When `RenderPipeline` is used to apply rendering pipeline and post processing effects, the application must use this version of `renderAsync()` inside its animation loop (not the one from the renderer).
-
-**Deprecated:** Yes
-
-**Returns:** A Promise that resolves when the render has been finished.
 
 ## Source
 

@@ -6,7 +6,7 @@ A track for Quaternion keyframe values.
 
 ## Constructor
 
-### new QuaternionKeyframeTrack( name : string, times : Array.<number>, values : Array.<number>, interpolation : InterpolateLinear | InterpolateDiscrete | InterpolateSmooth )
+### new QuaternionKeyframeTrack( name : string, times : Array.<number>, values : Array.<number>, interpolation : InterpolateLinear | InterpolateDiscrete )
 
 Constructs a new Quaternion keyframe track.
 
@@ -24,7 +24,7 @@ A list of keyframe values.
 
 **interpolation**
 
-The interpolation type.
+The interpolation type. `InterpolateSmooth` is not supported for quaternions.
 
 ## Properties
 

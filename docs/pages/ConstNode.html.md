@@ -8,7 +8,7 @@ Class for representing a constant value in the shader.
 
 ### new ConstNode( value : any, nodeType : string )
 
-Constructs a new input node.
+Constructs a new const node.
 
 **value**
 

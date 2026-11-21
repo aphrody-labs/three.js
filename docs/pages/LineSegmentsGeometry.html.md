@@ -4,7 +4,7 @@
 
 A series of vertex pairs, forming line segments.
 
-This is used in [LineSegments2](LineSegments2.html) to describe the shape.
+This is used in LineSegments2 to describe the shape.
 
 ## Import
 

@@ -171,14 +171,6 @@ The minimum thickness of the iridescence layer in nanometers.
 
 Default is `100`.
 
-### .iridescenceThicknessRange : Array.<number, number>
-
-Array of exactly 2 elements, specifying minimum and maximum thickness of the iridescence layer.
-
-Default is `[100,400]`.
-
-**Deprecated:** since r187. Use [MeshPhysicalMaterial#iridescenceThicknessMinimum](MeshPhysicalMaterial.html#iridescenceThicknessMinimum) and [MeshPhysicalMaterial#iridescenceThicknessMaximum](MeshPhysicalMaterial.html#iridescenceThicknessMaximum) instead.
-
 ### .isMeshPhysicalMaterial : boolean (readonly)
 
 This flag can be used for type testing.
@@ -201,13 +193,13 @@ Default is `0`.
 
 ### .sheen : number
 
-The intensity of the sheen layer, from `0.0` to `1.0`.
+The intensity of the sheen layer, from `0.0` to `1.0`. The sheen color is `sheenColor * sheen`, so [MeshPhysicalMaterial#sheenColor](MeshPhysicalMaterial.html#sheenColor) (black by default) must also be set for sheen to be visible.
 
 Default is `0`.
 
 ### .sheenColor : Color
 
-The sheen tint.
+The sheen tint. It is multiplied by [MeshPhysicalMaterial#sheen](MeshPhysicalMaterial.html#sheen), so it must be set to a non-black color for sheen to be visible.
 
 Default is `(0,0,0)`.
 

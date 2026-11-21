@@ -112,7 +112,7 @@ The target vector that is used to store the method's result.
 
 **Returns:** The barycentric coordinates for the given point
 
-### .getInterpolation( point : Vector3, v1 : Vector3, v2 : Vector3, v3 : Vector3, target : Vector3 ) : Vector3
+### .getInterpolation( point : Vector3, v1 : Vector2 | Vector3 | Vector4, v2 : Vector2 | Vector3 | Vector4, v3 : Vector2 | Vector3 | Vector4, target : Vector2 | Vector3 | Vector4 ) : Vector2 | Vector3 | Vector4
 
 Computes the value barycentrically interpolated for the given point on the triangle. Returns `null` if the triangle is degenerate.
 
@@ -180,13 +180,13 @@ The box to intersect.
 
 ### .isFrontFacing( direction : Vector3 ) : boolean
 
-Returns `true` if the triangle is oriented towards the given direction.
+Returns `true` if the triangle is front facing when viewed along the given direction, that is, its normal points against `direction`.
 
 **direction**
 
 The (normalized) direction vector.
 
-**Returns:** Whether the triangle is oriented towards the given direction or not.
+**Returns:** Whether the triangle is front facing when viewed along the given direction or not.
 
 ### .set( a : Vector3, b : Vector3, c : Vector3 ) : Triangle
 
@@ -300,7 +300,7 @@ The target vector that is used to store the method's result.
 
 **Returns:** The barycentric coordinates for the given point
 
-### .getInterpolatedAttribute( attr : BufferAttribute, i1 : number, i2 : number, i3 : number, barycoord : Vector3, target : Vector3 ) : Vector3
+### .getInterpolatedAttribute( attr : BufferAttribute, i1 : number, i2 : number, i3 : number, barycoord : Vector3, target : Vector2 | Vector3 | Vector4 ) : Vector2 | Vector3 | Vector4
 
 Computes the value barycentrically interpolated for the given attribute and indices.
 
@@ -330,7 +330,7 @@ The target vector that is used to store the method's result.
 
 **Returns:** The interpolated attribute value.
 
-### .getInterpolation( point : Vector3, p1 : Vector3, p2 : Vector3, p3 : Vector3, v1 : Vector3, v2 : Vector3, v3 : Vector3, target : Vector3 ) : Vector3
+### .getInterpolation( point : Vector3, p1 : Vector3, p2 : Vector3, p3 : Vector3, v1 : Vector2 | Vector3 | Vector4, v2 : Vector2 | Vector3 | Vector4, v3 : Vector2 | Vector3 | Vector4, target : Vector2 | Vector3 | Vector4 ) : Vector2 | Vector3 | Vector4
 
 Computes the value barycentrically interpolated for the given point on the triangle. Returns `null` if the triangle is degenerate.
 
@@ -392,7 +392,7 @@ The target vector that is used to store the method's result.
 
 ### .isFrontFacing( a : Vector3, b : Vector3, c : Vector3, direction : Vector3 ) : boolean
 
-Returns `true` if the triangle is oriented towards the given direction.
+Returns `true` if the triangle is front facing when viewed along the given direction, that is, its normal points against `direction`.
 
 **a**
 
@@ -410,7 +410,7 @@ The third corner of the triangle.
 
 The (normalized) direction vector.
 
-**Returns:** Whether the triangle is oriented towards the given direction or not.
+**Returns:** Whether the triangle is front facing when viewed along the given direction or not.
 
 ## Source
 

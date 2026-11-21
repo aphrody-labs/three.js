@@ -266,7 +266,7 @@ X and Y components should be between <code>-1</code> and <code>1</code>.</p>
 							</tbody>
 						</table>
 					</div>
-					<h3 class="name name-method" id="setFromXRController" translate="no">.<a href="#setFromXRController">setFromXRController</a><span class="signature">( controller : <span class="param-type"><a href="WebXRController.html">WebXRController</a></span> )</span><span class="type-signature"> : <a href="Raycaster.html">Raycaster</a></span> </h3>
+					<h3 class="name name-method" id="setFromXRController" translate="no">.<a href="#setFromXRController">setFromXRController</a><span class="signature">( controller : <span class="param-type"><a href="Group.html">Group</a></span> )</span><span class="type-signature"> : <a href="Raycaster.html">Raycaster</a></span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>Uses the given WebXR controller to compute a new origin and direction for the internal ray.</p>
@@ -278,7 +278,9 @@ X and Y components should be between <code>-1</code> and <code>1</code>.</p>
 										<strong translate="no">controller</strong>
 									</td>
 									<td class="description last">
-										<p>The controller to copy the position and direction from.</p>
+										<p>The target ray space of the controller, as returned by WebXRManager#getController
+or <a href="XRManager.html#getController">XRManager#getController</a>.
+The ray's origin and direction are copied from its world matrix.</p>
 									</td>
 								</tr>
 							</tbody>
@@ -333,7 +335,8 @@ intersection to the nearest point on the ray. For other objects it will be <code
 <span class="param-type">Object</span>
 				</td>
 			<td class="description last">
-				<p>The face that has been intersected.</p>
+				<p>The face that has been intersected. Its <code>normal</code> is defined in the local space
+of the intersected geometry. <code>null</code> for 3D objects without faces like points, lines or sprites.</p>
 			</td>
 		</tr>
 		<tr>
@@ -383,7 +386,8 @@ intersection to the nearest point on the ray. For other objects it will be <code
 <span class="param-type"><a href="Vector3.html">Vector3</a></span>
 				</td>
 			<td class="description last">
-				<p>Interpolated normal vector at point of intersection.</p>
+				<p>Interpolated normal vector at point of intersection, in the local space of the
+intersected geometry (not in world space). The normal is flipped so it faces against the ray's direction.</p>
 			</td>
 		</tr>
 		<tr>

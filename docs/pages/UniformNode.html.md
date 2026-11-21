@@ -68,18 +68,6 @@ The current node builder.
 
 **Returns:** The uniform hash.
 
-### .label( name : string ) : UniformNode
-
-Sets the [UniformNode#name](UniformNode.html#name) property.
-
-**name**
-
-The name of the uniform.
-
-**Deprecated:** Yes
-
-**Returns:** A reference to this node.
-
 ### .setGroup( group : UniformGroupNode ) : UniformNode
 
 Sets the [UniformNode#groupNode](UniformNode.html#groupNode) property.

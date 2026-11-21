@@ -13,19 +13,48 @@
 	<h1 translate="no">DenoiseNode</h1>
 		<section>
 			<header>
-				<div class="class-description"><p>Post processing node for denoising data like raw screen-space ambient occlusion output.
-Denoise can noticeably improve the quality of ambient occlusion but also add quite some
-overhead to the post processing setup. It's best to make its usage optional (e.g. via
-graphic settings).</p>
-<p>Reference: <a href="https://openaccess.thecvf.com/content/WACV2021/papers/Khademi_Self-Supervised_Poisson-Gaussian_Denoising_WACV_2021_paper.pdf" target="_blank" rel="noopener">https://openaccess.thecvf.com/content/WACV2021/papers/Khademi_Self-Supervised_Poisson-Gaussian_Denoising_WACV_2021_paper.pdf</a>.</p></div>
+				<div class="class-description"><p>Denoises the noisy output of a screen-space effect, e.g. AO, GI or reflections, or a texture, e.g. a light map,
+with the edge-aware à-trous wavelet filter of SVGF. In screen space, <code>temporalDenoise()</code> also accumulates the input
+in time. In texture space, the filter is guided by textures of the world-space position and normal.</p>
+<p>SVGF delivers high quality but is designed for desktop-class hardware and its cost can be very noticeable on mobile
+devices. Performance-restricted use cases should avoid per-frame denoising with this node and rely on the basic
+denoising of TAA instead, see <a href="TRAANode.html">TRAANode</a>. <a href="BilateralBlurNode.html">BilateralBlurNode</a> is a performant alternative as well. Both
+come at the cost of lower denoise quality.</p>
+<p>The noise of the input should be independent between neighboring pixels. Samples that are correlated across pixels,
+e.g. one sequence shifted by a smooth function of the pixel coordinates, leave structure such as bands that neither
+the accumulation in time nor the edge-aware filter removes. A low-discrepancy sequence in time, rotated by a random
+or stratified offset per pixel ( Cranley-Patterson rotation ), works well.</p>
+<p>References:</p>
+<ul>
+<li><a href="https://research.nvidia.com/publication/2017-07_spatiotemporal-variance-guided-filtering-real-time-reconstruction-path-traced" target="_blank" rel="noopener">https://research.nvidia.com/publication/2017-07_spatiotemporal-variance-guided-filtering-real-time-reconstruction-path-traced</a></li>
+<li><a href="https://github.com/NVIDIA-RTX/NRD" target="_blank" rel="noopener">https://github.com/NVIDIA-RTX/NRD</a></li>
+</ul></div>
+				<h2>Code Example</h2>
+				<div translate="no"><pre><code class="language-js">// SSGI, accumulated in time before TRAA: GI in rgb and AO in alpha
+const denoised = temporalDenoise( vec4( giPass.getGINode().rgb, giPass.getAONode().r ), { depth, normal, camera, velocity, alpha: true } );
+// SSR: lobe-aware, with the roughness and the hit distance of each pixel
+const denoised = temporalDenoise( ssrPass, { depth, normal, camera, velocity, roughness, hitDistance } );
+// SSR with coverage in alpha: texels without coverage do not darken the radiance
+const denoised = temporalDenoise( reflections, { depth, normal, camera, velocity, coverage: true } );
+// a light map, filtered once when the bake is done, with its coverage in alpha
+const denoiseNode = denoise( lightMapper.getTextureNode( 'color' ), {
+	position: lightMapper.getTextureNode( 'position' ),
+	normal: lightMapper.getTextureNode( 'normal' ),
+	variance: lightMapper.getTextureNode( 'variance' ),
+	quality: 'quality',
+	coverage: true
+} );
+denoiseNode.autoUpdate = false;
+material.lightMapNode = denoiseNode;
+</code></pre></div>
 			</header>
 			<article>
 				<h2 class="subsection-title">Import</h2>
 				<p><span translate="no">DenoiseNode</span> is an addon, and must be imported explicitly, see <a href="https://threejs.org/manual/#installation#addons" target="_blank" rel="noopener">Installation#Addons</a>.</p>
-				<pre><code class="language-js">import { denoise } from 'three/addons/tsl/display/DenoiseNode.js';</code></pre>
+				<pre><code class="language-js">import { denoise, temporalDenoise } from 'three/addons/tsl/display/DenoiseNode.js';</code></pre>
 				<div class="container-overview">
 					<h2>Constructor</h2>
-					<h3 class="name name-method" id="DenoiseNode" translate="no">new <a href="#DenoiseNode">DenoiseNode</a><span class="signature">( textureNode : <span class="param-type"><a href="TextureNode.html">TextureNode</a></span>, depthNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;float></span>, normalNode : <span class="param-type"><a href="Node.html">Node</a>.&lt;vec3></span>, camera : <span class="param-type"><a href="Camera.html">Camera</a></span> )</span> </h3>
+					<h3 class="name name-method" id="DenoiseNode" translate="no">new <a href="#DenoiseNode">DenoiseNode</a><span class="signature">( inputNode : <span class="param-type"><a href="TextureNode.html">TextureNode</a></span>, options : <span class="param-type">Object</span> )</span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>Constructs a new denoise node.</p>
@@ -34,26 +63,37 @@ graphic settings).</p>
 							<tbody>
 								<tr>
 									<td class="name">
-										<strong translate="no">textureNode</strong>
+										<strong translate="no">inputNode</strong>
 									</td>
 									<td class="description last">
-										<p>The texture node that represents the input of the effect (e.g. AO).</p>
+										<p>The noisy input.</p>
 									</td>
 								</tr>
 								<tr>
 									<td class="name">
-										<strong translate="no">depthNode</strong>
+										<strong translate="no">options</strong>
 									</td>
 									<td class="description last">
-										<p>A node that represents the scene's depth.</p>
+										<p>The guides and options.</p>
+										<p>Default is <code>{}</code>.</p>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">depth</strong>
+									</td>
+									<td class="description last">
+										<p>Screen space: the depth of the scene.</p>
+										<p>Default is <code>null</code>.</p>
 									</td>
 								</tr>
 								<tr>
 									<td class="name">
-										<strong translate="no">normalNode</strong>
+										<strong translate="no">normal</strong>
 									</td>
 									<td class="description last">
-										<p>A node that represents the scene's normals.</p>
+										<p>Screen space: the view-space normals of the scene, a node with <code>sample( uv )</code>, else they are reconstructed from the depth. Texture space: the world-space normal of each texel.</p>
+										<p>Default is <code>null</code>.</p>
 									</td>
 								</tr>
 								<tr>
@@ -61,7 +101,93 @@ graphic settings).</p>
 										<strong translate="no">camera</strong>
 									</td>
 									<td class="description last">
-										<p>The camera the scene is rendered with.</p>
+										<p>Screen space: the camera the scene is rendered with.</p>
+										<p>Default is <code>null</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">position</strong>
+									</td>
+									<td class="description last">
+										<p>Texture space: the world-space position of each texel, with the id of its surface in alpha, 0 without a surface.</p>
+										<p>Default is <code>null</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">variance</strong>
+									</td>
+									<td class="description last">
+										<p>Texture space: the variance of the luminance of each texel in red, negative without data.</p>
+										<p>Default is <code>null</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">velocity</strong>
+									</td>
+									<td class="description last">
+										<p>Screen space, temporal: the velocity of the scene.</p>
+										<p>Default is <code>null</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">roughness</strong>
+									</td>
+									<td class="description last">
+										<p>Screen space, reflections: the roughness of the scene, a node with <code>sample( uv )</code>.</p>
+										<p>Default is <code>null</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">hitDistance</strong>
+									</td>
+									<td class="description last">
+										<p>Screen space, reflections: the hit distance of each pixel of the input, a node with <code>sample( uv )</code>, with <code>roughness</code>.</p>
+										<p>Default is <code>null</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">alpha</strong>
+									</td>
+									<td class="description last">
+										<p>Screen space: whether alpha is a second signal to filter, e.g. AO next to GI.</p>
+										<p>Default is <code>false</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">coverage</strong>
+									</td>
+									<td class="description last">
+										<p>Whether the input has its coverage in alpha: radiance in screen space, a map in texture space, e.g. a light map of <code>LightMapper</code>.</p>
+										<p>Default is <code>false</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">temporal</strong>
+									</td>
+									<td class="description last">
+										<p>Screen space: whether to accumulate the input in time, see <code>temporalDenoise()</code>.</p>
+										<p>Default is <code>false</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">quality</strong>
+									</td>
+									<td class="description last">
+										<p>The preset of the filter.</p>
+										<p>Default is <code>'fast'</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
 									</td>
 								</tr>
 							</tbody>
@@ -70,108 +196,239 @@ graphic settings).</p>
 				</div>
 				<h2 class="subsection-title">Properties</h2>
 				<div class="member">
-					<h3 class="name" id="depthNode" translate="no">.<a href="#depthNode">depthNode</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;float></span> </h3>
+					<h3 class="name" id="alpha" translate="no">.<a href="#alpha">alpha</a><span class="type-signature"> : boolean</span> <span class="type-signature">(readonly) </span></h3>
 					<div class="description">
-						<p>A node that represents the scene's depth.</p>
+						<p>Whether alpha is a second signal to filter, e.g. AO next to GI. Otherwise the alpha of the output is 1, or with
+<code>temporal</code> the weight of the current frame in the history, <code>1 / history length</code>, which damps the feedback of
+multi-bounce reflections where the history is short, see <a href="SSRNode.html#setHistory">SSRNode#setHistory</a>.</p>
 					</div>
 				</div>
 				<div class="member">
-					<h3 class="name" id="depthPhi" translate="no">.<a href="#depthPhi">depthPhi</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<h3 class="name" id="autoUpdate" translate="no">.<a href="#autoUpdate">autoUpdate</a><span class="type-signature"> : boolean</span> </h3>
 					<div class="description">
-						<p>The depth Phi value.</p>
+						<p>Whether the node filters every frame in which it is used. Otherwise it filters once when
+<a href="DenoiseNode.html#textureNeedsUpdate">DenoiseNode#textureNeedsUpdate</a> is set, e.g. when a light map is baked.</p>
+						<p>Default is <code>true</code>.</p>
 					</div>
 				</div>
 				<div class="member">
-					<h3 class="name" id="index" translate="no">.<a href="#index">index</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<h3 class="name" id="camera" translate="no">.<a href="#camera">camera</a><span class="type-signature"> : <a href="Camera.html">Camera</a></span> </h3>
 					<div class="description">
-						<p>The index.</p>
+						<p>Screen space: the camera the scene is rendered with.</p>
 					</div>
 				</div>
 				<div class="member">
-					<h3 class="name" id="lumaPhi" translate="no">.<a href="#lumaPhi">lumaPhi</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<h3 class="name" id="coverage" translate="no">.<a href="#coverage">coverage</a><span class="type-signature"> : boolean</span> <span class="type-signature">(readonly) </span></h3>
 					<div class="description">
-						<p>The luma Phi value.</p>
+						<p>Whether the input has its coverage in alpha. In screen space, the input is radiance: the node filters the
+radiance weighted by coverage, so that texels without coverage do not darken it, and returns the radiance
+with the filtered coverage in alpha. In texture space, texels with an alpha of 0 have no data, like texels
+without a variance, and the output keeps the coverage in alpha, 1 or 0, e.g. for <code>SeamStitchGenerator</code>
+and <code>GutterFillGenerator</code>.</p>
 					</div>
 				</div>
 				<div class="member">
-					<h3 class="name" id="noiseNode" translate="no">.<a href="#noiseNode">noiseNode</a><span class="type-signature"> : <a href="TextureNode.html">TextureNode</a></span> </h3>
+					<h3 class="name" id="depthNode" translate="no">.<a href="#depthNode">depthNode</a><span class="type-signature"> : <a href="TextureNode.html">TextureNode</a></span> </h3>
 					<div class="description">
-						<p>The node represents the internal noise texture.</p>
+						<p>Screen space: the depth of the scene.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="hitDistanceNode" translate="no">.<a href="#hitDistanceNode">hitDistanceNode</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p>Screen space, reflections: the hit distance of each pixel of the input.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="inputNode" translate="no">.<a href="#inputNode">inputNode</a><span class="type-signature"> : <a href="TextureNode.html">TextureNode</a></span> </h3>
+					<div class="description">
+						<p>The noisy input.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="isDenoiseNode" translate="no">.<a href="#isDenoiseNode">isDenoiseNode</a><span class="type-signature"> : boolean</span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>This flag can be used for type testing.</p>
+						<p>Default is <code>true</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="iterations" translate="no">.<a href="#iterations">iterations</a><span class="type-signature"> : number</span> </h3>
+					<div class="description">
+						<p>The number of filter passes. The filter spans <code>3^iterations</code> texels with the <code>'fast'</code> preset, and
+<code>2^(iterations + 1) - 1</code> texels with the <code>'quality'</code> preset.</p>
+						<p>Default is <code>2</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="luminancePhi" translate="no">.<a href="#luminancePhi">luminancePhi</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p>How many standard deviations of the noise luminance differences may span before texels stop being
+averaged. Higher values remove more noise and blur more detail.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="maxFrames" translate="no">.<a href="#maxFrames">maxFrames</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p>Temporal: the maximum length of the history in frames. Longer histories have less noise and more lag.</p>
 					</div>
 				</div>
 				<div class="member">
 					<h3 class="name" id="normalNode" translate="no">.<a href="#normalNode">normalNode</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec3></span> </h3>
 					<div class="description">
-						<p>A node that represents the scene's normals. If no normals are passed to the
-constructor (because MRT is not available), normals can be automatically
-reconstructed from depth values in the shader.</p>
+						<p>The view-space normals of the scene in screen space, the world-space normal of each texel in texture space.</p>
 					</div>
 				</div>
 				<div class="member">
 					<h3 class="name" id="normalPhi" translate="no">.<a href="#normalPhi">normalPhi</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
 					<div class="description">
-						<p>The normal Phi value.</p>
+						<p>The exponent of the normal similarity weight.</p>
 					</div>
 				</div>
 				<div class="member">
-					<h3 class="name" id="radius" translate="no">.<a href="#radius">radius</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<h3 class="name" id="planePhi" translate="no">.<a href="#planePhi">planePhi</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
 					<div class="description">
-						<p>The radius.</p>
+						<p>The sine of the angle to the tangent plane at which neighbors lose most of their weight.</p>
 					</div>
 				</div>
 				<div class="member">
-					<h3 class="name" id="textureNode" translate="no">.<a href="#textureNode">textureNode</a><span class="type-signature"> : <a href="TextureNode.html">TextureNode</a></span> </h3>
+					<h3 class="name" id="positionNode" translate="no">.<a href="#positionNode">positionNode</a><span class="type-signature"> : <a href="TextureNode.html">TextureNode</a></span> </h3>
 					<div class="description">
-						<p>The texture node that represents the input of the effect (e.g. AO).</p>
+						<p>Texture space: the world-space position of each texel, with the id of its surface in alpha.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="quality" translate="no">.<a href="#quality">quality</a><span class="type-signature"> : 'fast' | 'quality'</span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>The preset of the filter, <code>'fast'</code> or <code>'quality'</code>.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="relativeNoise" translate="no">.<a href="#relativeNoise">relativeNoise</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p>Texture space without a variance: the relative noise of the texels, the standard deviation of their
+luminance over their luminance.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="roughnessNode" translate="no">.<a href="#roughnessNode">roughnessNode</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p>Screen space, reflections: the roughness of the scene.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="temporal" translate="no">.<a href="#temporal">temporal</a><span class="type-signature"> : boolean</span> <span class="type-signature">(readonly) </span></h3>
+					<div class="description">
+						<p>Whether the node accumulates the input in time.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="textureNeedsUpdate" translate="no">.<a href="#textureNeedsUpdate">textureNeedsUpdate</a><span class="type-signature"> : boolean</span> </h3>
+					<div class="description">
+						<p>Whether the node filters in the next frame in which it is used, also when <code>autoUpdate</code> is off.
+It is reset once the node has filtered.</p>
+						<p>Default is <code>true</code>.</p>
 					</div>
 				</div>
 				<div class="member">
 					<h3 class="name" id="updateBeforeType" translate="no">.<a href="#updateBeforeType">updateBeforeType</a><span class="type-signature"> : string</span> </h3>
 					<div class="description">
-						<p>The <code>updateBeforeType</code> is set to <code>NodeUpdateType.FRAME</code> since the node updates
-its internal uniforms once per frame in <code>updateBefore()</code>.</p>
+						<p>The <code>updateBeforeType</code> is set to <code>NodeUpdateType.FRAME</code> since the node filters once per frame in
+<code>updateBefore()</code>.</p>
 						<p>Default is <code>'frame'</code>.</p>
 					</div>
 						<dl class="details">
 							<dt class="tag-overrides"><strong>Overrides:</strong> <a href="Node.html#updateBeforeType">Node#updateBeforeType</a></dt>
 						</dl>
 				</div>
+				<div class="member">
+					<h3 class="name" id="varianceNode" translate="no">.<a href="#varianceNode">varianceNode</a><span class="type-signature"> : <a href="TextureNode.html">TextureNode</a></span> </h3>
+					<div class="description">
+						<p>Texture space: the variance of the luminance of each texel in red, negative without data.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="velocityNode" translate="no">.<a href="#velocityNode">velocityNode</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec2></span> </h3>
+					<div class="description">
+						<p>Screen space, temporal: the velocity of the scene.</p>
+					</div>
+				</div>
 				<h2 class="subsection-title">Methods</h2>
 					<h3 class="name name-method" id="dispose" translate="no">.<a href="#dispose">dispose</a><span class="signature">()</span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Frees internal resources. This method should be called
-when the effect is no longer required.</p>
+							<p>Frees internal resources. This method should be called when the node is no longer required.</p>
 						</div>
 						<dl class="details">
 							<dt class="tag-overrides"><strong>Overrides:</strong> <a href="Node.html#dispose">Node#dispose</a></dt>
 						</dl>
 					</div>
-					<h3 class="name name-method" id="setup" translate="no">.<a href="#setup">setup</a><span class="signature">( builder : <span class="param-type"><a href="NodeBuilder.html">NodeBuilder</a></span> )</span><span class="type-signature"> : ShaderCallNodeInternal</span> </h3>
+					<h3 class="name name-method" id="getTexture" translate="no">.<a href="#getTexture">getTexture</a><span class="signature">()</span><span class="type-signature"> : <a href="Texture.html">Texture</a></span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>This method is used to setup the effect's TSL code.</p>
+							<p>Returns the denoised result as a texture, e.g. the history of multi-bounce reflections.</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>Returns:</strong> The denoised result.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getTextureNode" translate="no">.<a href="#getTextureNode">getTextureNode</a><span class="signature">()</span><span class="type-signature"> : <a href="PassTextureNode.html">PassTextureNode</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>Returns the denoised result as a texture node.</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-returns"><strong>Returns:</strong> The denoised result.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="reset" translate="no">.<a href="#reset">reset</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>Forgets the history, e.g. after a camera cut.</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="setSize" translate="no">.<a href="#setSize">setSize</a><span class="signature">( width : <span class="param-type">number</span>, height : <span class="param-type">number</span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>Sets the size of the internal render targets, the size of the input.</p>
 						</div>
 						<table class="params">
 							<tbody>
 								<tr>
 									<td class="name">
-										<strong translate="no">builder</strong>
+										<strong translate="no">width</strong>
 									</td>
 									<td class="description last">
-										<p>The current node builder.</p>
+										<p>The width.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">height</strong>
+									</td>
+									<td class="description last">
+										<p>The height.</p>
 									</td>
 								</tr>
 							</tbody>
 						</table>
+					</div>
+					<h3 class="name name-method" id="setup" translate="no">.<a href="#setup">setup</a><span class="signature">()</span><span class="type-signature"> : <a href="PassTextureNode.html">PassTextureNode</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>This method is used to setup the effect's TSL code.</p>
+						</div>
 						<dl class="details">
 							<dt class="tag-overrides"><strong>Overrides:</strong> <a href="Node.html#setup">Node#setup</a></dt>
+						</dl>
+						<dl class="details">
+							<dt class="tag-returns"><strong>Returns:</strong> The denoised result.</dt>
 						</dl>
 					</div>
 					<h3 class="name name-method" id="updateBefore" translate="no">.<a href="#updateBefore">updateBefore</a><span class="signature">( frame : <span class="param-type"><a href="NodeFrame.html">NodeFrame</a></span> )</span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>This method is used to update internal uniforms once per frame.</p>
+							<p>Filters the input, once per frame if <code>autoUpdate</code> is on, else if <code>textureNeedsUpdate</code> is set.</p>
 						</div>
 						<table class="params">
 							<tbody>

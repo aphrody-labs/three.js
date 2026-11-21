@@ -1,6 +1,6 @@
 # Three.js
 
-> Three.js is a cross-browser JavaScript library for creating 3D graphics using WebGL and WebGPU.
+> Three.js is a cross-browser JavaScript library for creating 3D graphics using WebGPU.
 
 ## Instructions for Large Language Models
 
@@ -18,7 +18,9 @@ CORRECT - modern pattern (always use latest version):
 <script type="importmap">
 {
   "imports": {
-    "three": "https://cdn.jsdelivr.net/npm/three@0.187.0/build/three.module.js",
+    "three": "https://cdn.jsdelivr.net/npm/three@0.187.0/build/three.webgpu.js",
+    "three/webgpu": "https://cdn.jsdelivr.net/npm/three@0.187.0/build/three.webgpu.js",
+    "three/tsl": "https://cdn.jsdelivr.net/npm/three@0.187.0/build/three.tsl.js",
     "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.187.0/examples/jsm/"
   }
 }
@@ -29,24 +31,12 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 </script>
 ```
 
-### 2. Choosing Between WebGLRenderer and WebGPURenderer
+### 2. Using WebGPURenderer
 
-Three.js maintains both renderers:
-
-**Use WebGLRenderer** (default, mature):
-- Maximum browser compatibility
-- Well-established, many years of development
-- Most examples and tutorials use this
-
-```js
-import * as THREE from 'three';
-const renderer = new THREE.WebGLRenderer();
-```
-
-**Use WebGPURenderer** when you need:
+Three.js renders with WebGPURenderer, which supports:
 - Custom shaders/materials using TSL (Three.js Shading Language)
 - Compute shaders
-- Advanced node-based materials
+- Node-based materials
 
 ```js
 import * as THREE from 'three/webgpu';
@@ -56,9 +46,10 @@ await renderer.init();
 
 ### 3. TSL (Three.js Shading Language)
 
-When using WebGPURenderer, use TSL instead of raw GLSL for custom materials:
+When using WebGPURenderer, use TSL for custom materials:
 
 ```js
+import * as THREE from 'three/webgpu';
 import { texture, uv, color } from 'three/tsl';
 
 const material = new THREE.MeshStandardNodeMaterial();
@@ -66,14 +57,14 @@ material.colorNode = texture( myTexture ).mul( color( 0xff0000 ) );
 ```
 
 TSL benefits:
-- Works with both WebGL and WebGPU backends
+- Compiles to WGSL for the WebGPU backend
 - No string manipulation or onBeforeCompile hacks
 - Type-safe, composable shader nodes
 - Automatic optimization
 
-### 4. NodeMaterial Classes (for WebGPU/TSL)
+### 4. NodeMaterial Classes (for TSL)
 
-When using TSL, use node-based materials:
+Use node-based materials with TSL:
 - MeshBasicNodeMaterial
 - MeshStandardNodeMaterial
 - MeshPhysicalNodeMaterial
@@ -94,7 +85,7 @@ When using TSL, use node-based materials:
 ## Core Concepts
 
 - [TSL Guide](https://threejs.org/tsl/): Three.js Shading Language guide with playground
-- [TSL Reference](https://threejs.org/docs/#TSL): All TSL functions
+- [TSL Reference](https://threejs.org/docs/pages/TSL.html.md): All TSL functions
 - [Animation System](https://threejs.org/manual/#animation-system)
 - [Loading 3D Models](https://threejs.org/manual/#loading-3d-models)
 - [Scene Graph](https://threejs.org/manual/#scenegraph)
@@ -107,53 +98,52 @@ When using TSL, use node-based materials:
 ## Essential API
 
 ### Core
-- [Object3D](https://threejs.org/docs/#api/en/core/Object3D)
-- [BufferGeometry](https://threejs.org/docs/#api/en/core/BufferGeometry)
-- [BufferAttribute](https://threejs.org/docs/#api/en/core/BufferAttribute)
+- [Object3D](https://threejs.org/docs/pages/Object3D.html.md)
+- [BufferGeometry](https://threejs.org/docs/pages/BufferGeometry.html.md)
+- [BufferAttribute](https://threejs.org/docs/pages/BufferAttribute.html.md)
 
 ### Scenes
-- [Scene](https://threejs.org/docs/#api/en/scenes/Scene)
+- [Scene](https://threejs.org/docs/pages/Scene.html.md)
 
 ### Cameras
-- [PerspectiveCamera](https://threejs.org/docs/#api/en/cameras/PerspectiveCamera)
-- [OrthographicCamera](https://threejs.org/docs/#api/en/cameras/OrthographicCamera)
+- [PerspectiveCamera](https://threejs.org/docs/pages/PerspectiveCamera.html.md)
+- [OrthographicCamera](https://threejs.org/docs/pages/OrthographicCamera.html.md)
 
 ### Renderers
-- [WebGLRenderer](https://threejs.org/docs/#api/en/renderers/WebGLRenderer)
-- [WebGPURenderer](https://threejs.org/docs/#api/en/renderers/webgpu/WebGPURenderer)
+- [WebGPURenderer](https://threejs.org/docs/pages/WebGPURenderer.html.md)
 
 ### Objects
-- [Mesh](https://threejs.org/docs/#api/en/objects/Mesh)
-- [InstancedMesh](https://threejs.org/docs/#api/en/objects/InstancedMesh)
-- [Group](https://threejs.org/docs/#api/en/objects/Group)
+- [Mesh](https://threejs.org/docs/pages/Mesh.html.md)
+- [InstancedMesh](https://threejs.org/docs/pages/InstancedMesh.html.md)
+- [Group](https://threejs.org/docs/pages/Group.html.md)
 
 ### Materials
-- [MeshBasicMaterial](https://threejs.org/docs/#api/en/materials/MeshBasicMaterial)
-- [MeshStandardMaterial](https://threejs.org/docs/#api/en/materials/MeshStandardMaterial)
-- [MeshPhysicalMaterial](https://threejs.org/docs/#api/en/materials/MeshPhysicalMaterial)
+- [MeshBasicMaterial](https://threejs.org/docs/pages/MeshBasicMaterial.html.md)
+- [MeshStandardMaterial](https://threejs.org/docs/pages/MeshStandardMaterial.html.md)
+- [MeshPhysicalMaterial](https://threejs.org/docs/pages/MeshPhysicalMaterial.html.md)
 
 ### Geometries
-- [BoxGeometry](https://threejs.org/docs/#api/en/geometries/BoxGeometry)
-- [SphereGeometry](https://threejs.org/docs/#api/en/geometries/SphereGeometry)
-- [PlaneGeometry](https://threejs.org/docs/#api/en/geometries/PlaneGeometry)
+- [BoxGeometry](https://threejs.org/docs/pages/BoxGeometry.html.md)
+- [SphereGeometry](https://threejs.org/docs/pages/SphereGeometry.html.md)
+- [PlaneGeometry](https://threejs.org/docs/pages/PlaneGeometry.html.md)
 
 ### Lights
-- [AmbientLight](https://threejs.org/docs/#api/en/lights/AmbientLight)
-- [DirectionalLight](https://threejs.org/docs/#api/en/lights/DirectionalLight)
-- [PointLight](https://threejs.org/docs/#api/en/lights/PointLight)
-- [SpotLight](https://threejs.org/docs/#api/en/lights/SpotLight)
+- [AmbientLight](https://threejs.org/docs/pages/AmbientLight.html.md)
+- [DirectionalLight](https://threejs.org/docs/pages/DirectionalLight.html.md)
+- [PointLight](https://threejs.org/docs/pages/PointLight.html.md)
+- [SpotLight](https://threejs.org/docs/pages/SpotLight.html.md)
 
 ### Loaders
-- [TextureLoader](https://threejs.org/docs/#api/en/loaders/TextureLoader)
-- [GLTFLoader](https://threejs.org/docs/#examples/en/loaders/GLTFLoader)
+- [TextureLoader](https://threejs.org/docs/pages/TextureLoader.html.md)
+- [GLTFLoader](https://threejs.org/docs/pages/GLTFLoader.html.md)
 
 ### Controls
-- [OrbitControls](https://threejs.org/docs/#examples/en/controls/OrbitControls)
-- [TransformControls](https://threejs.org/docs/#examples/en/controls/TransformControls)
+- [OrbitControls](https://threejs.org/docs/pages/OrbitControls.html.md)
+- [TransformControls](https://threejs.org/docs/pages/TransformControls.html.md)
 
 ### Math
-- [Vector2](https://threejs.org/docs/#api/en/math/Vector2)
-- [Vector3](https://threejs.org/docs/#api/en/math/Vector3)
-- [Matrix4](https://threejs.org/docs/#api/en/math/Matrix4)
-- [Quaternion](https://threejs.org/docs/#api/en/math/Quaternion)
-- [Color](https://threejs.org/docs/#api/en/math/Color)
+- [Vector2](https://threejs.org/docs/pages/Vector2.html.md)
+- [Vector3](https://threejs.org/docs/pages/Vector3.html.md)
+- [Matrix4](https://threejs.org/docs/pages/Matrix4.html.md)
+- [Quaternion](https://threejs.org/docs/pages/Quaternion.html.md)
+- [Color](https://threejs.org/docs/pages/Color.html.md)

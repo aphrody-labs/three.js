@@ -2,7 +2,7 @@
 
 # DebugEnvironment
 
-This class represents a scene with a very basic room setup that can be used as input for [PMREMGenerator#fromScene](PMREMGenerator.html#fromScene). The resulting PMREM represents the room's lighting and can be used for Image Based Lighting by assigning it to [Scene#environment](Scene.html#environment) or directly as an environment map to PBR materials.
+This class represents a scene with a very basic room setup that can be used as input for PMREMGenerator#fromScene. The resulting PMREM represents the room's lighting and can be used for Image Based Lighting by assigning it to [Scene#environment](Scene.html#environment) or directly as an environment map to PBR materials.
 
 This class uses a simple room setup and should only be used for development purposes. A more appropriate setup for production is [RoomEnvironment](RoomEnvironment.html).
 

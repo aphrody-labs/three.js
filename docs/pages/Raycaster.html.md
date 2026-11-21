@@ -153,13 +153,13 @@ Uses the given coordinates and camera to compute a new origin and direction for 
 
 The camera from which the ray should originate.
 
-### .setFromXRController( controller : WebXRController ) : Raycaster
+### .setFromXRController( controller : Group ) : Raycaster
 
 Uses the given WebXR controller to compute a new origin and direction for the internal ray.
 
 **controller**
 
-The controller to copy the position and direction from.
+The target ray space of the controller, as returned by WebXRManager#getController or [XRManager#getController](XRManager.html#getController). The ray's origin and direction are copied from its world matrix.
 
 **Returns:** A reference to this raycaster.
 
@@ -187,7 +187,7 @@ The intersection point, in world coordinates.
 **face**  
 Object
 
-The face that has been intersected.
+The face that has been intersected. Its `normal` is defined in the local space of the intersected geometry. `null` for 3D objects without faces like points, lines or sprites.
 
 **faceIndex**  
 number
@@ -212,7 +212,7 @@ Second set of U,V coordinates at point of intersection.
 **normal**  
 [Vector3](Vector3.html)
 
-Interpolated normal vector at point of intersection.
+Interpolated normal vector at point of intersection, in the local space of the intersected geometry (not in world space). The normal is flipped so it faces against the ray's direction.
 
 **instanceId**  
 number

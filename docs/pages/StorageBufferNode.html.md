@@ -22,7 +22,7 @@ renderer.computeAsync( computeInit );
 
 ## Constructor
 
-### new StorageBufferNode( value : StorageBufferAttribute | StorageInstancedBufferAttribute | BufferAttribute, bufferType : string | Struct, bufferCount : number )
+### new StorageBufferNode( value : StorageBufferAttribute | StorageInstancedBufferAttribute | BufferAttribute, bufferType : string | Struct )
 
 Constructs a new storage buffer node.
 
@@ -35,12 +35,6 @@ The buffer data.
 The buffer type (e.g. `'vec3'`).
 
 Default is `null`.
-
-**bufferCount**
-
-The buffer count.
-
-Default is `0`.
 
 ## Properties
 
@@ -61,12 +55,6 @@ Default is `true`.
 ### .isAtomic : boolean
 
 Whether the node is atomic or not.
-
-Default is `false`.
-
-### .isPBO : boolean
-
-Whether the node represents a PBO or not. Only relevant for WebGL.
 
 Default is `false`.
 
@@ -118,24 +106,6 @@ The current node builder.
 
 **Returns:** The node type.
 
-### .getAttributeData() : Object
-
-Returns attribute data for this storage buffer node.
-
-**Returns:** The attribute data.
-
-### .getHash( builder : NodeBuilder ) : string
-
-This method is overwritten since the buffer data might be shared and thus the hash should be shared as well.
-
-**builder**
-
-The current node builder.
-
-**Overrides:** [BufferNode#getHash](BufferNode.html#getHash)
-
-**Returns:** The hash.
-
 ### .getInputType( builder : NodeBuilder ) : string
 
 Overwrites the default implementation to return a fixed value `'indirectStorageBuffer'` or `'storageBuffer'`.
@@ -164,12 +134,6 @@ The name of the member.
 
 **Returns:** The type of the member.
 
-### .getPBO() : boolean
-
-Returns the `isPBO` value.
-
-**Returns:** Whether the node represents a PBO or not.
-
 ### .setAccess( value : string ) : StorageBufferNode
 
 Defines the node access.
@@ -187,16 +151,6 @@ Defines whether the node is atomic or not.
 **value**
 
 The atomic flag.
-
-**Returns:** A reference to this node.
-
-### .setPBO( value : boolean ) : StorageBufferNode
-
-Defines whether this node is a PBO or not. Only relevant for WebGL.
-
-**value**
-
-The value so set.
 
 **Returns:** A reference to this node.
 

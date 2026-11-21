@@ -48,7 +48,7 @@ The current node builder.
 
 **Returns:** Whether the node builder's context uses node properties or not.
 
-### .equals( renderObject : RenderObject, lightsData : Array.<Light>, renderId : number ) : boolean
+### .equals( renderObject : RenderObject, lightsData : Array.<Object>, renderId : number ) : boolean
 
 Returns `true` if the given render object has not changed its state.
 
@@ -58,7 +58,7 @@ The render object.
 
 **lightsData**
 
-The current material lights.
+The lights data of the current material lights.
 
 **renderId**
 
@@ -124,13 +124,17 @@ The render ID.
 
 **Returns:** The lights for the given lights node and render ID.
 
-### .getLightsData( materialLights : Array.<Light> ) : Array.<Object>
+### .getLightsData( materialLights : Array.<Light>, lights : Array.<Object> ) : Array.<Object>
 
 Returns the lights data for the given material lights.
 
 **materialLights**
 
 The material lights.
+
+**lights**
+
+The target array that receives the lights data.
 
 **Returns:** The lights data for the given material lights.
 

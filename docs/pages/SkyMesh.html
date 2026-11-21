@@ -16,7 +16,7 @@
 				<div class="class-description"><p>Represents a skydome for scene backgrounds. Based on <a href="https://www.researchgate.net/publication/220720443_A_Practical_Analytic_Model_for_Daylight" target="_blank" rel="noopener">A Practical Analytic Model for Daylight</a>
 aka The Preetham Model, the de facto standard for analytical skydomes.</p>
 <p>Note that this class can only be used with <a href="WebGPURenderer.html">WebGPURenderer</a>.
-When using <a href="WebGLRenderer.html">WebGLRenderer</a>, use <a href="Sky.html">Sky</a>.</p>
+When using WebGLRenderer, use Sky.</p>
 <p>More references:</p>
 <ul>
 <li><a href="http://simonwallner.at/project/atmospheric-scattering/" target="_blank" rel="noopener">http://simonwallner.at/project/atmospheric-scattering/</a></li>
@@ -48,6 +48,22 @@ sky.showSunDisc.value = true;
 					</div>
 				</div>
 				<h2 class="subsection-title">Properties</h2>
+				<div class="member">
+					<h3 class="name" id="absorptionColor" translate="no">.<a href="#absorptionColor">absorptionColor</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;vec3></span> </h3>
+					<div class="description">
+						<p>The wavelengths absorbed by the atmosphere along the path of
+the sunlight. The default value represents the ozone layer
+of Earth.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="absorptionScale" translate="no">.<a href="#absorptionScale">absorptionScale</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p>The strength of atmospheric absorption. Higher values remove
+more of <a href="SkyMesh.html#absorptionColor">SkyMesh#absorptionColor</a> from the sunlight and
+tint the sky in the complementary color.</p>
+					</div>
+				</div>
 				<div class="member">
 					<h3 class="name" id="cloudCoverage" translate="no">.<a href="#cloudCoverage">cloudCoverage</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
 					<div class="description">
@@ -96,6 +112,15 @@ sky.showSunDisc.value = true;
 					</div>
 				</div>
 				<div class="member">
+					<h3 class="name" id="mieAlbedo" translate="no">.<a href="#mieAlbedo">mieAlbedo</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;vec3></span> </h3>
+					<div class="description">
+						<p>The albedo of aerosol particles, the part of the light they scatter
+instead of absorbing. White particles absorb nothing, like the haze
+on Earth. Tinted particles, like the dust on Mars, give the haze
+their color.</p>
+					</div>
+				</div>
+				<div class="member">
 					<h3 class="name" id="mieCoefficient" translate="no">.<a href="#mieCoefficient">mieCoefficient</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
 					<div class="description">
 						<p>The strength of Mie scattering by aerosol particles
@@ -104,11 +129,28 @@ Higher values produce a brighter glow.</p>
 					</div>
 				</div>
 				<div class="member">
+					<h3 class="name" id="mieColor" translate="no">.<a href="#mieColor">mieColor</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;vec3></span> </h3>
+					<div class="description">
+						<p>The color of Mie scattering which defines the spectrum of
+the haze around the sun and along the horizon. The default
+value represents the atmosphere of Earth.</p>
+					</div>
+				</div>
+				<div class="member">
 					<h3 class="name" id="mieDirectionalG" translate="no">.<a href="#mieDirectionalG">mieDirectionalG</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
 					<div class="description">
 						<p>The directionality of Mie scattering which controls
 the size of the glow around the sun. Values closer to <code>1</code>
 produce a smaller and more concentrated halo.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="mieDirectionalGSpread" translate="no">.<a href="#mieDirectionalGSpread">mieDirectionalGSpread</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p>How much more directional Mie scattering is for blue than for red.
+Blue uses <a href="SkyMesh.html#mieDirectionalG">SkyMesh#mieDirectionalG</a> plus this value, red uses
+it minus this value. Dust grains like those on Mars scatter blue
+into a tighter halo around the sun, which turns sunsets blue.</p>
 					</div>
 				</div>
 				<div class="member">
@@ -132,12 +174,32 @@ Higher values produce a brighter sky.</p>
 					</div>
 				</div>
 				<div class="member">
+					<h3 class="name" id="sunSize" translate="no">.<a href="#sunSize">sunSize</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
+					<div class="description">
+						<p>The size of the sun disc relative to the sun seen from Earth.</p>
+					</div>
+				</div>
+				<div class="member">
 					<h3 class="name" id="turbidity" translate="no">.<a href="#turbidity">turbidity</a><span class="type-signature"> : <a href="UniformNode.html">UniformNode</a>.&lt;float></span> </h3>
 					<div class="description">
 						<p>The atmospheric turbidity which controls the amount of haze.
 Higher values produce a hazier sky.</p>
 					</div>
+						<dl class="details">
+							<dt class="important tag-deprecated"><strong>Deprecated:</strong> since r188. Multiply <a href="SkyMesh.html#mieCoefficient">SkyMesh#mieCoefficient</a> by turbidity / 2 instead.</dt>
+						</dl>
 				</div>
+				<h2 class="subsection-title">Methods</h2>
+					<h3 class="name name-method" id="dispose" translate="no">.<a href="#dispose">dispose</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>Frees the GPU-related resources allocated by this instance. Call this
+method whenever the sky is no longer used in your app.</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>Overrides:</strong> <a href="Mesh.html#dispose">Mesh#dispose</a></dt>
+						</dl>
+					</div>
 				<h2 class="subsection-title">Source</h2>
 				<p>
 					<a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/objects/SkyMesh.js" translate="no" target="_blank" rel="noopener">examples/jsm/objects/SkyMesh.js</a>

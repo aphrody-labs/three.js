@@ -29,7 +29,8 @@ from an array of cameras. This is particularly useful for multi-view renderers.<
 				<div class="member">
 					<h3 class="name" id="coordinateSystem" translate="no">.<a href="#coordinateSystem">coordinateSystem</a><span class="type-signature"> : <a href="global.html#WebGLCoordinateSystem">WebGLCoordinateSystem</a> | <a href="global.html#WebGPUCoordinateSystem">WebGPUCoordinateSystem</a></span> </h3>
 					<div class="description">
-						<p>The coordinate system to use.</p>
+						<p>The coordinate system. Note that it is not used by the culling tests: each frustum
+uses the coordinate system of its sub camera, see <a href="FrustumArray.html#setFromArrayCamera">FrustumArray#setFromArrayCamera</a>.</p>
 						<p>Default is <code>WebGLCoordinateSystem</code>.</p>
 					</div>
 				</div>

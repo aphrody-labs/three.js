@@ -23,13 +23,13 @@ The input texture.
 
 **uvNode**
 
-The uv node.
+The world space sampling direction.
 
 Default is `null`.
 
 **levelNode**
 
-The level node.
+The roughness in the `[0, 1]` range, converted to a mip level internally.
 
 Default is `null`.
 
@@ -37,7 +37,7 @@ Default is `null`.
 
 ### .levelNode : Node.<float>
 
-The level node.
+The roughness in the `[0, 1]` range, converted to a mip level internally.
 
 ### .updateBeforeType : string
 
@@ -49,7 +49,7 @@ Default is `'render'`.
 
 ### .uvNode : Node.<vec3>
 
-The uv node.
+The world space sampling direction.
 
 ### .value : Texture
 

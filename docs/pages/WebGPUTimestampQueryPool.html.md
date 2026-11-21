@@ -2,11 +2,13 @@
 
 # WebGPUTimestampQueryPool
 
-Manages a pool of WebGPU timestamp queries for performance measurement. Extends the base TimestampQueryPool to provide WebGPU-specific implementation.
+Manages a pool of WebGPU timestamp queries for GPU timers. Each pass writes a begin and an end timestamp, a timer measures from the earliest begin to the latest end of its passes.
+
+Only one readback is in flight. When the query set is full meanwhile, it waits for its own readback and the following passes continue in another query set, so no query is dropped.
 
 ## Constructor
 
-### new WebGPUTimestampQueryPool( device : GPUDevice, type : string, maxQueries : number )
+### new WebGPUTimestampQueryPool( device : GPUDevice, maxQueries : number )
 
 Creates a new WebGPU timestamp query pool.
 
@@ -14,29 +16,49 @@ Creates a new WebGPU timestamp query pool.
 
 The WebGPU device to create queries on.
 
-**type**
-
-The type identifier for this query pool.
-
 **maxQueries**
 
-Maximum number of queries this pool can hold.
+Maximum number of queries of a query set.
 
-Default is `2048`.
+Default is `4096`.
+
+## Properties
+
+### .currentQueryIndex : number
+
+How many queries of the current query set are allocated.
+
+Default is `0`.
+
+### .freeQuerySets : Array.<GPUQuerySet>
+
+The query sets that were read back and can be reused.
+
+### .fullQuerySets : Array.<{querySet: GPUQuerySet, queryTimers: Map.<number, Array.<Object>>, queryCount: number}>
+
+The full query sets waiting for their readback.
+
+### .pendingResolve : Promise
+
+The readback in flight, `null` if there is none.
+
+Default is `null`.
+
+### .querySet : GPUQuerySet
+
+The query set the passes write to.
+
+### .queryTimers : Map.<number, Array.<Object>>
+
+The timers of each allocated query pair of the current query set, by the index of its first query.
 
 ## Methods
 
-### .allocateQueriesForContext( uid : string ) : number
+### .allocateQueries() : number
 
-Allocates a pair of queries for a given render context.
+Allocates a pair of queries for the active timers.
 
-**uid**
-
-A unique identifier for the render context.
-
-**Overrides:** [TimestampQueryPool#allocateQueriesForContext](TimestampQueryPool.html#allocateQueriesForContext)
-
-**Returns:** The base offset for the allocated queries, or null if allocation failed.
+**Returns:** The index of the first query in [WebGPUTimestampQueryPool#querySet](WebGPUTimestampQueryPool.html#querySet), or `null` without active timers.
 
 ### .dispose() : Promise (async)
 
@@ -46,13 +68,23 @@ Dispose of the query pool.
 
 **Returns:** A Promise that resolves when the dispose has been executed.
 
-### .resolveQueriesAsync() : Promise.<number> (async)
+### .getDuration( timer : Object ) : number
 
-Asynchronously resolves all pending queries and returns the total duration. If there's already a pending resolve operation, returns that promise instead.
+Returns the GPU time of the given timer, from the earliest begin to the latest end of its passes.
 
-**Overrides:** [TimestampQueryPool#resolveQueriesAsync](TimestampQueryPool.html#resolveQueriesAsync)
+**timer**
 
-**Returns:** The total duration in milliseconds, or the last valid value if resolution fails.
+The timer, ended and resolved.
+
+**Overrides:** [TimestampQueryPool#getDuration](TimestampQueryPool.html#getDuration)
+
+**Returns:** The GPU time in milliseconds, or `null` if queries couldn't be read back.
+
+### .resolveQueries()
+
+Reads back the oldest full query set, or the current one. Only one readback is in flight, queries allocated meanwhile are read back with the next ones.
+
+**Overrides:** [TimestampQueryPool#resolveQueries](TimestampQueryPool.html#resolveQueries)
 
 ## Source
 

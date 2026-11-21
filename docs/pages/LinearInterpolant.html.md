@@ -12,7 +12,7 @@ Constructs a new linear interpolant.
 
 **parameterPositions**
 
-The parameter positions hold the interpolation factors.
+The ascending parameter positions of the samples, e.g. keyframe times.
 
 **sampleValues**
 

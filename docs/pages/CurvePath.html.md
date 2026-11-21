@@ -60,6 +60,34 @@ The optional target vector the result is written to.
 
 **Returns:** The position on the curve. It can be a 2D or 3D vector depending on the curve definition.
 
+### .getPoints( divisions : number ) : Array.<(Vector2|Vector3)>
+
+This method samples each curve of the path and returns an array of points representing the path shape. Consecutive duplicate points are removed. If [CurvePath#autoClose](CurvePath.html#autoClose) is `true`, the first point is appended at the end if necessary.
+
+**divisions**
+
+The number of divisions per curve. Line curves always use one division, ellipse curves twice this value and [SplineCurve](SplineCurve.html) instances this value times their point count. All other curves use this value.
+
+Default is `12`.
+
+**Overrides:** [Curve#getPoints](Curve.html#getPoints)
+
+**Returns:** An array holding the sampled curve values.
+
+### .getSpacedPoints( divisions : number ) : Array.<(Vector2|Vector3)>
+
+This method samples the curve path via [CurvePath#getPoint](CurvePath.html#getPoint) and returns an array of equi-spaced points across the entire path. If [CurvePath#autoClose](CurvePath.html#autoClose) is `true`, the first point is appended at the end.
+
+**divisions**
+
+The number of divisions.
+
+Default is `40`.
+
+**Overrides:** [Curve#getSpacedPoints](Curve.html#getSpacedPoints)
+
+**Returns:** An array holding the sampled curve values.
+
 ## Source
 
 [src/extras/core/CurvePath.js](https://github.com/mrdoob/three.js/blob/master/src/extras/core/CurvePath.js)

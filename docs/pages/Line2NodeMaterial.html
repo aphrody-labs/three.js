@@ -53,8 +53,9 @@ by representing them as instanced meshes.</p></div>
 				<div class="member">
 					<h3 class="name" id="blending" translate="no">.<a href="#blending">blending</a><span class="type-signature"> : number</span> </h3>
 					<div class="description">
-						<p>Blending is set to <code>NoBlending</code> since transparency
-is not supported, yet.</p>
+						<p>Blending is set to <code>NoBlending</code>. When <code>transparent</code> is <code>true</code>, the line
+is blended in the shader over the opaque scene, so other transparent
+objects are not visible behind it.</p>
 						<p>Default is <code>0</code>.</p>
 					</div>
 						<dl class="details">
@@ -102,15 +103,6 @@ is not supported, yet.</p>
 						<p>This flag can be used for type testing.</p>
 						<p>Default is <code>true</code>.</p>
 					</div>
-				</div>
-				<div class="member">
-					<h3 class="name" id="lineColorNode" translate="no">.<a href="#lineColorNode">lineColorNode</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec3></span> </h3>
-					<div class="description">
-						<p>Defines the lines color.</p>
-					</div>
-						<dl class="details">
-							<dt class="important tag-deprecated"><strong>Deprecated:</strong> since r185. Use <a href="NodeMaterial.html#colorNode">NodeMaterial#colorNode</a> instead.</dt>
-						</dl>
 				</div>
 				<div class="member">
 					<h3 class="name" id="offsetNode" translate="no">.<a href="#offsetNode">offsetNode</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;float></span> </h3>

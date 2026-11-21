@@ -198,14 +198,6 @@ Default is `'output'`.
 
 **Returns:** The previous texture node.
 
-### .getResolution() : number
-
-Gets the current resolution of the pass.
-
-**Deprecated:** since r181. Use [\`getResolutionScale()\`](PassNode.html#getResolutionScale) instead.
-
-**Returns:** The current resolution. A value of `1` means full resolution.
-
 ### .getResolutionScale() : number
 
 Gets the current resolution scale of the pass.
@@ -266,18 +258,6 @@ The MRT object.
 
 **Returns:** A reference to this pass.
 
-### .setResolution( resolution : number ) : PassNode
-
-Sets the resolution for the pass. The resolution is a factor that is multiplied with the renderer's width and height.
-
-**resolution**
-
-The resolution to set. A value of `1` means full resolution.
-
-**Deprecated:** since r181. Use [\`setResolutionScale()\`](PassNode.html#setResolutionScale) instead.
-
-**Returns:** A reference to this pass.
-
 ### .setResolutionScale( resolutionScale : number ) : PassNode
 
 Sets the resolution scale for the pass. The resolution scale is a factor that is multiplied with the renderer's width and height.
@@ -294,11 +274,11 @@ This method allows to define the pass's scissor rectangle. By default, the sciss
 
 **x**
 
-The horizontal coordinate for the lower left corner of the box in logical pixel unit. Instead of passing four arguments, the method also works with a single four-dimensional vector.
+The horizontal coordinate for the upper left corner of the box in logical pixel unit. Instead of passing four arguments, the method also works with a single four-dimensional vector.
 
 **y**
 
-The vertical coordinate for the lower left corner of the box in logical pixel unit.
+The vertical coordinate for the upper left corner of the box in logical pixel unit.
 
 **width**
 
@@ -310,7 +290,7 @@ The height of the scissor box in logical pixel unit.
 
 ### .setSize( width : number, height : number )
 
-Sets the size of the pass's render target. Honors the pixel ratio.
+Sets the size of the pass's render target in physical pixels. The size is multiplied by the resolution scale.
 
 **width**
 
@@ -326,11 +306,11 @@ This method allows to define the pass's viewport. By default, the viewport is ke
 
 **x**
 
-The horizontal coordinate for the lower left corner of the viewport origin in logical pixel unit.
+The horizontal coordinate for the upper left corner of the viewport origin in logical pixel unit.
 
 **y**
 
-The vertical coordinate for the lower left corner of the viewport origin in logical pixel unit.
+The vertical coordinate for the upper left corner of the viewport origin in logical pixel unit.
 
 **width**
 

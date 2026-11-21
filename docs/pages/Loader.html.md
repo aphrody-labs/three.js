@@ -52,7 +52,7 @@ The base path from which additional resources like textures will be loaded.
 
 ### .withCredentials : boolean
 
-Whether the XMLHttpRequest uses credentials.
+Whether cross-origin `fetch()` requests include credentials.
 
 Default is `false`.
 
@@ -178,9 +178,9 @@ The resource path.
 
 ### .setWithCredentials( value : boolean ) : Loader
 
-Whether the XMLHttpRequest uses credentials such as cookies, authorization headers or TLS client certificates, see [XMLHttpRequest.withCredentials](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/withCredentials).
+Whether `fetch()` requests include credentials such as cookies, authorization headers or TLS client certificates on cross-origin requests, see [Request.credentials](https://developer.mozilla.org/en-US/docs/Web/API/Request/credentials).
 
-Note: This setting has no effect if you are loading files locally or from the same domain.
+Note: This setting has no effect if you are loading files locally or from the same domain. Loaders using `HTMLImageElement` (e.g. [ImageLoader](ImageLoader.html) or [TextureLoader](TextureLoader.html)) ignore it, use [Loader#setCrossOrigin](Loader.html#setCrossOrigin) with `'use-credentials'` instead.
 
 **value**
 

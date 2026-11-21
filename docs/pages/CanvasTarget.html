@@ -53,9 +53,7 @@
 				<div class="member">
 					<h3 class="name" id="domElement" translate="no">.<a href="#domElement">domElement</a><span class="type-signature"> : HTMLCanvasElement | OffscreenCanvas</span> </h3>
 					<div class="description">
-						<p>A reference to the canvas element the renderer is drawing to.
-This value of this property will automatically be created by
-the renderer.</p>
+						<p>A reference to the canvas element the renderer is drawing to.</p>
 					</div>
 				</div>
 				<h2 class="subsection-title">Methods</h2>
@@ -67,7 +65,7 @@ method whenever this instance is no longer used in your app.</p>
 						</div>
 						<h5>Fires:</h5>
 						<ul>
-							<li>RenderTarget#event:dispose</li>
+							<li>CanvasTarget#event:dispose</li>
 						</ul>
 					</div>
 					<h3 class="name name-method" id="getDrawingBufferSize" translate="no">.<a href="#getDrawingBufferSize">getDrawingBufferSize</a><span class="signature">( target : <span class="param-type"><a href="Vector2.html">Vector2</a></span> )</span><span class="type-signature"> : <a href="Vector2.html">Vector2</a></span> </h3>
@@ -242,7 +240,7 @@ size.y = height * pixelRatio;
 										<strong translate="no">x</strong>
 									</td>
 									<td class="description last">
-										<p>The horizontal coordinate for the lower left corner of the box in logical pixel unit.
+										<p>The horizontal coordinate for the upper left corner of the box in logical pixel unit.
 Instead of passing four arguments, the method also works with a single four-dimensional vector.</p>
 									</td>
 								</tr>
@@ -251,7 +249,7 @@ Instead of passing four arguments, the method also works with a single four-dime
 										<strong translate="no">y</strong>
 									</td>
 									<td class="description last">
-										<p>The vertical coordinate for the lower left corner of the box in logical pixel unit.</p>
+										<p>The vertical coordinate for the upper left corner of the box in logical pixel unit.</p>
 									</td>
 								</tr>
 								<tr>
@@ -338,7 +336,7 @@ Instead of passing four arguments, the method also works with a single four-dime
 										<strong translate="no">x</strong>
 									</td>
 									<td class="description last">
-										<p>The horizontal coordinate for the lower left corner of the viewport origin in logical pixel unit.</p>
+										<p>The horizontal coordinate for the upper left corner of the viewport origin in logical pixel unit.</p>
 									</td>
 								</tr>
 								<tr>
@@ -346,7 +344,7 @@ Instead of passing four arguments, the method also works with a single four-dime
 										<strong translate="no">y</strong>
 									</td>
 									<td class="description last">
-										<p>The vertical coordinate for the lower left corner of the viewport origin  in logical pixel unit.</p>
+										<p>The vertical coordinate for the upper left corner of the viewport origin in logical pixel unit.</p>
 									</td>
 								</tr>
 								<tr>

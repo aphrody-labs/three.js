@@ -38,7 +38,7 @@ and O(log N) for random access, where N is the number of positions.</p>
 										<strong translate="no">parameterPositions</strong>
 									</td>
 									<td class="description last">
-										<p>The parameter positions hold the interpolation factors.</p>
+										<p>The ascending parameter positions of the samples, e.g. keyframe times.</p>
 									</td>
 								</tr>
 								<tr>
@@ -102,7 +102,7 @@ and O(log N) for random access, where N is the number of positions.</p>
 					</div>
 				</div>
 				<div class="member">
-					<h3 class="name" id="valueSize" translate="no">.<a href="#valueSize">valueSize</a><span class="type-signature"> : TypedArray</span> </h3>
+					<h3 class="name" id="valueSize" translate="no">.<a href="#valueSize">valueSize</a><span class="type-signature"> : number</span> </h3>
 					<div class="description">
 						<p>The value size.</p>
 					</div>
@@ -141,7 +141,7 @@ and O(log N) for random access, where N is the number of positions.</p>
 										<strong translate="no">t</strong>
 									</td>
 									<td class="description last">
-										<p>The interpolation factor.</p>
+										<p>The parameter position (e.g. time) at which to evaluate.</p>
 									</td>
 								</tr>
 							</tbody>
@@ -162,7 +162,8 @@ and O(log N) for random access, where N is the number of positions.</p>
 					<h3 class="name name-method" id="interpolate_" translate="no">.<a href="#interpolate_">interpolate_</a><span class="signature">( i1 : <span class="param-type">number</span>, t0 : <span class="param-type">number</span>, t : <span class="param-type">number</span>, t1 : <span class="param-type">number</span> )</span><span class="type-signature"> : TypedArray</span> <span class="type-signature">(abstract) </span></h3>
 					<div class="method">
 						<div class="description">
-							<p>Copies a sample value to the result buffer.</p>
+							<p>Interpolates between the samples at <code>i1 - 1</code> and <code>i1</code> and writes the result
+to the result buffer.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -179,7 +180,7 @@ and O(log N) for random access, where N is the number of positions.</p>
 										<strong translate="no">t0</strong>
 									</td>
 									<td class="description last">
-										<p>The previous interpolation factor.</p>
+										<p>The previous parameter position.</p>
 									</td>
 								</tr>
 								<tr>
@@ -187,7 +188,7 @@ and O(log N) for random access, where N is the number of positions.</p>
 										<strong translate="no">t</strong>
 									</td>
 									<td class="description last">
-										<p>The current interpolation factor.</p>
+										<p>The current parameter position.</p>
 									</td>
 								</tr>
 								<tr>
@@ -195,7 +196,7 @@ and O(log N) for random access, where N is the number of positions.</p>
 										<strong translate="no">t1</strong>
 									</td>
 									<td class="description last">
-										<p>The next interpolation factor.</p>
+										<p>The next parameter position.</p>
 									</td>
 								</tr>
 							</tbody>
@@ -224,7 +225,7 @@ and O(log N) for random access, where N is the number of positions.</p>
 										<strong translate="no">t0</strong>
 									</td>
 									<td class="description last">
-										<p>The previous interpolation factor.</p>
+										<p>The previous parameter position.</p>
 									</td>
 								</tr>
 								<tr>
@@ -232,7 +233,7 @@ and O(log N) for random access, where N is the number of positions.</p>
 										<strong translate="no">t1</strong>
 									</td>
 									<td class="description last">
-										<p>The next interpolation factor.</p>
+										<p>The next parameter position.</p>
 									</td>
 								</tr>
 							</tbody>

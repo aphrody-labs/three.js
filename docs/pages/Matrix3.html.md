@@ -7,7 +7,7 @@ A Note on Row-Major and Column-Major Ordering:
 The constructor and [Matrix3#set](Matrix3.html#set) method take arguments in [row-major](https://en.wikipedia.org/wiki/Row-_and_column-major_order#Column-major_order) order, while internally they are stored in the [Matrix3#elements](Matrix3.html#elements) array in column-major order. This means that calling:
 
 ```js
-const m = new THREE.Matrix();
+const m = new THREE.Matrix3();
 m.set( 11, 12, 13,
        21, 22, 23,
        31, 32, 33 );
@@ -243,34 +243,6 @@ The matrix to multiply with.
 
 **Returns:** A reference to this matrix.
 
-### .rotate( theta : number ) : Matrix3
-
-Rotates this matrix by the given angle.
-
-**theta**
-
-The rotation in radians.
-
-**Deprecated:** Yes
-
-**Returns:** A reference to this matrix.
-
-### .scale( sx : number, sy : number ) : Matrix3
-
-Scales this matrix with the given scalar values.
-
-**sx**
-
-The amount to scale in the X axis.
-
-**sy**
-
-The amount to scale in the Y axis.
-
-**Deprecated:** Yes
-
-**Returns:** A reference to this matrix.
-
 ### .set( n11 : number, n12 : number, n13 : number, n21 : number, n22 : number, n23 : number, n31 : number, n32 : number, n33 : number ) : Matrix3
 
 Sets the elements of the matrix.The arguments are supposed to be in row-major order.
@@ -374,22 +346,6 @@ Index of the first element in the array.
 Default is `0`.
 
 **Returns:** The matrix elements in column-major order.
-
-### .translate( tx : number, ty : number ) : Matrix3
-
-Translates this matrix by the given scalar values.
-
-**tx**
-
-The amount to translate in the X axis.
-
-**ty**
-
-The amount to translate in the Y axis.
-
-**Deprecated:** Yes
-
-**Returns:** A reference to this matrix.
 
 ### .transpose() : Matrix3
 

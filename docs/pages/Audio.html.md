@@ -82,7 +82,7 @@ The gain node used for volume control.
 
 Indicates whether the audio playback can be controlled with method like [Audio#play](Audio.html#play) or [Audio#pause](Audio.html#pause).
 
-This flag will be automatically set when audio sources are defined.
+This flag is set to `false` by [Audio#setNodeSource](Audio.html#setNodeSource), [Audio#setMediaElementSource](Audio.html#setMediaElementSource) and [Audio#setMediaStreamSource](Audio.html#setMediaStreamSource).
 
 Default is `true`.
 
@@ -236,7 +236,7 @@ Default is `0`.
 
 Sets the given audio buffer as the source of this instance.
 
-[Audio#sourceType](Audio.html#sourceType) is set to `buffer` and [Audio#hasPlaybackControl](Audio.html#hasPlaybackControl) to `true`.
+[Audio#sourceType](Audio.html#sourceType) is set to `buffer`.
 
 **audioBuffer**
 
@@ -288,7 +288,7 @@ Whether the audio should loop or not.
 
 ### .setLoopEnd( value : number ) : Audio
 
-Sets the loop end value which defines where in the audio buffer the replay should stop, in seconds.
+Sets the loop end value which defines where in the audio buffer the replay should stop, in seconds. A value of `0` (the default) loops the whole buffer and also ignores [Audio#loopStart](Audio.html#loopStart). Only used when [Audio#loop](Audio.html#loop) is `true` and applied on the next call of [Audio#play](Audio.html#play).
 
 **value**
 
@@ -298,7 +298,7 @@ The loop end value.
 
 ### .setLoopStart( value : number ) : Audio
 
-Sets the loop start value which defines where in the audio buffer the replay should start, in seconds.
+Sets the loop start value which defines where in the audio buffer the replay should start, in seconds. Only used when [Audio#loop](Audio.html#loop) is `true` and [Audio#loopEnd](Audio.html#loopEnd) is greater than this value, and applied on the next call of [Audio#play](Audio.html#play).
 
 **value**
 

@@ -123,10 +123,10 @@ current value of <a href="OrthographicCamera.html#near">OrthographicCamera#near<
 				<div class="member">
 					<h3 class="name" id="near" translate="no">.<a href="#near">near</a><span class="type-signature"> : number</span> </h3>
 					<div class="description">
-						<p>The camera's near plane. The valid range is greater than <code>0</code>
-and less than the current value of <a href="OrthographicCamera.html#far">OrthographicCamera#far</a>.</p>
-<p>Note that, unlike for the <a href="PerspectiveCamera.html">PerspectiveCamera</a>, <code>0</code> is a
-valid value for an orthographic camera's near plane.</p>
+						<p>The camera's near plane. The value must be less than the current value of
+<a href="OrthographicCamera.html#far">OrthographicCamera#far</a>.</p>
+<p>Note that, unlike for the <a href="PerspectiveCamera.html">PerspectiveCamera</a>, <code>0</code> and negative values
+are valid for an orthographic camera's near plane.</p>
 						<p>Default is <code>0.1</code>.</p>
 					</div>
 				</div>
@@ -148,7 +148,7 @@ valid value for an orthographic camera's near plane.</p>
 					<h3 class="name" id="view" translate="no">.<a href="#view">view</a><span class="type-signature"> : Object</span> </h3>
 					<div class="description">
 						<p>Represents the frustum window specification. This property should not be edited
-directly but via <a href="PerspectiveCamera.html#setViewOffset">PerspectiveCamera#setViewOffset</a> and <a href="PerspectiveCamera.html#clearViewOffset">PerspectiveCamera#clearViewOffset</a>.</p>
+directly but via <a href="OrthographicCamera.html#setViewOffset">OrthographicCamera#setViewOffset</a> and <a href="OrthographicCamera.html#clearViewOffset">OrthographicCamera#clearViewOffset</a>.</p>
 						<p>Default is <code>null</code>.</p>
 					</div>
 				</div>

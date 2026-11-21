@@ -89,7 +89,7 @@ used in HTTP request.</p>
 				<div class="member">
 					<h3 class="name" id="withCredentials" translate="no">.<a href="#withCredentials">withCredentials</a><span class="type-signature"> : boolean</span> </h3>
 					<div class="description">
-						<p>Whether the XMLHttpRequest uses credentials.</p>
+						<p>Whether cross-origin <code>fetch()</code> requests include credentials.</p>
 						<p>Default is <code>false</code>.</p>
 					</div>
 				</div>
@@ -339,9 +339,11 @@ for configuring the HTTP request.</p>
 					<h3 class="name name-method" id="setWithCredentials" translate="no">.<a href="#setWithCredentials">setWithCredentials</a><span class="signature">( value : <span class="param-type">boolean</span> )</span><span class="type-signature"> : <a href="Loader.html">Loader</a></span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Whether the XMLHttpRequest uses credentials such as cookies, authorization
-headers or TLS client certificates, see <a href="https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/withCredentials" target="_blank" rel="noopener">XMLHttpRequest.withCredentials</a>.</p>
-<p>Note: This setting has no effect if you are loading files locally or from the same domain.</p>
+							<p>Whether <code>fetch()</code> requests include credentials such as cookies, authorization
+headers or TLS client certificates on cross-origin requests, see <a href="https://developer.mozilla.org/en-US/docs/Web/API/Request/credentials" target="_blank" rel="noopener">Request.credentials</a>.</p>
+<p>Note: This setting has no effect if you are loading files locally or from the same domain.
+Loaders using <code>HTMLImageElement</code> (e.g. <a href="ImageLoader.html">ImageLoader</a> or <a href="TextureLoader.html">TextureLoader</a>) ignore it,
+use <a href="Loader.html#setCrossOrigin">Loader#setCrossOrigin</a> with <code>'use-credentials'</code> instead.</p>
 						</div>
 						<table class="params">
 							<tbody>

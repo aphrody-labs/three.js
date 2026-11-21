@@ -13,7 +13,11 @@
 	<h1 translate="no">VolumeNodeMaterial</h1>
 		<section>
 			<header>
-				<div class="class-description"><p>Volume node material.</p></div>
+				<div class="class-description"><p>Volume node material. Renders a raymarched volume that is only lit by
+point, spot and rect area lights; directional, ambient and environment
+lighting are ignored.</p>
+<p>If <a href="NodeMaterial.html#depthNode">NodeMaterial#depthNode</a> is set, it is interpreted as the scene
+depth used to occlude the rays.</p></div>
 			</header>
 			<article>
 				<div class="container-overview">
@@ -48,15 +52,18 @@
 				<div class="member">
 					<h3 class="name" id="offsetNode" translate="no">.<a href="#offsetNode">offsetNode</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;float></span> </h3>
 					<div class="description">
-						<p>Offsets the distance a ray has been traveled through a volume.
-Can be used to implement dithering to reduce banding.</p>
+						<p>Offsets the distance a ray has been traveled through a volume, as a
+fraction of one raymarching step. Can be used to implement dithering
+(e.g. per-pixel noise in the range <code>[0,1)</code>) to reduce banding.</p>
 						<p>Default is <code>null</code>.</p>
 					</div>
 				</div>
 				<div class="member">
-					<h3 class="name" id="scatteringNode" translate="no">.<a href="#scatteringNode">scatteringNode</a><span class="type-signature"> : function | <a href="FunctionNode.html">FunctionNode</a>.&lt;vec4></span> </h3>
+					<h3 class="name" id="scatteringNode" translate="no">.<a href="#scatteringNode">scatteringNode</a><span class="type-signature"> : function | <a href="FunctionNode.html">FunctionNode</a></span> </h3>
 					<div class="description">
-						<p>Node used for scattering calculations.</p>
+						<p>Function used for scattering calculations. It receives <code>{ positionRay }</code>,
+the current ray position in world space, and returns the scattering
+density for that raymarching step.</p>
 						<p>Default is <code>null</code>.</p>
 					</div>
 				</div>

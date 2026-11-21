@@ -86,6 +86,10 @@ b.applyEuler(a);
 					<h3 class="name" id="order" translate="no">.<a href="#order">order</a><span class="type-signature"> : string</span> </h3>
 					<div class="description">
 						<p>A string representing the order that the rotations are applied.</p>
+<p>three.js uses intrinsic rotations, meaning each rotation is performed around
+the local axes of the already rotated object. For <code>'XYZ'</code>, the object is rotated
+around its local X axis first, then its local Y axis and finally its local Z axis,
+which equals the rotation matrix <code>Rx * Ry * Rz</code>.</p>
 						<p>Default is <code>'XYZ'</code>.</p>
 					</div>
 				</div>

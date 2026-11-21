@@ -39,11 +39,13 @@
 				</div>
 				<h2 class="subsection-title">Properties</h2>
 				<div class="member">
-					<h3 class="name" id="anisotropyNode" translate="no">.<a href="#anisotropyNode">anisotropyNode</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;float></span> </h3>
+					<h3 class="name" id="anisotropyNode" translate="no">.<a href="#anisotropyNode">anisotropyNode</a><span class="type-signature"> : <a href="Node.html">Node</a>.&lt;vec2></span> </h3>
 					<div class="description">
 						<p>The anisotropy of physical materials is by default inferred from the
-<code>anisotropy</code> property. This node property allows to overwrite the default
-and define the anisotropy with a node instead.</p>
+<code>anisotropy</code>, <code>anisotropyRotation</code> and <code>anisotropyMap</code> properties. This node
+property allows to overwrite the default and define the anisotropy with a
+tangent-space vector instead. Its direction is the anisotropy direction and
+its length is the anisotropy strength in the range <code>[0,1]</code>.</p>
 <p>If you don't want to overwrite the anisotropy but modify the existing
 value instead, use <a href="TSL.html#materialAnisotropy">materialAnisotropy</a>.</p>
 						<p>Default is <code>null</code>.</p>
@@ -87,7 +89,8 @@ value instead, use <a href="TSL.html#materialClearcoat">materialClearcoat</a>.</
 					<div class="description">
 						<p>The clearcoat normal of physical materials is by default inferred from the <code>clearcoatNormalMap</code>
 property. This node property allows to overwrite the default
-and define the clearcoat normal with a node instead.</p>
+and define the clearcoat normal with a node instead. The node must return a normal
+in view space.</p>
 <p>If you don't want to overwrite the clearcoat normal but modify the existing
 value instead, use <a href="TSL.html#materialClearcoatNormal">materialClearcoatNormal</a>.</p>
 						<p>Default is <code>null</code>.</p>
@@ -255,59 +258,59 @@ value instead, use <a href="TSL.html#materialTransmission">materialTransmission<
 					</div>
 				</div>
 				<div class="member">
-					<h3 class="name" id="useAnisotropy" translate="no">.<a href="#useAnisotropy">useAnisotropy</a><span class="type-signature"> : boolean</span> </h3>
+					<h3 class="name" id="useAnisotropy" translate="no">.<a href="#useAnisotropy">useAnisotropy</a><span class="type-signature"> : boolean</span> <span class="type-signature">(readonly) </span></h3>
 					<div class="description">
 						<p>Whether the lighting model should use anisotropy or not.</p>
-						<p>Default is <code>true</code>.</p>
+						<p>Default is <code>false</code>.</p>
 					</div>
 				</div>
 				<div class="member">
-					<h3 class="name" id="useClearcoat" translate="no">.<a href="#useClearcoat">useClearcoat</a><span class="type-signature"> : boolean</span> </h3>
+					<h3 class="name" id="useClearcoat" translate="no">.<a href="#useClearcoat">useClearcoat</a><span class="type-signature"> : boolean</span> <span class="type-signature">(readonly) </span></h3>
 					<div class="description">
 						<p>Whether the lighting model should use clearcoat or not.</p>
-						<p>Default is <code>true</code>.</p>
+						<p>Default is <code>false</code>.</p>
 					</div>
 				</div>
 				<div class="member">
-					<h3 class="name" id="useDiffuseRoughness" translate="no">.<a href="#useDiffuseRoughness">useDiffuseRoughness</a><span class="type-signature"> : boolean</span> </h3>
+					<h3 class="name" id="useDiffuseRoughness" translate="no">.<a href="#useDiffuseRoughness">useDiffuseRoughness</a><span class="type-signature"> : boolean</span> <span class="type-signature">(readonly) </span></h3>
 					<div class="description">
 						<p>Whether the lighting model should use EON rough diffuse reflection or not.</p>
 						<p>Default is <code>false</code>.</p>
 					</div>
 				</div>
 				<div class="member">
-					<h3 class="name" id="useDispersion" translate="no">.<a href="#useDispersion">useDispersion</a><span class="type-signature"> : boolean</span> </h3>
+					<h3 class="name" id="useDispersion" translate="no">.<a href="#useDispersion">useDispersion</a><span class="type-signature"> : boolean</span> <span class="type-signature">(readonly) </span></h3>
 					<div class="description">
 						<p>Whether the lighting model should use dispersion or not.</p>
-						<p>Default is <code>true</code>.</p>
+						<p>Default is <code>false</code>.</p>
 					</div>
 				</div>
 				<div class="member">
-					<h3 class="name" id="useIridescence" translate="no">.<a href="#useIridescence">useIridescence</a><span class="type-signature"> : boolean</span> </h3>
+					<h3 class="name" id="useIridescence" translate="no">.<a href="#useIridescence">useIridescence</a><span class="type-signature"> : boolean</span> <span class="type-signature">(readonly) </span></h3>
 					<div class="description">
 						<p>Whether the lighting model should use iridescence or not.</p>
-						<p>Default is <code>true</code>.</p>
+						<p>Default is <code>false</code>.</p>
 					</div>
 				</div>
 				<div class="member">
-					<h3 class="name" id="useRetroreflection" translate="no">.<a href="#useRetroreflection">useRetroreflection</a><span class="type-signature"> : boolean</span> </h3>
+					<h3 class="name" id="useRetroreflection" translate="no">.<a href="#useRetroreflection">useRetroreflection</a><span class="type-signature"> : boolean</span> <span class="type-signature">(readonly) </span></h3>
 					<div class="description">
 						<p>Whether the lighting model should use retroreflection or not.</p>
-						<p>Default is <code>true</code>.</p>
+						<p>Default is <code>false</code>.</p>
 					</div>
 				</div>
 				<div class="member">
-					<h3 class="name" id="useSheen" translate="no">.<a href="#useSheen">useSheen</a><span class="type-signature"> : boolean</span> </h3>
+					<h3 class="name" id="useSheen" translate="no">.<a href="#useSheen">useSheen</a><span class="type-signature"> : boolean</span> <span class="type-signature">(readonly) </span></h3>
 					<div class="description">
 						<p>Whether the lighting model should use sheen or not.</p>
-						<p>Default is <code>true</code>.</p>
+						<p>Default is <code>false</code>.</p>
 					</div>
 				</div>
 				<div class="member">
-					<h3 class="name" id="useTransmission" translate="no">.<a href="#useTransmission">useTransmission</a><span class="type-signature"> : boolean</span> </h3>
+					<h3 class="name" id="useTransmission" translate="no">.<a href="#useTransmission">useTransmission</a><span class="type-signature"> : boolean</span> <span class="type-signature">(readonly) </span></h3>
 					<div class="description">
 						<p>Whether the lighting model should use transmission or not.</p>
-						<p>Default is <code>true</code>.</p>
+						<p>Default is <code>false</code>.</p>
 					</div>
 				</div>
 				<h2 class="subsection-title">Methods</h2>

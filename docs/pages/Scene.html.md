@@ -18,7 +18,7 @@ Defines the background of the scene. Valid inputs are:
 
 *   A color for defining a uniform colored background.
 *   A texture for defining a (flat) textured background.
-*   Cube textures or equirectangular textures for defining a skybox.
+*   Cube textures, or equirectangular textures with `mapping` set to `EquirectangularReflectionMapping`, for defining a skybox.
 
 Default is `null`.
 
@@ -42,19 +42,19 @@ Default is `(0,0,0)`.
 
 ### .environment : Texture
 
-Sets the environment map for all physical materials in the scene. However, it's not possible to overwrite an existing texture assigned to the `envMap` material property.
+Sets the environment map used for image-based lighting of [MeshStandardMaterial](MeshStandardMaterial.html) and [MeshPhysicalMaterial](MeshPhysicalMaterial.html). However, it's not possible to overwrite an existing texture assigned to the `envMap` material property.
 
 Default is `null`.
 
 ### .environmentIntensity : number
 
-Attenuates the color of the environment. Only influences environment maps assigned to [Scene#environment](Scene.html#environment).
+Attenuates the color of the environment. Only influences environment maps assigned to [Scene#environment](Scene.html#environment). Materials lit by the scene environment use this value instead of their own `envMapIntensity`, which only applies to a material's own `envMap`.
 
 Default is `1`.
 
 ### .environmentRotation : Euler
 
-The rotation of the environment map in radians. Only influences physical materials in the scene when [Scene#environment](Scene.html#environment) is used.
+The rotation of the environment map in radians. Only influences materials lit by [Scene#environment](Scene.html#environment), which use this value instead of their own `envMapRotation`.
 
 Default is `(0,0,0)`.
 

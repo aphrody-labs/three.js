@@ -18,7 +18,7 @@ scene.add( spotLightHelper );
 
 ## Constructor
 
-### new SpotLightHelper( light : HemisphereLight, color : number | Color | string )
+### new SpotLightHelper( light : SpotLight, color : number | Color | string )
 
 Constructs a new spot light helper.
 

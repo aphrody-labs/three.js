@@ -112,6 +112,62 @@ for the given interpolation factor.</p>
 							<dt class="tag-returns"><strong>Returns:</strong> The position on the curve. It can be a 2D or 3D vector depending on the curve definition.</dt>
 						</dl>
 					</div>
+					<h3 class="name name-method" id="getPoints" translate="no">.<a href="#getPoints">getPoints</a><span class="signature">( divisions : <span class="param-type">number</span> )</span><span class="type-signature"> : Array.&lt;(<a href="Vector2.html">Vector2</a>|<a href="Vector3.html">Vector3</a>)></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>This method samples each curve of the path and returns an array of points representing
+the path shape. Consecutive duplicate points are removed. If <a href="CurvePath.html#autoClose">CurvePath#autoClose</a>
+is <code>true</code>, the first point is appended at the end if necessary.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">divisions</strong>
+									</td>
+									<td class="description last">
+										<p>The number of divisions per curve. Line curves always use
+one division, ellipse curves twice this value and <a href="SplineCurve.html">SplineCurve</a> instances this value times their
+point count. All other curves use this value.</p>
+										<p>Default is <code>12</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>Overrides:</strong> <a href="Curve.html#getPoints">Curve#getPoints</a></dt>
+						</dl>
+						<dl class="details">
+							<dt class="tag-returns"><strong>Returns:</strong> An array holding the sampled curve values.</dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="getSpacedPoints" translate="no">.<a href="#getSpacedPoints">getSpacedPoints</a><span class="signature">( divisions : <span class="param-type">number</span> )</span><span class="type-signature"> : Array.&lt;(<a href="Vector2.html">Vector2</a>|<a href="Vector3.html">Vector3</a>)></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>This method samples the curve path via <a href="CurvePath.html#getPoint">CurvePath#getPoint</a> and returns an array of
+equi-spaced points across the entire path. If <a href="CurvePath.html#autoClose">CurvePath#autoClose</a> is <code>true</code>, the
+first point is appended at the end.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">divisions</strong>
+									</td>
+									<td class="description last">
+										<p>The number of divisions.</p>
+										<p>Default is <code>40</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>Overrides:</strong> <a href="Curve.html#getSpacedPoints">Curve#getSpacedPoints</a></dt>
+						</dl>
+						<dl class="details">
+							<dt class="tag-returns"><strong>Returns:</strong> An array holding the sampled curve values.</dt>
+						</dl>
+					</div>
 				<h2 class="subsection-title">Source</h2>
 				<p>
 					<a href="https://github.com/mrdoob/three.js/blob/master/src/extras/core/CurvePath.js" translate="no" target="_blank" rel="noopener">src/extras/core/CurvePath.js</a>

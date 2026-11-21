@@ -14,10 +14,8 @@
 		<section>
 			<header>
 				<div class="class-description"><p>A minimal renderer for 3D Gaussian splat geometry.</p>
-<p>Note that this class can only be used with <a href="WebGPURenderer.html">WebGPURenderer</a>. The
-<code>forceWebGL</code> fallback of <a href="WebGPURenderer.html">WebGPURenderer</a> is supported, but
-<a href="WebGLRenderer.html">WebGLRenderer</a> is not. Import maps or package exports must resolve
-both <code>three/webgpu</code> and <code>three/tsl</code>.</p></div>
+<p>Note that this class can only be used with <a href="WebGPURenderer.html">WebGPURenderer</a>. Import maps
+or package exports must resolve both <code>three/webgpu</code> and <code>three/tsl</code>.</p></div>
 				<h2>Code Example</h2>
 				<div translate="no"><pre><code class="language-js">const splats = new GaussianSplat( geometry );
 scene.add( splats );
@@ -119,6 +117,16 @@ what is drawn.</p>
 <p>Each splat is expanded by its own extent rather than treated as a point, so the bounds cover
 what is drawn.</p>
 						</div>
+					</div>
+					<h3 class="name name-method" id="dispose" translate="no">.<a href="#dispose">dispose</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>Frees the GPU-related resources allocated by this instance. Call this
+method whenever the splat instance is no longer used in your app.</p>
+						</div>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>Overrides:</strong> <a href="Mesh.html#dispose">Mesh#dispose</a></dt>
+						</dl>
 					</div>
 					<h3 class="name name-method" id="raycast" translate="no">.<a href="#raycast">raycast</a><span class="signature">( raycaster : <span class="param-type"><a href="Raycaster.html">Raycaster</a></span>, intersects : <span class="param-type">Array.&lt;Object></span> )</span> </h3>
 					<div class="method">

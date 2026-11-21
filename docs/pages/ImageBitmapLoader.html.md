@@ -16,7 +16,7 @@ Also note that unlike [FileLoader](FileLoader.html), this loader will only avoid
 
 ```js
 const loader = new THREE.ImageBitmapLoader();
-loader.setOptions( { imageOrientation: 'flipY' } ); // set options if needed
+loader.setOptions( { imageOrientation: 'flipY', premultiplyAlpha: 'none' } ); // set options if needed
 const imageBitmap = await loader.loadAsync( 'image.png' );
 const texture = new THREE.Texture( imageBitmap );
 texture.needsUpdate = true;
@@ -80,7 +80,7 @@ Executed when errors occur.
 
 ### .setOptions( options : Object ) : ImageBitmapLoader
 
-Sets the given loader options. The structure of the object must match the `options` parameter of [createImageBitmap](https://developer.mozilla.org/en-US/docs/Web/API/Window/createImageBitmap).
+Sets the given loader options. The structure of the object must match the `options` parameter of [createImageBitmap](https://developer.mozilla.org/en-US/docs/Web/API/Window/createImageBitmap). The given object replaces the current options (including the default `premultiplyAlpha: 'none'`), it is not merged. `colorSpaceConversion` is always set to `'none'`.
 
 Note: When caching is enabled, the cache key is based on the URL only. Loading the same URL with different options will return the cached result of the first request.
 

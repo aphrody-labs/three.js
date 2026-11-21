@@ -29,7 +29,7 @@ audioLoader.load( 'sounds/ambient.ogg', function( buffer ) {
 });
 // create an AudioAnalyser, passing in the sound and desired fftSize
 const analyser = new THREE.AudioAnalyser( sound, 32 );
-// get the average frequency of the sound
+// get the average magnitude of the frequency data
 const data = analyser.getAverageFrequency();
 </code></pre></div>
 			</header>
@@ -68,7 +68,7 @@ const data = analyser.getAverageFrequency();
 				<div class="member">
 					<h3 class="name" id="analyser" translate="no">.<a href="#analyser">analyser</a><span class="type-signature"> : AnalyserNode</span> </h3>
 					<div class="description">
-						<p>The global audio listener.</p>
+						<p>The native analyser node used to compute the frequency data.</p>
 					</div>
 				</div>
 				<div class="member">
@@ -81,20 +81,21 @@ const data = analyser.getAverageFrequency();
 					<h3 class="name name-method" id="getAverageFrequency" translate="no">.<a href="#getAverageFrequency">getAverageFrequency</a><span class="signature">()</span><span class="type-signature"> : number</span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Returns the average of the frequencies returned by <a href="AudioAnalyser.html#getFrequencyData">AudioAnalyser#getFrequencyData</a>.</p>
+							<p>Returns the average of the frequency data returned by <a href="AudioAnalyser.html#getFrequencyData">AudioAnalyser#getFrequencyData</a>,
+i.e. the mean magnitude across all frequency bins.</p>
 						</div>
 						<dl class="details">
-							<dt class="tag-returns"><strong>Returns:</strong> The average frequency.</dt>
+							<dt class="tag-returns"><strong>Returns:</strong> The average magnitude in the range <code>[0, 255]</code>.</dt>
 						</dl>
 					</div>
 					<h3 class="name name-method" id="getFrequencyData" translate="no">.<a href="#getFrequencyData">getFrequencyData</a><span class="signature">()</span><span class="type-signature"> : Uint8Array</span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>Returns an array with frequency data of the audio.</p>
-<p>Each item in the array represents the decibel value for a specific frequency.
-The frequencies are spread linearly from 0 to 1/2 of the sample rate.
-For example, for 48000 sample rate, the last item of the array will represent
-the decibel value for 24000 Hz.</p>
+<p>Each item in the array is an unsigned byte in the range <code>[0, 255]</code>, linearly
+mapped from <code>analyser.minDecibels</code> to <code>analyser.maxDecibels</code>. Item <code>k</code> represents
+the frequency <code>k * sampleRate / fftSize</code>, so the frequencies are spread linearly
+from <code>0</code> up to just below half the sample rate.</p>
 						</div>
 						<dl class="details">
 							<dt class="tag-returns"><strong>Returns:</strong> The frequency data.</dt>

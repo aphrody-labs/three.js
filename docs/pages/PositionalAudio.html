@@ -105,7 +105,8 @@ source in 3D space.</p>
 					<h3 class="name name-method" id="setDirectionalCone" translate="no">.<a href="#setDirectionalCone">setDirectionalCone</a><span class="signature">( coneInnerAngle : <span class="param-type">number</span>, coneOuterAngle : <span class="param-type">number</span>, coneOuterGain : <span class="param-type">number</span> )</span><span class="type-signature"> : <a href="PositionalAudio.html">PositionalAudio</a></span> </h3>
 					<div class="method">
 						<div class="description">
-							<p>Sets the directional cone in which the audio can be listened.</p>
+							<p>Sets the directional cone in which the audio can be listened. The cone points
+along the object's local positive Z axis.</p>
 						</div>
 						<table class="params">
 							<tbody>
@@ -130,7 +131,7 @@ source in 3D space.</p>
 										<strong translate="no">coneOuterGain</strong>
 									</td>
 									<td class="description last">
-										<p>The amount of volume reduction outside the cone defined by the <code>coneOuterAngle</code>. When set to <code>0</code>, no sound can be heard.</p>
+										<p>The gain (linear, <code>[0, 1]</code>) applied outside the cone defined by the <code>coneOuterAngle</code>. <code>1</code> means no volume reduction, <code>0</code> means no sound can be heard.</p>
 									</td>
 								</tr>
 							</tbody>

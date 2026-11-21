@@ -246,14 +246,6 @@ A float data type for textures.
 
 Only front faces are rendered.
 
-### .GLSL1 : string (constant)
-
-GLSL 1 shader code.
-
-### .GLSL3 : string (constant)
-
-GLSL 3 shader code.
-
 ### .GreaterCompare : number (constant)
 
 Pass if the incoming value is greater than the texture value.
@@ -318,7 +310,7 @@ Represents the different interpolation sampling modes.
 
 ### .InterpolationSamplingType : ConstantsInterpolationSamplingType (constant)
 
-Represents mouse buttons and interaction types in context of controls.
+Represents the different interpolation sampling types.
 
 ### .InvertStencilOp : number (constant)
 
@@ -698,15 +690,13 @@ Multiplies all colors by `1` minus each source color.
 
 Filters shadow maps using the Percentage-Closer Filtering (PCF) algorithm.
 
-### .PCFSoftShadowMap : number (constant)
-
-Filters shadow maps using the Percentage-Closer Filtering (PCF) algorithm with better soft shadows especially when using low-resolution shadow maps.
-
-**Deprecated:** since r186. Use \`PCFShadowMap\` instead.
-
 ### .R11_EAC_Format : number (constant)
 
 EAC R11 UNORM format.
+
+### .R2_STEPS (constant)
+
+Per-dimension temporal steps (0.32 fixed point) of Hierarchical Hashed Weyl (HHW), from the R2 and R4 generalized golden ratio sequences. Each dimension needs its own step so a pixel's samples don't line up over time. Use `R2_STEPS` for two values per pixel and `R4_STEPS` for four.
 
 ### .RED_GREEN_RGTC2_Format : number (constant)
 
@@ -1097,10 +1087,6 @@ TSL object representing a varying property for the batch indirect index (instanc
 
 The NYC masonry palette every tower is dressed from ( hex colours ): limestone-dominant with terracotta accents. Shared by the single-tower example and [CityGenerator](CityGenerator.html)'s building material so both stay in sync.
 
-### .closestLineToLine (constant)
-
-Calculates the closest points on two 3D lines. Used for perspective-correct line rendering and coordinates interpolation.
-
 ### .depthAwareBlend (constant)
 
 Performs a depth-aware blend between a base scene and a secondary effect (like godrays). This function uses a Poisson disk sampling pattern to detect depth discontinuities in the neighborhood of the current pixel. If an edge is detected, it shifts the sampling coordinate for the blend node away from the edge to prevent light leaking/haloing.
@@ -1135,15 +1121,17 @@ Specular dominant factor for parallax-corrected ray length. From REBLUR: A Hiera
 
 Everything a single GGX reflection sample produces. `reflectDir` and `sampleWeight` drive the SSR ray-march and compositing; `pdf`, `NdotV`, `alpha` and `f0` are the GGX terms the env-miss MIS fallback needs so the caller never re-derives microfacet math.
 
+### .hierarchicalHashedWeyl (constant)
+
+Hierarchical Hashed Weyl (HHW): texture-free noise where each aligned 8×8 tile gets a scrambled three-level hierarchical rank pattern and a hashed phase, shifted by a Weyl sequence over time.
+
+This algorithm is Houston Stratified Noise, described at [https://ben3d.ca/blog/houston-stratified-noise](https://ben3d.ca/blog/houston-stratified-noise).
+
 ### .instanceColor : VaryingNode.<vec3> (constant)
 
 TSL object representing a varying property for the instanced color vector.
 
-### .lineDistance : VaryingNode.<float> (constant)
-
-Varying node representing the accumulated distance along the line. Crucial for correctly computing dashed line intervals in fragment stage.
-
-### .morphBase : UniformNode.<float> (constant)
+### .morphBase : PropertyNode.<float> (constant)
 
 The morph target base influence. It is `1` when `morphTargetsRelative` is `true`, otherwise `1 - sum( influences )`.
 
@@ -1164,22 +1152,6 @@ A node representing the total diffuse light.
 ### .totalSpecular : Node.<vec3> (constant)
 
 A node representing the total specular light.
-
-### .trimSegmentAlpha (constant)
-
-Trims the line segment to avoid rendering behind the camera near plane. Computes an interpolation factor (alpha) to clamp the segment's coordinate.
-
-### .worldEnd : VaryingNode.<vec3> (constant)
-
-Varying node representing the world position of the segment end in view space. Used for distance and coordinate calculations across the fragment shader.
-
-### .worldPos : VaryingNode.<vec4> (constant)
-
-Varying node representing the interpolated world/view position of the current fragment. Used for line/ray distance checks under perspective projection.
-
-### .worldStart : VaryingNode.<vec3> (constant)
-
-Varying node representing the world position of the segment start in view space. Used for distance and coordinate calculations across the fragment shader.
 
 ## Methods
 
@@ -1309,7 +1281,7 @@ Bakes a list of instance groups into one non-indexed BufferGeometry. Each group 
 
 **ctx**
 
-Shared [sampleBilinearTap](TSL.html#sampleBilinearTap) inputs plus `reprojICoord`.
+Shared sampleBilinearTap inputs plus `reprojICoord`.
 
 **tapOffset**
 
@@ -1327,11 +1299,19 @@ Added to the coordinate hash so each pass gets an independent R² phase.
 
 Default is `0`.
 
-### .bindTemporalCameraUniforms( camera : Camera )
+### .bindHierarchicalHashedWeyl( resolution : UniformNode.<Vector2>, seed : number ) : function
 
-Current and previous-frame camera matrices for temporal reprojection passes.
+Returns a TSL function that samples four independently seeded dimensions of Hierarchical Hashed Weyl.
 
-**camera**
+**resolution**
+
+**seed**
+
+Seeds the dimensions so each pass gets independent noise.
+
+Default is `0`.
+
+**Returns:** Takes a uv and a frame or sample index, returns a `vec4` of samples in \[0,1).
 
 ### .buildData3DTexture( chunk : Object ) : Data3DTexture
 
@@ -1525,7 +1505,7 @@ The texture.
 
 **aspect**
 
-The texture's aspect ratio.
+The aspect ratio (width / height) of the surface the texture is displayed on.
 
 **Returns:** The updated texture.
 
@@ -1553,7 +1533,7 @@ The texture.
 
 **aspect**
 
-The texture's aspect ratio.
+The aspect ratio (width / height) of the surface the texture is displayed on.
 
 **Returns:** The updated texture.
 
@@ -1875,7 +1855,7 @@ Returns a single precision floating point value (FP32) from the given half preci
 
 **val**
 
-A half precision floating point value.
+A FP16 bit pattern, e.g. an element of a `Uint16Array`.
 
 **Returns:** The FP32 value.
 
@@ -2041,7 +2021,7 @@ Utility functions for parsing
 
 ### .getEntry( geometry : BufferGeometry ) : Object
 
-Resolves or creates a compiled DataArrayTexture containing encoded vertex morph targets data for WebGL2/WebGPU.
+Resolves or creates a compiled DataArrayTexture containing encoded vertex morph targets data.
 
 **geometry**
 
@@ -2243,30 +2223,6 @@ The vector length.
 
 **Returns:** The padded length.
 
-### .getTextureIndex( textures : Array.<Texture>, name : string ) : number
-
-Returns the MRT texture index for the given name.
-
-**textures**
-
-The textures of a MRT-configured render target.
-
-**name**
-
-The name of the MRT texture which index is requested.
-
-**Returns:** The texture index.
-
-### .getUniforms( splineTexture : DataTexture ) : Object
-
-Create a new set of uniforms for describing the curve modifier.
-
-**splineTexture**
-
-Which holds the curve description.
-
-**Returns:** The uniforms object to be used in the shader.
-
 ### .getVectorLength( count : number, vectorLength : number ) : number
 
 Given the count of vectors and their vector length, this function computes a total length in bytes with buffer alignment according to STD140 layout.
@@ -2325,7 +2281,7 @@ The normalized ray direction.
 
 ### .inverseLerp( x : number, y : number, value : number ) : number
 
-Returns the percentage in the closed interval `[0, 1]` of the given value between the start and end point.
+Returns the interpolation factor of the given value between the start and end point. The result is not clamped, so values outside of the range produce factors outside of the closed interval `[0, 1]`.
 
 **x**
 
@@ -2388,24 +2344,6 @@ The end point.
 The interpolation factor in the closed interval `[0, 1]`.
 
 **Returns:** The interpolated value.
-
-### .lightProbeGridIrradiance( light : LightProbeGrid, position : Node.<vec3>, normal : Node.<vec3> ) : Node.<vec3>
-
-Returns the irradiance of a baked [LightProbeGrid](LightProbeGrid.html) at the given world-space position and normal. Use this to evaluate the grid outside of the lighting context, e.g. when baking light maps with [LightMapper](LightMapper.html).
-
-**light**
-
-The baked light probe grid.
-
-**position**
-
-The world-space position.
-
-**normal**
-
-The world-space normal.
-
-**Returns:** The irradiance.
 
 ### .log( …params : any )
 
@@ -2547,7 +2485,7 @@ The upper value boundary
 
 ### .randFloatSpread( range : number ) : number
 
-Returns a random integer from `<-range/2, range/2>` interval.
+Returns a random float from `<-range/2, range/2>` interval.
 
 **range**
 
@@ -2568,6 +2506,26 @@ The lower value boundary.
 The upper value boundary
 
 **Returns:** A random integer.
+
+### .rayTracedRadiosityIrradiance( radiosity : RayTracedRadiosity, options : Object ) : function
+
+Creates a world-space diffuse irradiance sampler for a prepared [RayTracedRadiosity](RayTracedRadiosity.html), for [LightMapper](LightMapper.html). Call `radiosity.update( renderer, scene )` before creating it. Every render call that uses the sampler continues the ray sequences, so the samples of a light mapper converge.
+
+**radiosity**
+
+The prepared radiosity solver.
+
+**options**
+
+The options.
+
+**analyticLights**
+
+Whether to also gather the direct light of the directional, point and spot lights, with shadow rays. Otherwise it is left to the materials.
+
+Default is `false`.
+
+**Returns:** The irradiance sampler.
 
 ### .replaceSunLights( scene : Scene ) : Array.<Object>
 
@@ -2701,22 +2659,6 @@ Creates the bone data of the previous frame if they do not exist yet.
 
 The skeleton.
 
-### .setupWebGLXRFallback( renderer : WebGPURenderer, createFallbackRenderer : function, onFallback : function )
-
-Sets up a construction-time WebGL fallback for WebGPU XR examples.
-
-**renderer**
-
-The initial renderer.
-
-**createFallbackRenderer**
-
-A function that returns a new renderer with a WebGL backend.
-
-**onFallback**
-
-A function that installs the new renderer in the app.
-
 ### .slab()
 
 A thin horizontal cap over a footprint's bounding box at height `y`. Its sides are pulled in behind the facade plane ( into the backing-wall shell ) so they never sit coplanar with the walls, spandrels or piers and z-fight.
@@ -2783,7 +2725,7 @@ Creates a new clip, containing only the segment of the original clip between the
 
 **sourceClip**
 
-The values to sort.
+The source clip.
 
 **name**
 
@@ -2795,7 +2737,7 @@ The start frame.
 
 **endFrame**
 
-The end frame.
+The end frame (exclusive).
 
 **fps**
 
@@ -2807,13 +2749,13 @@ Default is `30`.
 
 ### .toHalfFloat( val : number ) : number
 
-Returns a half precision floating point value (FP16) from the given single precision floating point value (FP32).
+Returns a half precision floating point value (FP16) from the given single precision floating point value (FP32). The result is the FP16 bit pattern as an integer in the range `[0, 65535]`, e.g. for a `Uint16Array` used with `HalfFloatType`. Values are clamped to `[-65504, 65504]`.
 
 **val**
 
 A single precision floating point value.
 
-**Returns:** The FP16 value.
+**Returns:** The FP16 bit pattern.
 
 ### .transformInstance( builder : NodeBuilder, instanceMatrixNode : Node.<mat4>, previousMatrixNode : Node.<mat4> )
 
@@ -2913,26 +2855,6 @@ The XR camera.
 
 The parent 3D object.
 
-### .vxgiIrradiance( volume : VXGIVolume, options : Object ) : function
-
-Creates a world-space diffuse irradiance sampler for a prepared [VXGIVolume](VXGIVolume.html). Call `volume.update( renderer, scene )` before baking. The sampler traces cosine-weighted cones through the volume's radiance, including cached bounces. It can be passed directly to [LightMapper](LightMapper.html), without a screen-space pass. The cones are rotated per pixel with interleaved gradient noise like `VXGINode`. When baking, the pixel is the light map texel. The optional sample index shifts the noise so that accumulated samples, or a temporal filter like TRAA, converge.
-
-**volume**
-
-The prepared voxel volume.
-
-**options**
-
-Options.
-
-**coneCount**
-
-The number of cones per sample. Fewer cones are faster but coarser.
-
-Default is `8`.
-
-**Returns:** The irradiance sampler.
-
 ### .warn( …params : any )
 
 Logs a warning message with the 'THREE.' prefix.
@@ -3015,12 +2937,12 @@ Flat interpolation.
 
 This type represents mouse buttons and interaction types in context of controls.
 
-**MIDDLE**  
+**LEFT**  
 number
 
 The left mouse button.
 
-**LEFT**  
+**MIDDLE**  
 number
 
 The middle mouse button.
@@ -3128,11 +3050,6 @@ function
 
 A callback function that is executed after a node builder has been created and before it is built.
 
-**onShaderError**  
-function
-
-A callback function that is executed when a shader error happens. Only supported with WebGL 2 right now.
-
 **getShaderAsync**  
 function
 
@@ -3154,7 +3071,7 @@ Default is `null`.
 **normal**  
 [Node](Node.html).<vec3>
 
-View-space normals for geometric edge stopping.
+A sampleable node that returns unit view-space normals for geometric edge stopping.
 
 Default is `null`.
 
@@ -3313,6 +3230,11 @@ boolean
 When `true`, history is stored in this pass (classic temporal resolve). When `false`, use [TemporalReprojectNode#setHistoryTexture](TemporalReprojectNode.html#setHistoryTexture) to read history from another pass (e.g. denoise output).
 
 Default is `false`.
+
+**normalDecode**  
+function
+
+Decodes a sample of the normal texture into a unit view-space normal. Defaults to [unpackRGBToNormal](TSL.html#unpackRGBToNormal).
 
 ### .XRConfig
 

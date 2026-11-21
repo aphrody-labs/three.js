@@ -7,7 +7,7 @@ A helper object to visualize an instance of [Plane](Plane.html).
 ## Code Example
 
 ```js
-const plane = new THREE.Plane( new THREE.Vector3( 1, 1, 0.2 ), 3 );
+const plane = new THREE.Plane( new THREE.Vector3( 1, 1, 0.2 ).normalize(), 3 );
 const helper = new THREE.PlaneHelper( plane, 1, 0xffff00 );
 scene.add( helper );
 ```
@@ -50,7 +50,7 @@ Default is `1`.
 
 ### .dispose()
 
-Updates the helper to match the position and direction of the light being visualized.
+Frees the GPU-related resources allocated by this instance. Call this method whenever this instance is no longer used in your app.
 
 **Overrides:** [Line#dispose](Line.html#dispose)
 

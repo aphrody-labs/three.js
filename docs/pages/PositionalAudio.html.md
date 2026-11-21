@@ -72,7 +72,7 @@ Returns the current rolloff factor.
 
 ### .setDirectionalCone( coneInnerAngle : number, coneOuterAngle : number, coneOuterGain : number ) : PositionalAudio
 
-Sets the directional cone in which the audio can be listened.
+Sets the directional cone in which the audio can be listened. The cone points along the object's local positive Z axis.
 
 **coneInnerAngle**
 
@@ -84,7 +84,7 @@ An angle, in degrees, of a cone outside of which the volume will be reduced by a
 
 **coneOuterGain**
 
-The amount of volume reduction outside the cone defined by the `coneOuterAngle`. When set to `0`, no sound can be heard.
+The gain (linear, `[0, 1]`) applied outside the cone defined by the `coneOuterAngle`. `1` means no volume reduction, `0` means no sound can be heard.
 
 **Returns:** A reference to this instance.
 

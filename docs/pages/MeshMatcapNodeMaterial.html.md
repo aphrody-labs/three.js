@@ -8,7 +8,7 @@ Node material version of [MeshMatcapMaterial](MeshMatcapMaterial.html).
 
 ### new MeshMatcapNodeMaterial( parameters : Object )
 
-Constructs a new mesh normal node material.
+Constructs a new mesh matcap node material.
 
 **parameters**
 

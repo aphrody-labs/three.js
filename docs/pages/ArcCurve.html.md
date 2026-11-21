@@ -24,7 +24,7 @@ Default is `0`.
 
 **aRadius**
 
-The radius of the ellipse in the x direction.
+The radius of the arc.
 
 Default is `1`.
 

@@ -21,7 +21,7 @@ Constructs a new perspective camera.
 
 **fov**
 
-The vertical field of view.
+The vertical field of view, in degrees.
 
 Default is `50`.
 
@@ -121,9 +121,9 @@ Returns the current vertical field of view angle in degrees considering [Perspec
 
 ### .getFilmHeight() : number
 
-Returns the height of the image on the film. If [PerspectiveCamera#aspect](PerspectiveCamera.html#aspect) is greater than or equal to one (landscape format), the result equals [PerspectiveCamera#filmGauge](PerspectiveCamera.html#filmGauge).
+Returns the height of the image on the film. If [PerspectiveCamera#aspect](PerspectiveCamera.html#aspect) is less than or equal to one (portrait format), the result equals [PerspectiveCamera#filmGauge](PerspectiveCamera.html#filmGauge).
 
-**Returns:** The film width.
+**Returns:** The film height.
 
 ### .getFilmWidth() : number
 

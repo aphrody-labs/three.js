@@ -14,7 +14,7 @@ Constructs a new storage buffer attribute.
 
 **count**
 
-The item count. It is also valid to pass a `Uint32Array` as an argument. The subsequent parameter is then obsolete.
+The item count. It is also valid to pass a `Uint32Array` as an argument. `itemSize` is still required in this case.
 
 **itemSize**
 

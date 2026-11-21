@@ -26,7 +26,6 @@ spotLight.shadow.mapSize.width = 1024;
 spotLight.shadow.mapSize.height = 1024;
 spotLight.shadow.camera.near = 500;
 spotLight.shadow.camera.far = 4000;
-spotLight.shadow.camera.fov = 30;s
 </code></pre></div>
 			</header>
 			<article>
@@ -89,7 +88,7 @@ spotLight.shadow.camera.fov = 30;s
 										<strong translate="no">decay</strong>
 									</td>
 									<td class="description last">
-										<p>The amount the light dims along the distance of the light.</p>
+										<p>The exponent of the light's distance falloff.</p>
 										<p>Default is <code>2</code>.</p>
 									</td>
 								</tr>
@@ -108,8 +107,9 @@ spotLight.shadow.camera.fov = 30;s
 				<div class="member">
 					<h3 class="name" id="decay" translate="no">.<a href="#decay">decay</a><span class="type-signature"> : number</span> </h3>
 					<div class="description">
-						<p>The amount the light dims along the distance of the light. In context of
-physically-correct rendering the default value should not be changed.</p>
+						<p>The exponent of the light's distance falloff (<code>1 / distance^decay</code>). The
+default <code>2</code> gives physically correct inverse-square falloff and should not
+be changed in context of physically-correct rendering.</p>
 						<p>Default is <code>2</code>.</p>
 					</div>
 				</div>
@@ -130,11 +130,10 @@ physically-correct rendering the default value should not be changed.</p>
 				<div class="member">
 					<h3 class="name" id="map" translate="no">.<a href="#map">map</a><span class="type-signature"> : <a href="Texture.html">Texture</a></span> </h3>
 					<div class="description">
-						<p>A texture used to modulate the color of the light. The spot light
-color is mixed with the RGB value of this texture, with a ratio
-corresponding to its alpha value. The cookie-like masking effect is
-reproduced using pixel values (0, 0, 0, 1-cookie_value).</p>
-<p><em>Warning</em>: This property is disabled if <a href="Object3D.html#castShadow">Object3D#castShadow</a> is set to <code>false</code>.</p>
+						<p>A texture projected from the light that modulates its color. The spot light
+color is multiplied by the RGB value of this texture. The projection uses the
+frustum of the shadow camera (see <a href="SpotLightShadow.html#focus">SpotLightShadow#focus</a>) and works
+whether or not <a href="Object3D.html#castShadow">Object3D#castShadow</a> is enabled.</p>
 						<p>Default is <code>null</code>.</p>
 					</div>
 				</div>

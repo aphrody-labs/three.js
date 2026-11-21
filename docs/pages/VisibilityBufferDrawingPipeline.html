@@ -59,6 +59,25 @@ per corner of the triangles by the software rasterizer and by the resolve.</p>
 								</tr>
 								<tr>
 									<td class="name">
+										<strong translate="no">lodTransition</strong>
+									</td>
+									<td class="description last">
+										<p>The fraction of <code>lodThreshold</code> over which adjacent levels of detail crossfade with a screen-door dither mask.
+Only the clusters drawn by the hardware rasterizer crossfade, the levels of the software rasterizer switch at once.</p>
+										<p>Default is <code>0</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">transitionScreenRadius</strong>
+									</td>
+									<td class="description last">
+										<p>The radius in pixels below which the levels of detail of objects switch without a transition, <code>0</code> crossfades all objects.</p>
+										<p>Default is <code>0</code>.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
 										<strong translate="no">shadowLodThreshold</strong>
 									</td>
 									<td class="description last">

@@ -8,7 +8,7 @@ Node material version of [MeshPhongMaterial](MeshPhongMaterial.html).
 
 ### new MeshPhongNodeMaterial( parameters : Object )
 
-Constructs a new mesh lambert node material.
+Constructs a new mesh phong node material.
 
 **parameters**
 

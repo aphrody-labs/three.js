@@ -6,7 +6,7 @@ This special version of a texture node can be used to write data into a 3D stora
 
 ## Constructor
 
-### new StorageTexture3DNode( value : Storage3DTexture, uvNode : Node.<vec3>, storeNode : Node )
+### new StorageTexture3DNode( value : Storage3DTexture, uvNode : Node.<uvec3>, storeNode : Node )
 
 Constructs a new 3D storage texture node.
 
@@ -16,7 +16,7 @@ The 3D storage texture.
 
 **uvNode**
 
-The uv node.
+The integer texel coordinates (not normalized uvs).
 
 **storeNode**
 

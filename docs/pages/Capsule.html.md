@@ -78,7 +78,7 @@ The target vector that is used to store the method's result.
 
 ### .intersectsBox( box : Box3 ) : boolean
 
-Returns `true` if the given bounding box intersects with this capsule.
+Returns `true` if the given bounding box intersects with this capsule. The test is conservative so it may report false positives.
 
 **box**
 

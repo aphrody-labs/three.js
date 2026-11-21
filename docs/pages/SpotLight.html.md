@@ -18,7 +18,6 @@ spotLight.shadow.mapSize.width = 1024;
 spotLight.shadow.mapSize.height = 1024;
 spotLight.shadow.camera.near = 500;
 spotLight.shadow.camera.far = 4000;
-spotLight.shadow.camera.fov = 30;s
 ```
 
 ## Constructor
@@ -59,7 +58,7 @@ Default is `0`.
 
 **decay**
 
-The amount the light dims along the distance of the light.
+The exponent of the light's distance falloff.
 
 Default is `2`.
 
@@ -73,7 +72,7 @@ Default is `Math.PI/3`.
 
 ### .decay : number
 
-The amount the light dims along the distance of the light. In context of physically-correct rendering the default value should not be changed.
+The exponent of the light's distance falloff (`1 / distance^decay`). The default `2` gives physically correct inverse-square falloff and should not be changed in context of physically-correct rendering.
 
 Default is `2`.
 
@@ -91,9 +90,7 @@ Default is `true`.
 
 ### .map : Texture
 
-A texture used to modulate the color of the light. The spot light color is mixed with the RGB value of this texture, with a ratio corresponding to its alpha value. The cookie-like masking effect is reproduced using pixel values (0, 0, 0, 1-cookie\_value).
-
-_Warning_: This property is disabled if [Object3D#castShadow](Object3D.html#castShadow) is set to `false`.
+A texture projected from the light that modulates its color. The spot light color is multiplied by the RGB value of this texture. The projection uses the frustum of the shadow camera (see [SpotLightShadow#focus](SpotLightShadow.html#focus)) and works whether or not [Object3D#castShadow](Object3D.html#castShadow) is enabled.
 
 Default is `null`.
 

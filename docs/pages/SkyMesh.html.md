@@ -4,7 +4,7 @@
 
 Represents a skydome for scene backgrounds. Based on [A Practical Analytic Model for Daylight](https://www.researchgate.net/publication/220720443_A_Practical_Analytic_Model_for_Daylight) aka The Preetham Model, the de facto standard for analytical skydomes.
 
-Note that this class can only be used with [WebGPURenderer](WebGPURenderer.html). When using [WebGLRenderer](WebGLRenderer.html), use [Sky](Sky.html).
+Note that this class can only be used with [WebGPURenderer](WebGPURenderer.html). When using WebGLRenderer, use Sky.
 
 More references:
 
@@ -43,6 +43,14 @@ Constructs a new skydome.
 
 ## Properties
 
+### .absorptionColor : UniformNode.<vec3>
+
+The wavelengths absorbed by the atmosphere along the path of the sunlight. The default value represents the ozone layer of Earth.
+
+### .absorptionScale : UniformNode.<float>
+
+The strength of atmospheric absorption. Higher values remove more of [SkyMesh#absorptionColor](SkyMesh.html#absorptionColor) from the sunlight and tint the sky in the complementary color.
+
 ### .cloudCoverage : UniformNode.<float>
 
 The cloud coverage uniform.
@@ -77,13 +85,25 @@ This flag can be used for type testing.
 
 Default is `true`.
 
+### .mieAlbedo : UniformNode.<vec3>
+
+The albedo of aerosol particles, the part of the light they scatter instead of absorbing. White particles absorb nothing, like the haze on Earth. Tinted particles, like the dust on Mars, give the haze their color.
+
 ### .mieCoefficient : UniformNode.<float>
 
 The strength of Mie scattering by aerosol particles which controls the intensity of the glow around the sun. Higher values produce a brighter glow.
 
+### .mieColor : UniformNode.<vec3>
+
+The color of Mie scattering which defines the spectrum of the haze around the sun and along the horizon. The default value represents the atmosphere of Earth.
+
 ### .mieDirectionalG : UniformNode.<float>
 
 The directionality of Mie scattering which controls the size of the glow around the sun. Values closer to `1` produce a smaller and more concentrated halo.
+
+### .mieDirectionalGSpread : UniformNode.<float>
+
+How much more directional Mie scattering is for blue than for red. Blue uses [SkyMesh#mieDirectionalG](SkyMesh.html#mieDirectionalG) plus this value, red uses it minus this value. Dust grains like those on Mars scatter blue into a tighter halo around the sun, which turns sunsets blue.
 
 ### .rayleigh : UniformNode.<float>
 
@@ -97,9 +117,23 @@ Whether to render the solar disc.
 
 The sun position uniform.
 
+### .sunSize : UniformNode.<float>
+
+The size of the sun disc relative to the sun seen from Earth.
+
 ### .turbidity : UniformNode.<float>
 
 The atmospheric turbidity which controls the amount of haze. Higher values produce a hazier sky.
+
+**Deprecated:** since r188. Multiply [SkyMesh#mieCoefficient](SkyMesh.html#mieCoefficient) by turbidity / 2 instead.
+
+## Methods
+
+### .dispose()
+
+Frees the GPU-related resources allocated by this instance. Call this method whenever the sky is no longer used in your app.
+
+**Overrides:** [Mesh#dispose](Mesh.html#dispose)
 
 ## Source
 

@@ -24,7 +24,7 @@ Default is `1`.
 
 **depth**
 
-The height of the render target.
+The depth of the render target.
 
 Default is `1`.
 

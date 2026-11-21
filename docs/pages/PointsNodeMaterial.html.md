@@ -12,10 +12,11 @@ This material can be used in two ways:
 const pointCloud = new THREE.Points( geometry, new THREE.PointsNodeMaterial() );
 ```
 
-*   By rendering point primitives with Sprites. In this case, size is honored, see [PointsNodeMaterial#sizeNode](PointsNodeMaterial.html#sizeNode).
+*   By rendering instanced quads with [Sprite](Sprite.html). In this case, size is honored, see [PointsNodeMaterial#sizeNode](PointsNodeMaterial.html#sizeNode). Set [Sprite#count](Sprite.html#count) to the number of points.
 
 ```js
 const instancedPoints = new THREE.Sprite( new THREE.PointsNodeMaterial( { positionNode: instancedBufferAttribute( positionAttribute ) } ) );
+instancedPoints.count = positionAttribute.count;
 ```
 
 ## Constructor
@@ -34,7 +35,7 @@ The configuration parameter.
 
 Whether alpha to coverage should be used or not.
 
-Default is `true`.
+Default is `false`.
 
 **Overrides:** [SpriteNodeMaterial#alphaToCoverage](SpriteNodeMaterial.html#alphaToCoverage)
 
@@ -46,9 +47,9 @@ Default is `true`.
 
 ### .sizeNode : Node.<vec2>
 
-This node property provides an additional way to set the point size.
+This node property allows to overwrite the point size defined by `size`. The size is in pixels, additionally scaled by distance when `sizeAttenuation` is `true`.
 
-Note that WebGPU only supports point primitives with 1 pixel size. Consequently, this node has no effect when the material is used with [Points](Points.html) and a WebGPU backend. If an application wants to render points with a size larger than 1 pixel, the material should be used with [Sprite](Sprite.html) and instancing.
+Note that `WebGPURenderer` always renders point primitives with a size of 1 pixel (with both backends). Consequently, this node has no effect when the material is used with [Points](Points.html). If an application wants to render points with a size larger than 1 pixel, the material should be used with [Sprite](Sprite.html) and instancing.
 
 Default is `null`.
 

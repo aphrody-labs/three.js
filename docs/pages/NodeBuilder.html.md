@@ -156,9 +156,9 @@ Whether the built material uses hardware clipping or not.
 
 Default is `false`.
 
-### .hashNodes : Object.<number, Node>
+### .hashNodes : Map.<number, Node>
 
-A dictionary that assigns each node to a unique hash.
+A map that assigns each node to a unique hash.
 
 ### .lightsNode : LightsNode
 
@@ -394,18 +394,6 @@ Central build method which controls the build for the given object.
 
 **Returns:** A reference to this node builder.
 
-### .buildAsync( yieldFn : function ) : Promise.<NodeBuilder> (async)
-
-Async version of build() that yields to main thread between shader stages. Use this in compileAsync() to prevent blocking the main thread.
-
-**yieldFn**
-
-The function used to yield to the main thread.
-
-Default is `yieldToMain`.
-
-**Returns:** A promise that resolves to this node builder.
-
 ### .buildCode() (abstract)
 
 Controls the code build of the shader stages.
@@ -586,7 +574,7 @@ Default is `null`.
 
 ### .flowShaderNode( shaderNode : ShaderNodeInternal ) : Object
 
-Generates a code flow based on a TSL function: Fn().
+Generates a code flow based on a TSL function: Fn(). The flow also has the parameters of the function code: the inputs of the layout, each texture input with the parameters of [NodeBuilder#getTextureParameters](NodeBuilder.html#getTextureParameters).
 
 **shaderNode**
 
@@ -1026,7 +1014,7 @@ The node.
 
 ### .getDrawIndex() : string (abstract)
 
-Returns the drawIndex input variable as a native shader string. Only relevant for WebGL and its `WEBGL_multi_draw` extension.
+Returns the drawIndex input variable as a native shader string.
 
 **Returns:** The drawIndex shader string.
 
@@ -1065,6 +1053,16 @@ Returns the fragCoord input variable as a native shader string.
 Returns the frontFacing input variable as a native shader string.
 
 **Returns:** The frontFacing shader string.
+
+### .getFunctionNode( functionNode : FunctionNode ) : FunctionNode
+
+Returns the function node to call in the current shader stage. A call of a TSL function can be set up in another stage, and the code of TSL functions is built per stage.
+
+**functionNode**
+
+The function node of the call.
+
+**Returns:** The function node of the current stage.
 
 ### .getFunctionOperator( op : string ) : string (abstract)
 
@@ -1330,6 +1328,20 @@ The expression to resolve to if the condition is false.
 
 **Returns:** The resolved method name.
 
+### .getTextureParameters( name : string, textureNode : TextureNode ) : Object.<string, Node>
+
+Returns the parameters that pass a texture to a function: the texture node, and the nodes the backend needs to sample it, e.g. its sampler. The parameters are passed in this order, with the given names in the code of the function.
+
+**name**
+
+The name of the texture parameter.
+
+**textureNode**
+
+The texture node.
+
+**Returns:** The nodes of the parameters, by name.
+
 ### .getType( type : string ) : string
 
 It might be necessary to convert certain data types to different ones so this method can be used to hide the conversion.
@@ -1392,7 +1404,7 @@ Returns the maximum number of bytes available for uniform buffers.
 
 **Returns:** The maximum number of bytes available for uniform buffers.
 
-### .getUniformFromNode( node : UniformNode, type : string, shaderStage : 'vertex' | 'fragment' | 'compute' | 'any', name : string ) : NodeUniform
+### .getUniformFromNode( node : UniformNode, type : string, shaderStage : 'vertex' | 'fragment' | 'compute' | 'any', name : string ) : NodeUniform | ParameterNode
 
 Returns an instance of [NodeUniform](NodeUniform.html) for the given uniform node.
 
@@ -1416,7 +1428,7 @@ The name of the uniform.
 
 Default is `null`.
 
-**Returns:** The node uniform.
+**Returns:** The node uniform, or the parameter that replaces it in the code of a function.
 
 ### .getUniforms( shaderStage : 'vertex' | 'fragment' | 'compute' | 'any' ) : string (abstract)
 
@@ -1686,7 +1698,7 @@ Whether the material is using flat shading or not.
 
 ### .isFlipY() : boolean (abstract)
 
-Whether to flip texture data along its vertical axis or not. WebGL needs this method evaluate to `true`, WebGPU to `false`.
+Whether to flip texture data along its vertical axis or not.
 
 **Returns:** Whether to flip texture data along its vertical axis or not.
 

@@ -19,10 +19,7 @@ are considered as one render bundle and processed as such by
 the renderer.</p>
 <p>Only renderable 3D objects are allowed in a bundle group. Other
 types like lights are not supported and must be added to the scene
-outside of the group.</p>
-<p>This module is only fully supported by <code>WebGPURenderer</code> with a WebGPU backend.
-With a WebGL backend, the group can technically be rendered but without
-any performance improvements.</p></div>
+outside of the group.</p></div>
 			</header>
 			<article>
 				<div class="container-overview">
@@ -52,11 +49,12 @@ any performance improvements.</p></div>
 				<div class="member">
 					<h3 class="name" id="static" translate="no">.<a href="#static">static</a><span class="type-signature"> : boolean</span> </h3>
 					<div class="description">
-						<p>Whether the bundle is static or not. When set to <code>true</code>, the structure
-is assumed to be static and does not change. E.g. no new objects are
-added to the group.</p>
-<p>If a change is required, an update can still be forced by setting the
-<code>needsUpdate</code> flag to <code>true</code>.</p>
+						<p>Whether the bundle is static or not. When set to <code>true</code>, the renderer may
+skip updating the transformation and material properties of the objects in
+the bundle until the <code>needsUpdate</code> flag is set to <code>true</code>. Set it to <code>false</code>
+for bundles with animated objects.</p>
+<p>Adding or removing objects always requires setting the <code>needsUpdate</code>
+flag to <code>true</code>.</p>
 						<p>Default is <code>true</code>.</p>
 					</div>
 						<dl class="details">

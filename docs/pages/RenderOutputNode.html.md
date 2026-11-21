@@ -64,7 +64,7 @@ Gets the tone mapping type.
 
 **Returns:** The tone mapping type.
 
-### .setToneMapping( value : number ) : ToneMappingNode
+### .setToneMapping( value : number ) : RenderOutputNode
 
 Sets the tone mapping type.
 

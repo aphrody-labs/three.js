@@ -1,6 +1,6 @@
 # Fog
 
-This class can be used to define a linear fog that grows linearly denser with the distance.
+This class can be used to define a range fog that smoothly grows denser from no fog at `near` to full fog at `far`. The distance is measured as depth along the camera's view direction.
 
 ## Code Example
 
@@ -27,7 +27,7 @@ Default is `1`.
 
 **far**
 
-The maximum distance at which fog stops being calculated and applied.
+The distance at which fog reaches full density.
 
 Default is `1000`.
 
@@ -39,7 +39,7 @@ The fog's color.
 
 ### .far : number
 
-The maximum distance at which fog stops being calculated and applied. Objects that are more than `far` units away from the active camera won't be affected by fog.
+The distance at which fog reaches full density. Objects that are more than `far` units away from the active camera are rendered entirely in the fog color.
 
 Default is `1000`.
 

@@ -93,7 +93,7 @@ monitor must maintain a list of render objects.</p>
 							<dt class="tag-returns"><strong>Returns:</strong> Whether the node builder's context uses node properties or not.</dt>
 						</dl>
 					</div>
-					<h3 class="name name-method" id="equals" translate="no">.<a href="#equals">equals</a><span class="signature">( renderObject : <span class="param-type"><a href="RenderObject.html">RenderObject</a></span>, lightsData : <span class="param-type">Array.&lt;<a href="Light.html">Light</a>></span>, renderId : <span class="param-type">number</span> )</span><span class="type-signature"> : boolean</span> </h3>
+					<h3 class="name name-method" id="equals" translate="no">.<a href="#equals">equals</a><span class="signature">( renderObject : <span class="param-type"><a href="RenderObject.html">RenderObject</a></span>, lightsData : <span class="param-type">Array.&lt;Object></span>, renderId : <span class="param-type">number</span> )</span><span class="type-signature"> : boolean</span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>Returns <code>true</code> if the given render object has not changed its state.</p>
@@ -113,7 +113,7 @@ monitor must maintain a list of render objects.</p>
 										<strong translate="no">lightsData</strong>
 									</td>
 									<td class="description last">
-										<p>The current material lights.</p>
+										<p>The lights data of the current material lights.</p>
 									</td>
 								</tr>
 								<tr>
@@ -253,7 +253,7 @@ monitoring.</p>
 							<dt class="tag-returns"><strong>Returns:</strong> The lights for the given lights node and render ID.</dt>
 						</dl>
 					</div>
-					<h3 class="name name-method" id="getLightsData" translate="no">.<a href="#getLightsData">getLightsData</a><span class="signature">( materialLights : <span class="param-type">Array.&lt;<a href="Light.html">Light</a>></span> )</span><span class="type-signature"> : Array.&lt;Object></span> </h3>
+					<h3 class="name name-method" id="getLightsData" translate="no">.<a href="#getLightsData">getLightsData</a><span class="signature">( materialLights : <span class="param-type">Array.&lt;<a href="Light.html">Light</a>></span>, lights : <span class="param-type">Array.&lt;Object></span> )</span><span class="type-signature"> : Array.&lt;Object></span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>Returns the lights data for the given material lights.</p>
@@ -266,6 +266,14 @@ monitoring.</p>
 									</td>
 									<td class="description last">
 										<p>The material lights.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">lights</strong>
+									</td>
+									<td class="description last">
+										<p>The target array that receives the lights data.</p>
 									</td>
 								</tr>
 							</tbody>

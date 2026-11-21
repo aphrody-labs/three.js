@@ -12,7 +12,7 @@ const colors = array( [
 	vec3( 0, 1, 0 ),
 	vec3( 0, 0, 1 )
 ] );
-const redColor = tintColors.element( 0 );
+const redColor = colors.element( 0 );
 ```
 
 ## Constructor

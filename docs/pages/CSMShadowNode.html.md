@@ -4,7 +4,7 @@
 
 An implementation of Cascade Shadow Maps (CSM).
 
-This module can only be used with [WebGPURenderer](WebGPURenderer.html). When using [WebGLRenderer](WebGLRenderer.html), use [CSM](CSM.html) instead.
+This module can only be used with [WebGPURenderer](WebGPURenderer.html). When using WebGLRenderer, use CSM instead.
 
 ## Import
 

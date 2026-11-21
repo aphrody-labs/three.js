@@ -38,7 +38,7 @@ Default is `true`.
 
 Calculates the morphed attributes of a morphed/skinned BufferGeometry.
 
-Helpful for Raytracing or Decals (i.e. a `DecalGeometry` applied to a morphed Object with a `BufferGeometry` will use the original `BufferGeometry`, not the morphed/skinned one, generating an incorrect result. Using this function to create a shadow `Object3`D the `DecalGeometry` can be correctly generated).
+Helpful for Raytracing or Decals (i.e. a `DecalGeometry` applied to a morphed Object with a `BufferGeometry` will use the original `BufferGeometry`, not the morphed/skinned one, generating an incorrect result. Using this function to create a shadow `Object3`D the `DecalGeometry` can be correctly generated). If the geometry has no normal attribute, both returned normal attributes are `undefined`.
 
 **object**
 

@@ -8,7 +8,7 @@ This class represents a set of built in WGSL shader functions that sync synchron
 
 ### new SubgroupFunctionNode( method : string, aNode : Node, bNode : Node )
 
-Constructs a new function node.
+Constructs a new subgroup function node.
 
 **method**
 

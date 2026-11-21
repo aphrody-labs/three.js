@@ -61,7 +61,7 @@ Anti-Aliasing samples of the internal render-target.
 
 **defaultTexture**
 
-The default texture node.
+The default texture.
 
 **reflector**
 

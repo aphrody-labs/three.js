@@ -70,7 +70,7 @@ The camera being used for rendering.
 
 The render target, if any.
 
-### .computeAsync( computeNode : ComputeNode, dispatchSizeOrCount : number | Array.<number> )
+### .computeAsync( computeNode : ComputeNode, dispatchSizeOrCount : number | Array.<number> | IndirectStorageBufferAttribute )
 
 When a compute operation is performed.
 
@@ -110,7 +110,7 @@ Frees all internal resources of the inspector.
 
 Called when a frame ends.
 
-### .finishCompute( uid : string, computeNode : ComputeNode )
+### .finishCompute( uid : string )
 
 Called when a compute operation ends.
 
@@ -118,13 +118,9 @@ Called when a compute operation ends.
 
 A unique identifier for the render context.
 
-**computeNode**
-
-The compute node being executed.
-
 ### .finishRender( uid : string )
 
-Called when an animation loop ends.
+Called when a render operation ends.
 
 **uid**
 

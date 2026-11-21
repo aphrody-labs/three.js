@@ -2,7 +2,7 @@
 
 # MeshNormalMaterial
 
-A material that maps the normal vectors to RGB colors.
+A material that maps view-space normal vectors to RGB colors.
 
 ## Constructor
 
@@ -76,7 +76,7 @@ Default is `TangentSpaceNormalMap`.
 
 ### .normalScale : Vector2
 
-How much the normal map affects the material. Typical value range is `[0,1]`.
+How much the normal map affects the material. Typical value range is `[0,1]`. Only affects tangent space normal maps.
 
 Default is `(1,1)`.
 
@@ -90,7 +90,7 @@ Default is `false`.
 
 Controls the thickness of the wireframe.
 
-WebGL and WebGPU ignore this property and always render 1 pixel wide lines.
+WebGPU ignores this property and always renders 1 pixel wide lines.
 
 Default is `1`.
 

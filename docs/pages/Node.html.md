@@ -278,12 +278,6 @@ Default is `null`.
 
 **Returns:** The type of the node.
 
-### .getScope() : Node
-
-Returns the references to this node which is by default `this`.
-
-**Returns:** A reference to this node.
-
 ### .getSerializeChildren() : Generator.<Object>
 
 Returns the child nodes as a JSON object.

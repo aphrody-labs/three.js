@@ -21,7 +21,7 @@ their requirements.</p></div>
 			<article>
 				<div class="container-overview">
 					<h2>Constructor</h2>
-					<h3 class="name name-method" id="ShadowBaseNode" translate="no">new <a href="#ShadowBaseNode">ShadowBaseNode</a><span class="signature">( light : <span class="param-type"><a href="Light.html">Light</a></span> )</span> </h3>
+					<h3 class="name name-method" id="ShadowBaseNode" translate="no">new <a href="#ShadowBaseNode">ShadowBaseNode</a><span class="signature">( light : <span class="param-type"><a href="Light.html">Light</a></span>, shadow : <span class="param-type"><a href="LightShadow.html">LightShadow</a></span> )</span> </h3>
 					<div class="method">
 						<div class="description">
 							<p>Constructs a new shadow base node.</p>
@@ -34,6 +34,15 @@ their requirements.</p></div>
 									</td>
 									<td class="description last">
 										<p>The shadow casting light.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">shadow</strong>
+									</td>
+									<td class="description last">
+										<p>The light shadow.</p>
+										<p>Default is <code>light.shadow</code>.</p>
 									</td>
 								</tr>
 							</tbody>
@@ -52,6 +61,13 @@ their requirements.</p></div>
 					<h3 class="name" id="light" translate="no">.<a href="#light">light</a><span class="type-signature"> : <a href="Light.html">Light</a></span> </h3>
 					<div class="description">
 						<p>The shadow casting light.</p>
+					</div>
+				</div>
+				<div class="member">
+					<h3 class="name" id="shadow" translate="no">.<a href="#shadow">shadow</a><span class="type-signature"> : <a href="LightShadow.html">LightShadow</a></span> </h3>
+					<div class="description">
+						<p>The light shadow which defines the properties light's
+shadow.</p>
 					</div>
 				</div>
 				<div class="member">
@@ -112,6 +128,29 @@ If not, it creates a new <code>NodeMaterial</code> configured for shadow renderi
 							<dt class="tag-returns"><strong>Returns:</strong> A function that renders shadow objects.</dt>
 						</dl>
 					</div>
+					<h3 class="name name-method" id="needsRefresh" translate="no">.<a href="#needsRefresh">needsRefresh</a><span class="signature">( frame : <span class="param-type"><a href="NodeFrame.html">NodeFrame</a></span> )</span><span class="type-signature"> : boolean</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>Returns <code>true</code> if the shadow map must be rendered for the given frame. The shadow
+map is rendered once per camera and frame. Renders nested in the one that has
+updated the shadow map in the current frame share it.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">frame</strong>
+									</td>
+									<td class="description last">
+										<p>A reference to the current node frame.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>Returns:</strong> Whether the shadow map must be rendered.</dt>
+						</dl>
+					</div>
 					<h3 class="name name-method" id="setupShadowPosition" translate="no">.<a href="#setupShadowPosition">setupShadowPosition</a><span class="signature">( object : <span class="param-type"><a href="NodeBuilder.html">NodeBuilder</a></span> )</span> </h3>
 					<div class="method">
 						<div class="description">
@@ -125,6 +164,45 @@ If not, it creates a new <code>NodeMaterial</code> configured for shadow renderi
 									</td>
 									<td class="description last">
 										<p>A configuration object that must at least hold a material reference.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<h3 class="name name-method" id="updateBefore" translate="no">.<a href="#updateBefore">updateBefore</a><span class="signature">( frame : <span class="param-type"><a href="NodeFrame.html">NodeFrame</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>The implementation performs the update of the shadow map if necessary.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">frame</strong>
+									</td>
+									<td class="description last">
+										<p>A reference to the current node frame.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-overrides"><strong>Overrides:</strong> <a href="Node.html#updateBefore">Node#updateBefore</a></dt>
+						</dl>
+					</div>
+					<h3 class="name name-method" id="updateShadow" translate="no">.<a href="#updateShadow">updateShadow</a><span class="signature">( frame : <span class="param-type"><a href="NodeFrame.html">NodeFrame</a></span> )</span> <span class="type-signature">(abstract) </span></h3>
+					<div class="method">
+						<div class="description">
+							<p>Updates the shadow. Must be implemented by subclasses.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">frame</strong>
+									</td>
+									<td class="description last">
+										<p>A reference to the current node frame.</p>
 									</td>
 								</tr>
 							</tbody>

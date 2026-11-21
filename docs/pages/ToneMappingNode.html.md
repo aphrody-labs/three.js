@@ -36,7 +36,7 @@ Default is `null`.
 
 The tone mapping exposure.
 
-Default is `null`.
+Default is `toneMappingExposure`.
 
 ## Methods
 

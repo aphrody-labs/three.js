@@ -22,7 +22,7 @@ Default is `0`.
 
 **theta**
 
-The equator/azimuthal angle in radians around the y (up) axis.
+The equator/azimuthal angle in radians around the y (up) axis, measured from the positive z-axis towards the positive x-axis.
 
 Default is `0`.
 
@@ -42,7 +42,7 @@ Default is `1`.
 
 ### .theta : number
 
-The equator/azimuthal angle in radians around the y (up) axis.
+The equator/azimuthal angle in radians around the y (up) axis, measured from the positive z-axis towards the positive x-axis.
 
 Default is `0`.
 
@@ -66,7 +66,7 @@ The spherical to copy.
 
 ### .makeSafe() : Spherical
 
-Restricts the polar angle \[page:.phi phi\] to be between `0.000001` and pi - `0.000001`.
+Restricts the polar angle [Spherical#phi](Spherical.html#phi) to be between `0.000001` and pi - `0.000001`.
 
 **Returns:** A reference to this spherical.
 

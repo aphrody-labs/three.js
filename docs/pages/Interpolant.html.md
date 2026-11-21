@@ -20,7 +20,7 @@ Constructs a new interpolant.
 
 **parameterPositions**
 
-The parameter positions hold the interpolation factors.
+The ascending parameter positions of the samples, e.g. keyframe times.
 
 **sampleValues**
 
@@ -58,7 +58,7 @@ The interpolation settings.
 
 Default is `null`.
 
-### .valueSize : TypedArray
+### .valueSize : number
 
 The value size.
 
@@ -80,7 +80,7 @@ Evaluate the interpolant at position `t`.
 
 **t**
 
-The interpolation factor.
+The parameter position (e.g. time) at which to evaluate.
 
 **Returns:** The result buffer.
 
@@ -92,7 +92,7 @@ Returns the interpolation settings.
 
 ### .interpolate_( i1 : number, t0 : number, t : number, t1 : number ) : TypedArray (abstract)
 
-Copies a sample value to the result buffer.
+Interpolates between the samples at `i1 - 1` and `i1` and writes the result to the result buffer.
 
 **i1**
 
@@ -100,15 +100,15 @@ An index into the sample value buffer.
 
 **t0**
 
-The previous interpolation factor.
+The previous parameter position.
 
 **t**
 
-The current interpolation factor.
+The current parameter position.
 
 **t1**
 
-The next interpolation factor.
+The next parameter position.
 
 **Returns:** The result buffer.
 
@@ -122,11 +122,11 @@ An index into the sample value buffer.
 
 **t0**
 
-The previous interpolation factor.
+The previous parameter position.
 
 **t1**
 
-The next interpolation factor.
+The next parameter position.
 
 ## Source
 

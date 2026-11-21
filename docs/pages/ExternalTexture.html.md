@@ -8,7 +8,7 @@ This may be a texture from a protected media stream, device camera feed, or othe
 
 ## Constructor
 
-### new ExternalTexture( sourceTexture : WebGLTexture | GPUTexture )
+### new ExternalTexture( sourceTexture : GPUTexture )
 
 Creates a new raw texture.
 
@@ -26,7 +26,7 @@ This flag can be used for type testing.
 
 Default is `true`.
 
-### .sourceTexture : WebGLTexture | GPUTexture
+### .sourceTexture : GPUTexture
 
 The external source texture.
 

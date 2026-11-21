@@ -42,7 +42,7 @@ Default is `0`.
 
 **decay**
 
-The amount the light dims along the distance of the light.
+The exponent of the light's distance falloff.
 
 Default is `2`.
 

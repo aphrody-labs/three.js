@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>GutterFillGenerator - Three.js Docs</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="../scripts/highlight.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="../styles/highlight-three.css">
+	<link type="text/css" rel="stylesheet" href="../styles/page.css">
+</head>
+<body>
+	<h1 translate="no">GutterFillGenerator</h1>
+		<section>
+			<header>
+				<div class="class-description"><p>Fills the gutters of a baked map: the texels outside the charts of a UV atlas, e.g. of a light map or an
+ambient occlusion map. Texture filtering reads texels on both sides of the border of a chart, and the mip
+levels of a map average whole blocks of texels, so empty gutters show up as dark outlines around the
+charts, the more the farther away the map is seen. This fills every texel outside the charts with the
+values of the nearest charts.</p>
+<p>The coverage of the map is read from its alpha: texels with an alpha above zero are covered, e.g. in a
+light map of <a href="LightMapper.html">LightMapper</a> or a map stitched by <a href="SeamStitchGenerator.html">SeamStitchGenerator</a>. The fill is a push-pull
+in one chain of levels: the map is halved down to one texel, averaging the covered texels, then, from
+the coarsest level to the finest, the uncovered texels of each level are filled from the level below,
+upsampled with filtering. The covered texels keep their values, the filled texels have an alpha of zero.</p>
+<p>Like PMREMGenerator, the generator can fill many maps, and the caller owns the results.</p>
+<p>This class can only be used with <a href="WebGPURenderer.html">WebGPURenderer</a> and a WebGPU backend.</p></div>
+				<h2>Code Example</h2>
+				<div translate="no"><pre><code class="language-js">const gutterFill = new GutterFillGenerator( renderer );
+const renderTarget = new THREE.RenderTarget( size, size, { type: THREE.HalfFloatType, generateMipmaps: true, minFilter: THREE.LinearMipmapLinearFilter } );
+gutterFill.generate( lightMapper.texture, renderTarget );
+material.lightMap = renderTarget.texture;
+</code></pre></div>
+			</header>
+			<article>
+				<h2 class="subsection-title">Import</h2>
+				<p><span translate="no">GutterFillGenerator</span> is an addon, and must be imported explicitly, see <a href="https://threejs.org/manual/#installation#addons" target="_blank" rel="noopener">Installation#Addons</a>.</p>
+				<pre><code class="language-js">import { GutterFillGenerator } from 'three/addons/utils/GutterFillGenerator.js';</code></pre>
+				<div class="container-overview">
+					<h2>Constructor</h2>
+					<h3 class="name name-method" id="GutterFillGenerator" translate="no">new <a href="#GutterFillGenerator">GutterFillGenerator</a><span class="signature">( renderer : <span class="param-type"><a href="WebGPURenderer.html">WebGPURenderer</a></span> )</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>Constructs a new gutter fill generator.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">renderer</strong>
+									</td>
+									<td class="description last">
+										<p>The renderer.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<h2 class="subsection-title">Properties</h2>
+				<div class="member">
+					<h3 class="name" id="renderer" translate="no">.<a href="#renderer">renderer</a><span class="type-signature"> : <a href="WebGPURenderer.html">WebGPURenderer</a></span> </h3>
+					<div class="description">
+						<p>The renderer.</p>
+					</div>
+				</div>
+				<h2 class="subsection-title">Methods</h2>
+					<h3 class="name name-method" id="dispose" translate="no">.<a href="#dispose">dispose</a><span class="signature">()</span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>Frees all internal resources.</p>
+						</div>
+					</div>
+					<h3 class="name name-method" id="generate" translate="no">.<a href="#generate">generate</a><span class="signature">( source : <span class="param-type"><a href="Texture.html">Texture</a></span>, renderTarget : <span class="param-type"><a href="RenderTarget.html">RenderTarget</a></span> )</span><span class="type-signature"> : <a href="RenderTarget.html">RenderTarget</a></span> </h3>
+					<div class="method">
+						<div class="description">
+							<p>Fills the gutters of a map.</p>
+						</div>
+						<table class="params">
+							<tbody>
+								<tr>
+									<td class="name">
+										<strong translate="no">source</strong>
+									</td>
+									<td class="description last">
+										<p>The map, with an alpha above zero at its covered texels.</p>
+									</td>
+								</tr>
+								<tr>
+									<td class="name">
+										<strong translate="no">renderTarget</strong>
+									</td>
+									<td class="description last">
+										<p>The render target of the filled map, resized to the map. The map
+must not be its texture. By default, a new half float render target.</p>
+										<p>Default is <code>null</code>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<dl class="details">
+							<dt class="tag-returns"><strong>Returns:</strong> The render target of the filled map, with the UV channel of the map.</dt>
+						</dl>
+					</div>
+				<h2 class="subsection-title">Source</h2>
+				<p>
+					<a href="https://github.com/mrdoob/three.js/blob/master/examples/jsm/utils/GutterFillGenerator.js" translate="no" target="_blank" rel="noopener">examples/jsm/utils/GutterFillGenerator.js</a>
+				</p>
+			</article>
+		</section>
+<script src="../scripts/linenumber.js"></script>
+<script src="../scripts/page.js"></script>
+</body>
+</html>

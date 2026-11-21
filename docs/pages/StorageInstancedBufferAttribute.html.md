@@ -16,7 +16,7 @@ Constructs a new storage instanced buffer attribute.
 
 **count**
 
-The item count. It is also valid to pass a typed array as an argument. The subsequent parameters are then obsolete.
+The item count. It is also valid to pass a typed array as an argument. `typeClass` is then ignored but `itemSize` is still required.
 
 **itemSize**
 
@@ -35,6 +35,14 @@ Default is `Float32Array`.
 This flag can be used for type testing.
 
 Default is `true`.
+
+## Methods
+
+### .dispose()
+
+Frees the GPU-related resources allocated by this instance. Available only in [WebGPURenderer](WebGPURenderer.html).
+
+**Overrides:** [InstancedBufferAttribute#dispose](InstancedBufferAttribute.html#dispose)
 
 ## Source
 

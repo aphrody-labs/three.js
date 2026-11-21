@@ -2,7 +2,7 @@
 
 A class that creates an stereo effect.
 
-Note that this class can only be used with [WebGLRenderer](WebGLRenderer.html). When using [WebGPURenderer](WebGPURenderer.html), use [StereoPassNode](StereoPassNode.html).
+Note that this class can only be used with WebGLRenderer. When using [WebGPURenderer](WebGPURenderer.html), use [StereoPassNode](StereoPassNode.html).
 
 ## Import
 
@@ -26,7 +26,7 @@ The renderer.
 
 ### .render( scene : Object3D, camera : Camera )
 
-When using this effect, this method should be called instead of the default [WebGLRenderer#render](WebGLRenderer.html#render).
+When using this effect, this method should be called instead of the default WebGLRenderer#render.
 
 **scene**
 

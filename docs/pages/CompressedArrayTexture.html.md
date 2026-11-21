@@ -30,13 +30,13 @@ The depth of the texture.
 
 **format**
 
-The min filter value.
+The texture format.
 
 Default is `RGBAFormat`.
 
 **type**
 
-The min filter value.
+The texture type.
 
 Default is `UnsignedByteType`.
 

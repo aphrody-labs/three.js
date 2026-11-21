@@ -16,7 +16,7 @@ Default is `(1,0,0)`.
 
 **constant**
 
-The signed distance from the origin to the plane.
+The signed distance from the plane to the origin.
 
 Default is `0`.
 
@@ -24,7 +24,7 @@ Default is `0`.
 
 ### .constant : number
 
-The signed distance from the origin to the plane.
+The signed distance from the plane to the origin. The plane is the set of points `p` for which `normal.dot( p ) + constant = 0`, so the point on the plane closest to the origin is `normal * - constant`.
 
 Default is `0`.
 
@@ -40,7 +40,7 @@ A unit length vector defining the normal of the plane.
 
 ## Methods
 
-### .applyMatrix4( matrix : Matrix4, optionalNormalMatrix : Matrix4 ) : Plane
+### .applyMatrix4( matrix : Matrix4, optionalNormalMatrix : Matrix3 ) : Plane
 
 Apply a 4x4 matrix to the plane. The matrix must be an affine, homogeneous transform.
 
@@ -88,7 +88,7 @@ The plane to copy.
 
 ### .distanceToPoint( point : Vector3 ) : number
 
-Returns the signed distance from the given point to this plane.
+Returns the signed distance from the given point to this plane. The distance is positive if the point lies on the side of the plane the normal points to.
 
 **point**
 

@@ -97,13 +97,6 @@ e.g. in context of post-processing.</p>
 					</div>
 				</div>
 				<div class="member">
-					<h3 class="name" id="multiview" translate="no">.<a href="#multiview">multiview</a><span class="type-signature"> : boolean</span> </h3>
-					<div class="description">
-						<p>Whether to this target is used in multiview rendering.</p>
-						<p>Default is <code>false</code>.</p>
-					</div>
-				</div>
-				<div class="member">
 					<h3 class="name" id="resolveColorBuffer" translate="no">.<a href="#resolveColorBuffer">resolveColorBuffer</a><span class="type-signature"> : boolean</span> </h3>
 					<div class="description">
 						<p>Whether to resolve the color buffer or not. When set to <code>false</code>, the color
@@ -111,28 +104,6 @@ attachments do not receive the resolved (single-sampled) output of a render
 pass and the render target's textures are left untouched. The rendered
 content is then only accessible within the render pass itself.</p>
 <p>Only relevant for multisampled render targets.</p>
-						<p>Default is <code>true</code>.</p>
-					</div>
-				</div>
-				<div class="member">
-					<h3 class="name" id="resolveDepthBuffer" translate="no">.<a href="#resolveDepthBuffer">resolveDepthBuffer</a><span class="type-signature"> : boolean</span> </h3>
-					<div class="description">
-						<p>Whether to resolve the depth buffer or not. When set to <code>false</code>, the depth
-texture does not receive the resolved depth output of a render pass which
-saves memory bandwidth. Use this setting when the depth data of a render
-pass are not required afterwards.</p>
-<p>Only relevant for multisampled render targets in WebGL. WebGPU does not
-support depth resolves; sampling the depth texture of a multisampled render
-target accesses the multisampled data directly, see
-<a href="RenderTarget.html#storeMultisampledDepthBuffer">RenderTarget#storeMultisampledDepthBuffer</a>.</p>
-						<p>Default is <code>true</code>.</p>
-					</div>
-				</div>
-				<div class="member">
-					<h3 class="name" id="resolveStencilBuffer" translate="no">.<a href="#resolveStencilBuffer">resolveStencilBuffer</a><span class="type-signature"> : boolean</span> </h3>
-					<div class="description">
-						<p>Whether to resolve the stencil buffer or not. Analogous to
-<a href="RenderTarget.html#resolveDepthBuffer">RenderTarget#resolveDepthBuffer</a> but for the stencil aspect.</p>
 						<p>Default is <code>true</code>.</p>
 					</div>
 				</div>
@@ -218,9 +189,7 @@ Has at least a single entry for the default color attachment.</p>
 				<div class="member">
 					<h3 class="name" id="useArrayDepthTexture" translate="no">.<a href="#useArrayDepthTexture">useArrayDepthTexture</a><span class="type-signature"> : boolean</span> </h3>
 					<div class="description">
-						<p>Whether to create the depth texture as an array texture for per-layer depth testing.
-This is separate from multiview so layered render targets can use array depth without
-the multiview extension.</p>
+						<p>Whether to create the depth texture as an array texture for per-layer depth testing.</p>
 						<p>Default is <code>false</code>.</p>
 					</div>
 				</div>
@@ -483,28 +452,6 @@ no need to dispose them separately.</p>
 		</tr>
 		<tr>
 				<td class="name">
-					<strong>resolveDepthBuffer</strong>
-						<br>
-<span class="param-type">boolean</span>
-				</td>
-			<td class="description last">
-				<p>Whether to resolve the depth buffer or not. Only relevant for multisampled render targets.</p>
-						<p>Default is <code>true</code>.</p>
-			</td>
-		</tr>
-		<tr>
-				<td class="name">
-					<strong>resolveStencilBuffer</strong>
-						<br>
-<span class="param-type">boolean</span>
-				</td>
-			<td class="description last">
-				<p>Whether to resolve the stencil buffer or not. Only relevant for multisampled render targets.</p>
-						<p>Default is <code>true</code>.</p>
-			</td>
-		</tr>
-		<tr>
-				<td class="name">
 					<strong>storeMultisampledColorBuffer</strong>
 						<br>
 <span class="param-type">boolean</span>
@@ -582,23 +529,12 @@ no need to dispose them separately.</p>
 		</tr>
 		<tr>
 				<td class="name">
-					<strong>multiview</strong>
-						<br>
-<span class="param-type">boolean</span>
-				</td>
-			<td class="description last">
-				<p>Whether this target is used for multiview rendering (WebGL OVR_multiview2 extension).</p>
-						<p>Default is <code>false</code>.</p>
-			</td>
-		</tr>
-		<tr>
-				<td class="name">
 					<strong>useArrayDepthTexture</strong>
 						<br>
 <span class="param-type">boolean</span>
 				</td>
 			<td class="description last">
-				<p>Whether to create the depth texture as an array texture for per-layer depth testing. This is separate from multiview so layered render targets can use array depth without the multiview extension.</p>
+				<p>Whether to create the depth texture as an array texture for per-layer depth testing.</p>
 						<p>Default is <code>false</code>.</p>
 			</td>
 		</tr>

@@ -10,19 +10,19 @@ Returns a single precision floating point value (FP32) from the given half preci
 
 **val**
 
-A half precision floating point value.
+A FP16 bit pattern, e.g. an element of a `Uint16Array`.
 
 **Returns:** The FP32 value.
 
 ### .toHalfFloat( val : number ) : number
 
-Returns a half precision floating point value (FP16) from the given single precision floating point value (FP32).
+Returns a half precision floating point value (FP16) from the given single precision floating point value (FP32). The result is the FP16 bit pattern as an integer in the range `[0, 65535]`, e.g. for a `Uint16Array` used with `HalfFloatType`. Values are clamped to `[-65504, 65504]`.
 
 **val**
 
 A single precision floating point value.
 
-**Returns:** The FP16 value.
+**Returns:** The FP16 bit pattern.
 
 ## Source
 

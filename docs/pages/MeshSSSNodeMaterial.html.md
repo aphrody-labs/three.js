@@ -26,7 +26,7 @@ Represents the thickness attenuation.
 
 ### .thicknessColorNode : Node.<vec3>
 
-Represents the thickness color.
+Represents the thickness color. Subsurface scattering is only enabled when this node is set.
 
 Default is `null`.
 
@@ -42,11 +42,11 @@ Represents the thickness power.
 
 Represents the thickness scale.
 
-### .useSSS : boolean
+### .useSSS : boolean (readonly)
 
 Whether the lighting model should use SSS or not.
 
-Default is `true`.
+Default is `false`.
 
 ## Methods
 

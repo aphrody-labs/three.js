@@ -58,7 +58,7 @@ Split the geometry into groups, each of which will be rendered in a separate dra
 
 Use `addGroup()` and `clearGroups()` to edit groups, rather than modifying this array directly.
 
-Every vertex and index must belong to exactly one group — groups must not share vertices or indices, and must not leave vertices or indices unused.
+Groups are only used when the 3D object has an array of materials. Groups should not overlap, since overlapping ranges are rendered (and raycast) more than once. Vertices or indices that are not part of any group are not rendered.
 
 ### .id : number (readonly)
 
@@ -124,7 +124,7 @@ Adds a group to this geometry.
 
 **start**
 
-The first element in this draw call. That is the first vertex for non-indexed geometry, otherwise the first triangle index.
+The first element in this draw call. That is the first vertex for non-indexed geometry, otherwise the offset (in indices) into the index buffer.
 
 **count**
 
@@ -184,7 +184,7 @@ Computes the bounding sphere of the geometry, and updates the `boundingSphere` m
 
 Calculates and adds a tangent attribute to this geometry.
 
-The computation is only supported for indexed geometries and if position, normal, and uv attributes are defined. When using a tangent space normal map, prefer the MikkTSpace algorithm provided by BufferGeometryUtils#computeMikkTSpaceTangents instead.
+The computation is only supported for indexed geometries and if position, normal, and uv attributes are defined. When using a tangent space normal map, prefer the MikkTSpace algorithm provided by [BufferGeometryUtils.computeMikkTSpaceTangents()](module-BufferGeometryUtils.html#~computeMikkTSpaceTangents) instead.
 
 ### .computeVertexNormals()
 
@@ -226,7 +226,7 @@ Returns the buffer attribute for the given name.
 
 The attribute name.
 
-**Returns:** The buffer attribute. Returns `undefined` if not attribute has been found.
+**Returns:** The buffer attribute. Returns `undefined` if no attribute has been found.
 
 ### .getIndex() : BufferAttribute
 
@@ -296,7 +296,7 @@ The angle in radians.
 
 ### .scale( x : number, y : number, z : number ) : BufferGeometry
 
-Scales the geometry. This is typically done as a one time operation, and not during a loop. Use [Object3D#scale](Object3D.html#scale) for typical real-time mesh rotation.
+Scales the geometry. This is typically done as a one time operation, and not during a loop. Use [Object3D#scale](Object3D.html#scale) for typical real-time mesh scaling.
 
 **x**
 
@@ -332,7 +332,7 @@ Sets the draw range for this geometry.
 
 **start**
 
-The first vertex for non-indexed geometry, otherwise the first triangle index.
+The first vertex for non-indexed geometry, otherwise the offset (in indices) into the index buffer.
 
 **count**
 
@@ -384,13 +384,13 @@ Serializes the geometry into JSON.
 
 ### .toNonIndexed() : BufferGeometry
 
-Return a new non-index version of this indexed geometry. If the geometry is already non-indexed, the method is a NOOP.
+Return a new non-index version of this indexed geometry. If the geometry is already non-indexed, the method is a NOOP and returns this instance.
 
 **Returns:** The non-indexed version of this indexed geometry.
 
 ### .translate( x : number, y : number, z : number ) : BufferGeometry
 
-Translates the geometry. This is typically done as a one time operation, and not during a loop. Use [Object3D#position](Object3D.html#position) for typical real-time mesh rotation.
+Translates the geometry. This is typically done as a one time operation, and not during a loop. Use [Object3D#position](Object3D.html#position) for typical real-time mesh translation.
 
 **x**
 

@@ -13,7 +13,7 @@
 	<h1 translate="no">MeshNormalMaterial</h1>
 		<section>
 			<header>
-				<div class="class-description"><p>A material that maps the normal vectors to RGB colors.</p></div>
+				<div class="class-description"><p>A material that maps view-space normal vectors to RGB colors.</p></div>
 				<iframe id="viewer" src="../scenes/material-browser.html#MeshNormalMaterial"></iframe>
 			</header>
 			<article>
@@ -132,7 +132,8 @@ for the different handedness.</p>
 				<div class="member">
 					<h3 class="name" id="normalScale" translate="no">.<a href="#normalScale">normalScale</a><span class="type-signature"> : <a href="Vector2.html">Vector2</a></span> </h3>
 					<div class="description">
-						<p>How much the normal map affects the material. Typical value range is <code>[0,1]</code>.</p>
+						<p>How much the normal map affects the material. Typical value range is <code>[0,1]</code>.
+Only affects tangent space normal maps.</p>
 						<p>Default is <code>(1,1)</code>.</p>
 					</div>
 				</div>
@@ -147,7 +148,7 @@ for the different handedness.</p>
 					<h3 class="name" id="wireframeLinewidth" translate="no">.<a href="#wireframeLinewidth">wireframeLinewidth</a><span class="type-signature"> : number</span> </h3>
 					<div class="description">
 						<p>Controls the thickness of the wireframe.</p>
-<p>WebGL and WebGPU ignore this property and always render
+<p>WebGPU ignores this property and always renders
 1 pixel wide lines.</p>
 						<p>Default is <code>1</code>.</p>
 					</div>

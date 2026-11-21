@@ -28,7 +28,7 @@ A shape or an array of shapes.
 
 **curveSegments**
 
-Number of segments per shape.
+Number of segments per curve of the shape. Line curves are never subdivided, ellipse curves use twice this value and spline curves this value times their point count, see [CurvePath#getPoints](CurvePath.html#getPoints).
 
 Default is `12`.
 

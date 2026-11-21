@@ -1,6 +1,8 @@
 # Cache
 
-A simple caching system, used internally by [FileLoader](FileLoader.html). To enable caching across all loaders that use [FileLoader](FileLoader.html), add `THREE.Cache.enabled = true.` once in your app.
+A simple caching system, used internally by [FileLoader](FileLoader.html), [ImageLoader](ImageLoader.html) and [ImageBitmapLoader](ImageBitmapLoader.html). To enable caching across all loaders that use these classes, add `THREE.Cache.enabled = true.` once in your app.
+
+Keys are the resolved URLs prefixed with the loader type (`file:`, `image:` or `image-bitmap:`). Blob URLs are never cached.
 
 ## Static Properties
 

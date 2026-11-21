@@ -6,7 +6,7 @@ This type of uniform node represents a 3D texture.
 
 ## Constructor
 
-### new Texture3DNode( value : Data3DTexture, uvNode : Node.<(vec2|vec3)>, levelNode : Node.<int> )
+### new Texture3DNode( value : Data3DTexture, uvNode : Node.<vec3>, levelNode : Node.<int> )
 
 Constructs a new 3D texture node.
 

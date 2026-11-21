@@ -70,11 +70,11 @@ Default is `2`.
 
 The focus point of the `minTargetRadius` and `maxTargetRadius` limits. It can be updated manually at any point to change the center of interest for the `target`.
 
-### .cursorStyle : 'auto' | 'grab'
+### .cursorStyle : '' | 'grab'
 
 Defines the visual representation of the cursor.
 
-Default is `'auto'`.
+Default is `''`.
 
 ### .dampingFactor : number
 

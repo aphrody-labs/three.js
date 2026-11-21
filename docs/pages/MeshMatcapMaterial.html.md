@@ -118,7 +118,7 @@ Default is `TangentSpaceNormalMap`.
 
 ### .normalScale : Vector2
 
-How much the normal map affects the material. Typical value range is `[0,1]`.
+How much the normal map affects the material. Typical value range is `[0,1]`. Only affects tangent space normal maps.
 
 Default is `(1,1)`.
 

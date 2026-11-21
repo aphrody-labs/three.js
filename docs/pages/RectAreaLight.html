@@ -20,12 +20,10 @@ windows or strip lighting.</p>
 <ul>
 <li>There is no shadow support.</li>
 <li>Only PBR materials are supported.</li>
-<li>You have to include <code>RectAreaLightUniformsLib</code> (<code>WebGLRenderer</code>) or <code>RectAreaLightTexturesLib</code> (<code>WebGPURenderer</code>)
-into your app and init the uniforms/textures.</li>
+<li>You have to include <code>RectAreaLightTexturesLib</code> into your app and init the textures.</li>
 </ul></div>
 				<h2>Code Example</h2>
-				<div translate="no"><pre><code class="language-js">RectAreaLightUniformsLib.init(); // only relevant for WebGLRenderer
-THREE.RectAreaLightNode.setLTC( RectAreaLightTexturesLib.init() ); //  only relevant for WebGPURenderer
+				<div translate="no"><pre><code class="language-js">THREE.RectAreaLightNode.setLTC( RectAreaLightTexturesLib.init() );
 const intensity = 1; const width = 10; const height = 10;
 const rectLight = new THREE.RectAreaLight( 0xffffff, intensity, width, height );
 rectLight.position.set( 5, 5, 0 );
@@ -57,7 +55,7 @@ scene.add( rectLight )
 										<strong translate="no">intensity</strong>
 									</td>
 									<td class="description last">
-										<p>The light's strength/intensity.</p>
+										<p>The light's strength/intensity measured in nits (cd/m²).</p>
 										<p>Default is <code>1</code>.</p>
 									</td>
 								</tr>

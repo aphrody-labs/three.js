@@ -12,8 +12,11 @@
 	<h1 translate="no">Cache</h1>
 		<section>
 			<header>
-				<div class="class-description"><p>A simple caching system, used internally by <a href="FileLoader.html">FileLoader</a>.
-To enable caching across all loaders that use <a href="FileLoader.html">FileLoader</a>, add <code>THREE.Cache.enabled = true.</code> once in your app.</p></div>
+				<div class="class-description"><p>A simple caching system, used internally by <a href="FileLoader.html">FileLoader</a>, <a href="ImageLoader.html">ImageLoader</a>
+and <a href="ImageBitmapLoader.html">ImageBitmapLoader</a>. To enable caching across all loaders that use these classes, add
+<code>THREE.Cache.enabled = true.</code> once in your app.</p>
+<p>Keys are the resolved URLs prefixed with the loader type (<code>file:</code>, <code>image:</code> or <code>image-bitmap:</code>).
+Blob URLs are never cached.</p></div>
 			</header>
 			<article>
 				<div class="container-overview">

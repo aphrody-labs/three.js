@@ -26,7 +26,7 @@ Default is `false`.
 
 ## Static Methods
 
-### .createButton( renderer : WebGLRenderer | WebGPURenderer, sessionInit : XRSessionInit ) : HTMLElement
+### .createButton( renderer : WebGPURenderer, sessionInit : XRSessionInit ) : HTMLElement
 
 Constructs a new VR button.
 

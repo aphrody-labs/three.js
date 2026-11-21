@@ -197,7 +197,7 @@ The vector to copy.
 
 ### .cross( v : Vector2 ) : number
 
-Calculates the cross product of the given vector with this instance.
+Calculates the cross product of this vector and the given one (in that order).
 
 **v**
 

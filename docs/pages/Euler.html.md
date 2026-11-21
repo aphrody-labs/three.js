@@ -56,6 +56,8 @@ Default is `true`.
 
 A string representing the order that the rotations are applied.
 
+three.js uses intrinsic rotations, meaning each rotation is performed around the local axes of the already rotated object. For `'XYZ'`, the object is rotated around its local X axis first, then its local Y axis and finally its local Z axis, which equals the rotation matrix `Rx * Ry * Rz`.
+
 Default is `'XYZ'`.
 
 ### .x : number

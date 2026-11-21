@@ -74,7 +74,8 @@ Required for normal map conventions in some formats, including glTF.</p>
 							<p>Calculates the morphed attributes of a morphed/skinned BufferGeometry.</p>
 <p>Helpful for Raytracing or Decals (i.e. a <code>DecalGeometry</code> applied to a morphed Object with a <code>BufferGeometry</code>
 will use the original <code>BufferGeometry</code>, not the morphed/skinned one, generating an incorrect result.
-Using this function to create a shadow <code>Object3</code>D the <code>DecalGeometry</code> can be correctly generated).</p>
+Using this function to create a shadow <code>Object3</code>D the <code>DecalGeometry</code> can be correctly generated).
+If the geometry has no normal attribute, both returned normal attributes are <code>undefined</code>.</p>
 						</div>
 						<table class="params">
 							<tbody>
